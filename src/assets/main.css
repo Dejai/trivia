@@ -1,0 +1,48 @@
+@import './base.css';
+
+#app {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  padding: 0rem 2rem;
+  font-weight: normal;
+}
+
+.mobileInput { font-size: 16px; }
+.mobileIcon { font-size: 22px; }
+
+.modalContainer { position:fixed; top:0; right:0; bottom:0; left:0; z-index: 999; opacity:0; visibility: hidden; transition: all 0.3s; }
+.modalContainer.open { opacity:100; visibility: visible;}
+.modalContent { width: 75%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 2em; }
+.modalCloser { text-align:left; }
+
+.iconLabel { cursor: pointer; margin-left:0.2%; color:blue; }
+.iconContainer { cursor:pointer; display: inline-block; }
+
+.missingRequiredField { border: 3px solid red; }
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+@media (min-width: 1024px) {
+  /* body {
+    display: flex;
+    place-items: center;
+  } */
+
+  /* #app {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 2rem;
+  } */
+}

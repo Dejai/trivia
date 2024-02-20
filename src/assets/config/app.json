@@ -1,0 +1,22 @@
+{
+    "auth":{
+        "endpoint":  "https://auth.dejaithekid.com"
+    },
+    
+    "Urls":{
+        "auth": "https://auth.dejaithekid.com", 
+        "files": "https://files.dejaithekid.com",
+        "kv": "https://kv.dejaithekid.com",
+        "media": "https://trivia-media.dejaithekid.com"
+    },
+
+    "GameTypes": [ "Jeopardy" ],
+
+    "Tags": {
+        "FinalJeopardy": "Final Jeopardy!", 
+        "DailyDouble": "Daily Double",
+        "NewQuestion": "New Question"
+    },
+
+    "CategorySorts": [ "Value", "Custom Order" ]
+}
