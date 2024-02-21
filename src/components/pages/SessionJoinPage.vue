@@ -29,10 +29,9 @@
                 <div>
                     <h2>Team Name</h2>
                     <input class="fieldInput" id="teamName" type="text" placeholder="Enter a team name" v-model="teamName" autocomplete="off">
-                    <!-- <p v-if="isMissingTeamName" class="color-red italic">please enter a team name</p> -->
                 </div>
                 
-                <IconButton @click="enterSession" :class="{ 'color-blue': canJoinSession}">
+                <IconButton v-if="!isJoining" @click="enterSession" :class="{ 'color-blue': canJoinSession}">
                     <template #icon>
                         <h3><up-right-from-square-icon/></h3>
                     </template>
@@ -40,6 +39,7 @@
                         <h3>JOIN SESSION</h3>
                     </template>
                 </IconButton>
+                <h2 v-if="isJoining"><spinner-icon/></h2>
             </div>
         </div>
         <div v-else>
@@ -73,16 +73,15 @@
     const teamName = ref("")
     const hasExistingTeam = ref(false)
     const existingTeam = ref("")
-    const joinAttempts = ref(0)
     const isMounted = ref(false)
+    const isJoining = ref(false)
 
-    // const isMissingTeamName = computed( () => joinAttempts.value > 0 && teamName.value == "")
     const canJoinSession = computed( () => teamName.value != "")
 
     // Play a game (as a player)
     async function enterSession(){
-        joinAttempts.value ++;
         if(teamName.value != ""){
+            isJoining.value = true
             await teamsStore.createTeam(teamCode.value, teamName.value)
             router.push( {name: "team", params: { gameID: route.params.gameID, sessionID: route.params.sessionID, teamID: teamCode.value }})
         }
