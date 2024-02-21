@@ -17,8 +17,8 @@
 
 <script setup lang="ts">
     import { ref, computed } from 'vue'
-    import PlayIcon from '../icons/FontAwesome/PlayIcon.vue';
-    import StopwatchIcon from '../icons/FontAwesome/StopwatchIcon.vue';
+    import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue';
+    import StopwatchIcon from '@/components/icons/FontAwesome/StopwatchIcon.vue';
 
     const props = defineProps<{
         seconds:number

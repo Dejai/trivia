@@ -2,14 +2,14 @@
     <div class="gameCoverCard flex-column flex-gap-15" @click="openGame">
         <h3 class="gameCoverName"> {{gameName}}</h3>
         <p style="width:90%;">{{gameDesc}}</p>
-        <HeaderButton  >
+        <IconButton  >
             <template #icon>
                 <share-from-square-icon/>
             </template>
             <template #content>
                 Open
             </template>
-        </HeaderButton>
+        </IconButton>
     </div>
 </template>
 
@@ -17,7 +17,7 @@
     import { useRouter } from 'vue-router'
     import Game from '@/models/Game'
     import { useGamesStore } from '@/stores/games'
-    import HeaderButton from './HeaderButton.vue'
+    import IconButton from '@/components/views/IconButton.vue'
     import ShareFromSquareIcon from '@/components/icons/FontAwesome/ShareFromSquareIcon.vue';
 
     const props = defineProps<{

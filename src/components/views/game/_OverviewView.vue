@@ -34,11 +34,11 @@
         <div id="gameSessionsSubSection">
             <div id="gameSessionsHeader">
                 <h1>Game Sessions</h1>
-                <HeaderButton  v-if="showAddSessionButton" style="color:white;" @click="onAddSession">
+                <IconButton  v-if="showAddSessionButton" style="color:white;" @click="onAddSession">
                     <template #content>
                         <h3>ADD SESSION</h3>
                     </template>
-                </HeaderButton>
+                </IconButton>
             </div>
             <div v-if="showSessionInstruction">
                 <p>Add new sessions for players to join & play a new instance of this game.</p>
@@ -90,9 +90,9 @@
     import SessionRow from '@/components/views/game/SessionRow.vue'
     import SessionForm from '@/components/views/game/SessionForm.vue'
     import { useFiltersStore } from '@/stores/filters'
-import HeaderButton from './HeaderButton.vue'
-import FormContainer from '../forms/FormContainer.vue'
-import FormRow from '../forms/FormRow.vue'
+    import IconButton from '@/components/views/IconButton.vue'
+    import FormContainer from '@/components/views/forms/FormContainer.vue'
+    import FormRow from '@/components/views/forms/FormRow.vue'
 
     const gamesStore = useGamesStore()
     const authStore = useAuthStore()

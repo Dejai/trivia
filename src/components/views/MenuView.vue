@@ -30,7 +30,7 @@
     import { storeToRefs } from 'pinia';
     import { useGamesStore } from '@/stores/games'
     import { useMenuStore } from '@/stores/menu'
-    import SpinnerIcon from '../icons/FontAwesome/SpinnerIcon.vue'
+    import SpinnerIcon from '@/components/icons/FontAwesome/SpinnerIcon.vue'
 
     import router from '@/router'
 

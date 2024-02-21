@@ -10,36 +10,36 @@
                     </p>
                 </div>
                 <div class="flex-row flex-space-between">
-                    <HeaderButton class="color-green" @click="enterSession">
+                    <IconButton class="color-green" @click="enterSession">
                         <template #icon>
                             <h3><circle-check-icon/></h3>
                         </template>
                         <template #content>
                             <h3>USE THIS TEAM</h3>
                         </template>
-                    </HeaderButton>
-                    <HeaderButton class="color-blue" @click="useNewTeam">
+                    </IconButton>
+                    <IconButton class="color-blue" @click="useNewTeam">
                         <template #content>
                             <h3>NEW TEAM</h3>
                         </template>
-                    </HeaderButton>
+                    </IconButton>
                 </div>
             </div>
             <div v-else id="enterTeamNameSection">
                 <div>
                     <h2>Team Name</h2>
-                    <input class="fieldInput" :class="{'error': isMissingTeamName}" id="teamName" type="text" placeholder="Enter a team name" v-model="teamName" autocomplete="off">
-                    <p v-if="isMissingTeamName" class="color-red italic">please enter a team name</p>
+                    <input class="fieldInput" id="teamName" type="text" placeholder="Enter a team name" v-model="teamName" autocomplete="off">
+                    <!-- <p v-if="isMissingTeamName" class="color-red italic">please enter a team name</p> -->
                 </div>
                 
-                <HeaderButton @click="enterSession" class="color-blue">
+                <IconButton @click="enterSession" :class="{ 'color-blue': canJoinSession}">
                     <template #icon>
                         <h3><up-right-from-square-icon/></h3>
                     </template>
                     <template #content>
                         <h3>JOIN SESSION</h3>
                     </template>
-                </HeaderButton>
+                </IconButton>
             </div>
         </div>
         <div v-else>
@@ -53,27 +53,22 @@
     import { storeToRefs } from 'pinia';
     import { useRouter, useRoute } from 'vue-router';
     import { useGamesStore } from '@/stores/games'
-    import { useAuthStore } from '@/stores/auth'
     import { useMenuStore } from '@/stores/menu';
     import { useTeamsStore } from '@/stores/teams';
     import { useCode } from '@/composables/useCode'
     import { useCookie } from '@/composables/useCookie';
-    import HeaderButton from '@/components/views/game/HeaderButton.vue';
+    import IconButton from '@/components/views/IconButton.vue';
     import UpRightFromSquareIcon from '@/components/icons/FontAwesome/UpRightFromSquareIcon.vue';
     import SpinnerIcon from '@/components/icons/FontAwesome/SpinnerIcon.vue';
     import CircleCheckIcon from '@/components/icons/FontAwesome/CircleCheckIcon.vue';
-    import XMarkIcon from '@/components/icons/FontAwesome/XMarkIcon.vue';
 
     const gamesStore = useGamesStore()
     const router = useRouter()
-    const authStore = useAuthStore()
     const route = useRoute()
     const menuStore = useMenuStore()
     const teamsStore = useTeamsStore()
 
     const { currentGame } = storeToRefs(gamesStore);
-    const { isLoggedIn } = storeToRefs(authStore);
-    const { teams } = storeToRefs(teamsStore)
     const teamCode = ref("")
     const teamName = ref("")
     const hasExistingTeam = ref(false)
@@ -81,7 +76,8 @@
     const joinAttempts = ref(0)
     const isMounted = ref(false)
 
-    const isMissingTeamName = computed( () => joinAttempts.value > 0 && teamName.value == "")
+    // const isMissingTeamName = computed( () => joinAttempts.value > 0 && teamName.value == "")
+    const canJoinSession = computed( () => teamName.value != "")
 
     // Play a game (as a player)
     async function enterSession(){
@@ -95,9 +91,7 @@
      // Check for existing cookie & if none, set one with this game,session
      function checkSessionCookie(){
         const cookieNameBase = `dtk-trivia-${route.params.gameID}_${route.params.sessionID}`;
-        console.log("Checking for cookie: " + cookieNameBase)
         let cookieValue = useCookie("get", cookieNameBase)
-        console.log(cookieValue)
         if(cookieValue != ""){
             let splits = cookieValue.split(" - ");
             teamName.value = splits?.[0] ?? "";
@@ -138,7 +132,7 @@
 <style scoped>
     #enterTeamNameSection { display:flex; flex-direction: column; gap:20px; justify-content: left; }
     #teamName { font-size:22px; width:90%; }
-
     @media (min-width: 1024px) {
+        
     }
 </style>

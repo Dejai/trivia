@@ -4,10 +4,10 @@
             <div>
                 <p>
                     <span v-if="isMounted && isLoggedIn">
-                        <CircleUserIcon style="font-size:24px; color:blue; padding-right:3%;" @click="authStore.onAuthAction" />
+                        <CircleUserIcon class="color-blue" style="font-size:24px; padding-right:3%;" @click="authStore.onAuthAction" />
                         Hi, {{ authStore.userName }}
                     </span>   
-                    <span v-if="isMounted && !isLoggedIn" @click="authStore.onAuthAction" style="color:blue; cursor:pointer">Log in</span>
+                    <span v-if="isMounted && !isLoggedIn" @click="authStore.onAuthAction" class="color-blue pointer">Log in</span>
                     &nbsp;
                 </p>
             </div>
@@ -19,7 +19,7 @@
         </div>
         <div id="gamePageSubsection" v-if="isMounted">
             <div id="headerButtonSection" v-if="isLoggedIn">
-                <HeaderButton @click="gamesStore.saveGame()" :class="{'toBeSaved': toBeSaved}">
+                <IconButton @click="gamesStore.saveGame()" :class="{'toBeSaved': toBeSaved}">
                     <template #icon>
                         <floppy-disk-icon/>
                     </template>
@@ -28,13 +28,13 @@
                         <h3 v-if="isSaving">Saving ... <spinner-icon /></h3>
                         <h3 v-if="isSaveSuccess">Saved!</h3>
                     </template>
-                </HeaderButton>
-                <HeaderButton @click="onAddCategory" v-if="showQnATab" style="color:white;">
+                </IconButton>
+                <IconButton @click="onAddCategory" v-if="showQnATab" style="color:white;">
                     <template #content>
                         <h3>Add New Category</h3>
                     </template>
-                </HeaderButton>
-                <HeaderButton @click="onValidateCategories" v-if="showQnATab" style="color:white;">
+                </IconButton>
+                <IconButton @click="onValidateCategories" v-if="showQnATab" style="color:white;">
                     <template #icon>
                         <rotate-icon :spinning="isSpinning" />
                     </template>
@@ -46,12 +46,12 @@
                         </h3>
 
                     </template>
-                </HeaderButton>
-                <HeaderButton v-if="showMediaTab" @click="onShowMediaForm" style="color:white;">
+                </IconButton>
+                <IconButton v-if="showMediaTab" @click="onShowMediaForm" style="color:white;">
                     <template #content>
                         <h3>Add Content</h3>
                     </template>
-                </HeaderButton>
+                </IconButton>
             </div>
             <div id="errorsSection" v-if="showErrors">
                 <div v-for="error in errorsList">
@@ -83,10 +83,10 @@
     import OverviewView from '@/components/views/game/_OverviewView.vue'
     import QuestionsAnswersView from '@/components/views/game/QuestionsAnswersView.vue'
     import MediaView from '@/components/views/game/MediaView.vue'
-    import HeaderButton from '@/components/views/game/HeaderButton.vue'
+    import IconButton from '@/components/views/IconButton.vue'
     import CircleUserIcon from '@/components/icons/FontAwesome/CircleUserIcon.vue'
-    import FloppyDiskIcon from '../icons/FontAwesome/FloppyDiskIcon.vue'
-    import SpinnerIcon from '../icons/FontAwesome/SpinnerIcon.vue'
+    import FloppyDiskIcon from '@/components/icons/FontAwesome/FloppyDiskIcon.vue'
+    import SpinnerIcon from '@/components/icons/FontAwesome/SpinnerIcon.vue'
     import RotateIcon from '@/components/icons/FontAwesome/RotateIcon.vue'
 
     const props = defineProps<{

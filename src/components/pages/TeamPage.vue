@@ -12,7 +12,7 @@
             <input id="answerInputField" class="fieldInput" type="text" placeholder="Enter answer here..." name="answer" autocomplete="off" v-model="currentTeam.Answer">
         </div>
         <div id="teamActionSection" style="" v-if="!showAddWager">
-            <HeaderButton v-if="!isSubmitting" :class="{'color-green': canSubmit }" @click="onSubmitAnswer">
+            <IconButton v-if="!isSubmitting" :class="{'color-green': canSubmit }" @click="onSubmitAnswer">
                 <template #icon>
                     <pen-to-square-icon/>
                 </template>
@@ -21,8 +21,8 @@
                         SUBMIT
                     </h2>
                 </template>
-            </HeaderButton>
-            <HeaderButton  v-if="isSubmitting" class="color-green">
+            </IconButton>
+            <IconButton  v-if="isSubmitting" class="color-green">
                 <template #icon>
                     <spinner-icon/>
                 </template>
@@ -31,8 +31,8 @@
                         SAVING ...
                     </h2>
                 </template>
-            </HeaderButton>
-            <HeaderButton class="color-blue" @click="onShowAddWager" v-if="!currentTeam.HasWager">
+            </IconButton>
+            <IconButton class="color-blue" @click="onShowAddWager" v-if="!currentTeam.HasWager">
                 <template #icon>
                     <pen-to-square-icon />
                 </template>
@@ -41,7 +41,7 @@
                         Add Wager
                     </h2>
                 </template>
-            </HeaderButton>
+            </IconButton>
         </div>
         <div v-if="showLastAnswer && !showAddWager" style="padding-top:5%;">
             <h3>Last Submitted: {{ lastAnswer }}</h3>
@@ -53,7 +53,7 @@
             <h3 class="color-red italic">warning: once you save your wager, it cannot be changed!</h3>
 
             <div style="display:flex; justify-content: space-between; align-items: center; gap:2%;">
-                <HeaderButton style="color:limegreen;" @click="onConfirmWager">
+                <IconButton style="color:limegreen;" @click="onConfirmWager">
                     <template #icon>
                         <circle-check-icon/>
                     </template>
@@ -62,8 +62,8 @@
                             Confirm Wager
                         </h2>
                     </template>
-                </HeaderButton>
-                <HeaderButton style="color:red;" @click="onCancelWager">
+                </IconButton>
+                <IconButton style="color:red;" @click="onCancelWager">
                     <template #icon>
                         <x-mark-icon/>
                     </template>
@@ -72,7 +72,7 @@
                             Cancel
                         </h2>
                     </template>
-                </HeaderButton>
+                </IconButton>
             </div>
         </div>
         <div v-if="isSubmittingWager">
@@ -95,11 +95,11 @@
     import { useTeamsStore } from '@/stores/teams'
     import { useMenuStore } from '@/stores/menu'
     import { useCookie } from '@/composables/useCookie';
-    import HeaderButton from '../views/game/HeaderButton.vue'
-    import PenToSquareIcon from '../icons/FontAwesome/PenToSquareIcon.vue'
-    import SpinnerIcon from '../icons/FontAwesome/SpinnerIcon.vue'
-    import CircleCheckIcon from '../icons/FontAwesome/CircleCheckIcon.vue';
-    import XMarkIcon from '../icons/FontAwesome/XMarkIcon.vue';
+    import IconButton from '@/components/views/IconButton.vue'
+    import PenToSquareIcon from '@/components/icons/FontAwesome/PenToSquareIcon.vue'
+    import SpinnerIcon from '@/components/icons/FontAwesome/SpinnerIcon.vue'
+    import CircleCheckIcon from '@/components/icons/FontAwesome/CircleCheckIcon.vue';
+    import XMarkIcon from '@/components/icons/FontAwesome/XMarkIcon.vue';
     import appConfig from '@/assets/config/app.json'
 
     const route = useRoute()

@@ -8,30 +8,30 @@
                 {{ expirationDate ?? "Expiration" }}
             </div>
             <div v-if="showButtons" class="column3">
-                <HeaderButton v-if="isActive" class="color-blue" @click="joinSession">
+                <IconButton v-if="isActive" class="color-blue" @click="joinSession">
                     <template #icon>
                         <share-from-square-icon/>
                     </template>
                     <template #content>
                         <h3>JOIN</h3>
                     </template>
-                </HeaderButton>
-                <HeaderButton v-if="isLoggedIn" style="color:white;"  @click="editSession">
+                </IconButton>
+                <IconButton v-if="isLoggedIn" style="color:white;"  @click="editSession">
                     <template #icon>
                         <pen-to-square-icon/>
                     </template>
                     <template #content>
                         <h3>EDIT SESSION</h3>
                     </template>
-                </HeaderButton>
-                <HeaderButton v-if="isLoggedIn && isActive" style="color:limegreen" @click="openBoard">
+                </IconButton>
+                <IconButton v-if="isLoggedIn && isActive" style="color:limegreen" @click="openBoard">
                     <template #icon>
                         <play-icon/>
                     </template>
                     <template #content>
                         OPEN BOARD
                     </template>
-                </HeaderButton>
+                </IconButton>
             </div>
         </div>
         <div v-if="showSessionForm">
@@ -56,7 +56,7 @@
     import Game from '@/models/Game'
     import Session from '@/models/Session'
     import SessionForm from '@/components/views/game/SessionForm.vue'
-    import HeaderButton from './HeaderButton.vue'
+    import IconButton from '@/components/views/IconButton.vue'
     import PenToSquareIcon from '@/components/icons/FontAwesome/PenToSquareIcon.vue'
     import ShareFromSquareIcon from '@/components/icons/FontAwesome/ShareFromSquareIcon.vue'
 import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
