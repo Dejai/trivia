@@ -106,7 +106,7 @@ import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
 
 <style scoped>
     .sessionRow { display:flex; flex-wrap: nowrap; justify-content:left; gap:5px; align-items: center; width:100%; text-align:left; }
-    .sessionRow .header { font-size:22px; }
+    .sessionRow .header { font-size:18px; }
     .sessionRow .column1 { min-width: 20%; }
     .sessionRow .column2 { min-width: 35%; }
     .sessionRow .column3 { max-width:35%; display:flex; justify-content: left; gap:4%; align-items: center; }

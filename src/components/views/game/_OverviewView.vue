@@ -1,39 +1,29 @@
 <template>
     <main>
-        
         <div v-if="isLoggedIn">
+            <h2>Game Details</h2>
             <FormContainer>
-                <FormRow>
-                    <label>Name</label>
-                    <input id="gameName" class="fieldInput-half" type="text" placeholder="Enter a name" v-model="currentGame.Name" @change="saveOnChange" @keyup="updateMenu">
+                <FormRow :stacked="true" :style="'width:20%;'">
+                    <h3>Name</h3>
+                    <input id="gameName" class="fieldInput" type="text" placeholder="Enter a name" v-model="currentGame.Name" @change="saveOnChange" @keyup="updateMenu">
                 </FormRow>
-                <FormRow>
-                    <label>Description</label>
-                    <input id="gameDescription" class="fieldInput-half" type="text" placeholder="Enter a short description" v-model="currentGame.Description" @change="saveOnChange">
+                <FormRow :stacked="true" :style="'width:20%;'">
+                    <h3>Description</h3>
+                    <input id="gameDescription" class="fieldInput" type="text" placeholder="Enter a short description" v-model="currentGame.Description" @change="saveOnChange">
                 </FormRow>
             </FormContainer>
-            <!-- <div>
-                <h2>Name</h2>
-                <div style="margin-left:3%;">
-                </div>
-            </div> -->
-            <!-- <div>
-                <h2>Description</h2>
-                <div style="margin-left:3%;">
-                </div>
-            </div> -->
         </div>
         <div v-else>
-            <!-- <h2>{{ currentGame.Name }}</h2> -->
-            <h2>{{ currentGame.Description }}</h2>
+            <h2>Game Description</h2>
+            <h3 style="padding-left:2%;">{{ currentGame.Description }}</h3>
         </div>
         <!-- <div>
             <h2>Type: {{ currentGame.Type }}</h2>
         </div> -->
-        <hr style="margin:1% 0%;" />
-        <div id="gameSessionsSubSection">
+        <!-- <hr style="margin:1% 0%;" /> -->
+        <div id="gameSessionsSubSection" style="margin-top:2%;">
             <div id="gameSessionsHeader">
-                <h1>Game Sessions</h1>
+                <h2>Game Sessions</h2>
                 <IconButton  v-if="showAddSessionButton" style="color:white;" @click="onAddSession">
                     <template #content>
                         <h3>ADD SESSION</h3>
@@ -148,7 +138,7 @@
     .highlight-orange { color:orange; }
     .highlight-red { color: red; }
 
-    #gameSessionSection { width: 100%; }
+    #gameSessionSection { width: 100%; padding-left:2%;}
 
     #gameSessionsHeader { display: flex; flex-wrap: wrap; justify-content:left; gap:20px; align-items: center; }
 
