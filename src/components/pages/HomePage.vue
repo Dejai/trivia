@@ -1,15 +1,17 @@
 <template>
     <div v-if="showGames">
-        <button @click="onNewGame">NEW GAME</button>
-        <div id="gameBlocks">
-            <GameCover class="gameBlock pointer" v-for="game in games"
+        <!-- <button @click="onNewGame">NEW GAME</button> -->
+        <div id="gameCoversSection" class="flex-row flex-wrap flex-align-start flex-gap-25">
+            <GameCover class="gameBlock gameCoverCard" v-for="game in games"
                 :key="game.GameID"
                 :game="game"
             />
         </div>
     </div>
     <div v-else>
-        <h2>LOADING ... </h2>
+        <h2>
+            LOADING <spinner-icon/>
+        </h2>
     </div>
 </template>
 
@@ -19,6 +21,7 @@
   import { useGamesStore } from '@/stores/games'
   import GameCover from '@/components/views/game/_GameCover.vue'
   import router from '@/router'
+  import SpinnerIcon from '@/components/icons/FontAwesome/SpinnerIcon.vue';
 
   const gamesStore = useGamesStore()
   const { games, gamesLoaded } = storeToRefs(gamesStore)
@@ -28,10 +31,11 @@
   function onNewGame(){
     router.push({name: 'newgame'})
   }
-
 </script>
 
 <style scoped>
-    #gameBlocks { display:flex; gap:10px; flex-wrap:wrap; justify-content:left; align-items:center; }
-    #gameBlocks .gameBlock { max-width: 20%; }
+    #gameCoversSection { width:100%; justify-content: center; }
+    @media (min-width: 1024px) {
+        #gameCoversSection { justify-content: left; }
+    }
 </style>

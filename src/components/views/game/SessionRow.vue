@@ -1,19 +1,19 @@
 <template>
     <main>
         <div class="sessionRow"  v-if="showSessionRow">
-            <div style="width:8%;text-align: left;" :class="{ header: props.header, 'isExpired': props.session?.IsExpired }" @click="clearFilter">
+            <div class="column1" :class="{ 'header': props.header, 'isExpired': props.session?.IsExpired }" @click="clearFilter">
                 {{ props.session?.Code ?? "Code" }}
             </div>
-            <div style="width:10%;text-align: left;" :class="{ header: props.header, 'isExpired': props.session?.IsExpired }" @click="clearFilter">
+            <div class="column2" :class="{ 'header': props.header, 'isExpired': props.session?.IsExpired }" @click="clearFilter">
                 {{ expirationDate ?? "Expiration" }}
             </div>
-            <div v-if="showButtons" style="display:flex; justify-content: left; gap:4%; align-items: center; width:50%;">
-                <HeaderButton v-if="isActive" style="color:lightblue;" @click="playGame">
+            <div v-if="showButtons" class="column3">
+                <HeaderButton v-if="isActive" class="color-blue" @click="joinSession">
                     <template #icon>
                         <share-from-square-icon/>
                     </template>
                     <template #content>
-                        <h3>JOIN SESSION</h3>
+                        <h3>JOIN</h3>
                     </template>
                 </HeaderButton>
                 <HeaderButton v-if="isLoggedIn" style="color:white;"  @click="editSession">
@@ -74,7 +74,6 @@ import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
     const { filters } = storeToRefs(filtersStore)
 
     const expirationDate = computed( () => props.header ? "Expiration" : `${props.session?.Expires?.Month ?? ""} ${props.session?.Expires?.Day ?? ""}, ${props.session?.Expires?.Year ?? ""}`)
-
     const showButtons = computed( () => !props.header );
     const showSessionRow = computed( () => filters.value.session == "" )
     const showSessionForm = computed( () => (filters.value.session == props.session?.Code) && !props.header)
@@ -86,8 +85,8 @@ import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
     }
 
     // Play a game (as a player)
-    function playGame(){
-        router.push(  { name: "play", params: { gameID: props.gameID, sessionID: props.session?.Code } } )
+    function joinSession(){
+        router.push(  { name: "join", params: { gameID: props.gameID, sessionID: props.session?.Code } } )
     }
 
     // Edit a session details
@@ -106,7 +105,17 @@ import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
 </script>
 
 <style scoped>
-    .sessionRow { display:flex; flex-wrap: wrap; justify-content:left; gap:10px; align-items: center; padding:0.5%; width:100%; }
+    .sessionRow { display:flex; flex-wrap: nowrap; justify-content:left; gap:5px; align-items: center; width:100%; text-align:left; }
     .sessionRow .header { font-size:22px; }
+    .sessionRow .column1 { min-width: 20%; }
+    .sessionRow .column2 { min-width: 35%; }
+    .sessionRow .column3 { max-width:35%; display:flex; justify-content: left; gap:4%; align-items: center; }
     .isExpired { text-decoration: line-through !important; font-style: italic; }
+
+    @media (min-width: 1024px) {
+    .sessionRow { display:flex; flex-wrap: wrap; justify-content:left; gap:10px; align-items: center; padding:0.5%; width:100%; }
+        .sessionRow .column1 { width: 8%; }
+        .sessionRow .column2 { width: 10%; }
+        .sessionRow .column3 { width: 50%; }
+    }
 </style>

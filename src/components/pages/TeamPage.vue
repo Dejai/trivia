@@ -2,17 +2,17 @@
     <main id="teamPageMain" style="" v-if="isMounted">
         <div class="teamHeader">
             <h2 id="homemade_jeopardy_title" style="font-size:25px; margin-bottom:0px;">
-                Team: <span id="team_code" class="highlight highlight-orange">{{ currentTeam.Name }}</span>
+                Team: <span id="team_code" class="bolder color-orange">{{ currentTeam.Name }}</span>
             </h2>
             <h2 id="homemade_jeopardy_title" style="font-size:25px; margin-bottom:0px;" v-if="currentTeam.HasWager">
-                Wager: <span id="team_wagere" class="highlight highlight-red">{{ currentTeam.Wager }}</span>
+                Wager: <span id="team_wagere" class="bolder color-red">{{ currentTeam.Wager }}</span>
             </h2>
         </div>
         <div class="teamSubmitSection" style="width:100%;" v-if="!showAddWager">
-            <input id="answerInputField" type="text" placeholder="Enter answer here..." name="answer" autocomplete="off" v-model="currentTeam.Answer">
+            <input id="answerInputField" class="fieldInput" type="text" placeholder="Enter answer here..." name="answer" autocomplete="off" v-model="currentTeam.Answer">
         </div>
         <div id="teamActionSection" style="" v-if="!showAddWager">
-            <HeaderButton v-if="!isSubmitting" :class="{'canSubmit': canSubmit }" @click="onSubmitAnswer">
+            <HeaderButton v-if="!isSubmitting" :class="{'color-green': canSubmit }" @click="onSubmitAnswer">
                 <template #icon>
                     <pen-to-square-icon/>
                 </template>
@@ -22,7 +22,7 @@
                     </h2>
                 </template>
             </HeaderButton>
-            <HeaderButton  v-if="isSubmitting" style="color:limegreen;">
+            <HeaderButton  v-if="isSubmitting" class="color-green">
                 <template #icon>
                     <spinner-icon/>
                 </template>
@@ -32,7 +32,7 @@
                     </h2>
                 </template>
             </HeaderButton>
-            <HeaderButton style="color:orange;" @click="onShowAddWager" v-if="!currentTeam.HasWager">
+            <HeaderButton class="color-blue" @click="onShowAddWager" v-if="!currentTeam.HasWager">
                 <template #icon>
                     <pen-to-square-icon />
                 </template>
@@ -44,13 +44,13 @@
             </HeaderButton>
         </div>
         <div v-if="showLastAnswer && !showAddWager" style="padding-top:5%;">
-            <h3>Submitted: {{ lastAnswer }}</h3>
+            <h3>Last Submitted: {{ lastAnswer }}</h3>
         </div>
 
         <div v-if="showAddWager && !isSubmittingWager">
             <h2>Enter Wager</h2>
             <input id="wagerInputField" type="number" min="0" placeholder="Enter wager" name="answer" autocomplete="off" v-model="theWager">
-            <h3 style="font-style: italic; color:orange;">note: once you save your wager, it cannot be changed</h3>
+            <h3 class="color-red italic">warning: once you save your wager, it cannot be changed!</h3>
 
             <div style="display:flex; justify-content: space-between; align-items: center; gap:2%;">
                 <HeaderButton style="color:limegreen;" @click="onConfirmWager">
@@ -183,11 +183,6 @@
 
     #teamPageMain { display:flex; flex-direction: column; align-items: left; width:100%; }
     #teamActionSection{ display:flex; justify-content:space-between; align-items: center; width:100%;  }
-    .canSubmit { color:limegreen }
-    .highlight { font-weight: bolder; }
-    .highlight-orange { color:orange; }
-    .highlight-red { color: red; }
-
     .teamSubmitSection { display:flex; flex-wrap: wrap; flex-direction: column; justify-content: left; align-items: start; gap:20px; }
     #answerInputField { width:100%; font-size: 22px; }
     #wagerInputField { max-width:25%; font-size:22px; }

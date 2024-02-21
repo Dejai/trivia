@@ -1,10 +1,10 @@
 <template>
     <div id="gamePageContainer">
-        <div id="navTabs" class="navTabs">
+        <div id="navTabs">
             <div>
                 <p>
                     <span v-if="isMounted && isLoggedIn">
-                        <CircleUserIcon style="font-size:24px; color:blue; padding-right:3%;" />
+                        <CircleUserIcon style="font-size:24px; color:blue; padding-right:3%;" @click="authStore.onAuthAction" />
                         Hi, {{ authStore.userName }}
                     </span>   
                     <span v-if="isMounted && !isLoggedIn" @click="authStore.onAuthAction" style="color:blue; cursor:pointer">Log in</span>
@@ -88,8 +88,6 @@
     import FloppyDiskIcon from '../icons/FontAwesome/FloppyDiskIcon.vue'
     import SpinnerIcon from '../icons/FontAwesome/SpinnerIcon.vue'
     import RotateIcon from '@/components/icons/FontAwesome/RotateIcon.vue'
-import { useTeamsStore } from '@/stores/teams'
-
 
     const props = defineProps<{
         gameID:string
@@ -164,17 +162,13 @@ import { useTeamsStore } from '@/stores/teams'
     onBeforeUnmount(() => {
         menuStore.clearMenuValue("subtitle1")
     })
-
 </script>
-
 
 <style scoped>
     #gamePageContainer { display:flex; flex-wrap: wrap; justify-content: left; align-items: start; gap:5%; }
 
-    #navTabs { display:flex; flex-direction: column; gap:10px; justify-content: left; align-items: left ; min-width:10%; max-width:15%; }
-    #navTabs .tab { cursor: pointer; padding:5% 1%; }
-
-    #gamePageSubsection { width:85%; }
+    #navTabs { display:none; }
+    #gamePageSubsection { width:99%; }
 
     .syncDetail { visibility: hidden;}
     .showSyncDetail { visibility: visible !important; }
@@ -185,5 +179,12 @@ import { useTeamsStore } from '@/stores/teams'
 
     #errorsSection p { color: red; }
     .toBeSaved { color:limegreen !important; }
+
+
+    @media (min-width: 1024px) {
+        #navTabs { display:flex; flex-direction: column; gap:10px; justify-content: left; align-items: left ; width:10%; }
+        #navTabs .tab { cursor: pointer; padding:3% 1%; }
+        #gamePageSubsection { width:85%; }
+    }
 
 </style>
