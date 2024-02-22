@@ -1,26 +1,24 @@
 <template>
-    <div id="menuSection" class="dtk-menu-sticky2" >
-        <h1 class="pointer"  style="width:100%;">
-            <span @click="onNavigateHome">Trivia</span>
-            <span style="padding-left:0.5%;" v-if="showMenuSubTitle1" @click="onNavigateGamePage">
-                |
+    <div id="menuSection" class="width-100 flex-row flex-justify-left flex-align-center flex-nowrap" >
+        <div id="menuItems" class="pointer width-100 flex-row flex-justify-left flex-gap-30">
+            <h1 @click="onNavigateHome" class="leftMenuWidth">Trivia</h1>
+            <h1 v-if="showMenuSubTitle1" class="gameTitle" @click="onNavigateGamePage">
                 <span v-if="isLoading">
                     <spinner-icon/>
                 </span>
-                <span v-else>
+                <p v-else>
                     {{ subtitle1 }}
-                </span>
-            </span>
-            <span style="padding-left:0.5%;" v-if="showMenuSubTitle2">
+                </p>
+            </h1>
+            <h2 v-if="showMenuSubTitle2">
                 | 
-                <!-- <span v-if="isGameBoard"> -->
-                    <span style="font-style:italic;font-size:smaller;">session: <span style="color:orange; font-style: italic;">{{ route.params?.sessionID ?? "" }} </span></span> </span>
-                <!-- </span> -->
-                <!-- <span v-else> -->
-                    <!-- {{ subtitle2 }} -->
-                <!-- </span> -->
-                
-        </h1>
+                <span style="font-style:italic;font-size:smaller;">
+                    session:
+                     <span style="color:orange; font-style: italic;">{{ route.params?.sessionID ?? "" }} 
+                    </span>
+                </span> 
+            </h2>
+        </div>
     </div>
 </template>
 
@@ -69,7 +67,12 @@
 </script>
 
 <style scoped>
-    /* #menuSection { position: sticky; top: 0; z-index: 100; opacity: 100; margin-bottom:2%; display:flex; justify-content: left; flex-wrap: wrap; align-items: center; gap:20px; } */
-    #menuSection { width:100%; margin-bottom:2%; display:flex; justify-content: left; flex-wrap: wrap; align-items: center; gap:20px; }
-    
+    /* #menuSection {margin-bottom:10%;  } */
+    #menuItems { flex-wrap: wrap;}
+
+    @media (min-width:1024px) { 
+        #menuItems { flex-wrap: nowrap;}
+        #menuSection { margin-bottom:0px; }
+    }
+
 </style>

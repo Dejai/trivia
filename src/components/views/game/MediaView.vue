@@ -3,21 +3,25 @@
         <FormContainer v-if="showMediaForm">
             <FormRow>
                 <label>Select File</label>
+                <p class="italic">Only JPEG and MP3 files allowed</p>
                 <input type="file" id="mediaFileInput" name="filename" accept="image/jpeg,audio/mp3" @change="getFileDetails">
-                <p>Images must be *.jpeg and Audio must be *.mp3</p>
             </FormRow>
             <FormRow>
                 <label for="">File Name</label>
                 <input type="text" name="categoryName" placeholder="Enter a name" autocomplete="off" v-model="fileName" >
             </FormRow>
             <p>Upload Name: {{  uploadName }}</p>
-            <FormActions>
+            <FormActions v-if="hasFile">
                 <div v-if="!isUploading">
-                    <button @click="onUploadFile">UPLOAD</button>
+                    <button class="bg-color-blue color-white button-round" @click="onUploadFile">UPLOAD</button>
                     &nbsp;
-                    <button @click="onCancelFileUpload">CANCEL</button> 
+                    <button class="color-black button-round" @click="onCancelFileUpload">CANCEL</button> 
                 </div>
-                <spinner-icon />
+                <div v-if="isUploading" class="width-100">
+                    <h3>
+                        <spinner-icon :label="'Uploading'" />
+                    </h3>
+                </div>
             </FormActions>
         </FormContainer>
 
@@ -65,6 +69,7 @@
     const uploadName = computed( () => fileName.value.toString().replace(/\s/g, "_").toLocaleLowerCase() + fileExt.value )
     const uploadFileName = computed ( () => `${gameID}_${uploadName.value}`)
     const showMediaForm = computed( () => filters.value.mediaForm )
+    const hasFile = computed( () => fileName.value != "")
 
     const images = computed( () => media.value.filter( (x:Media) => x.Type == "Image" ) )
     const audios = computed( () => media.value.filter( (x:Media) => x.Type == "Audio" ) )
@@ -102,11 +107,10 @@
     }
 
     async function onUploadFile(){
-        isUploading.value = true;
         let file = getUploadedFile()
         let contentType = _getContentType()
         if(file != undefined && contentType != ""){
-            
+            isUploading.value = true;
             useFileEncode(file, async (fileString:any) => {
                 let { data, error } = await useFetch("POST", `${appConfig.Urls.files}/trivia/media/?key=${uploadFileName.value}`, { body: fileString } )
                 isUploading.value = false;

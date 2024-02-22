@@ -3,24 +3,21 @@
     #gamePageContainer { display:flex; flex-wrap: wrap; justify-content: left; align-items: start; gap:5%; }
      -->
     <div id="gamePageContainer" class="flex-row flex-wrap flex-justify-left flex-align-start flex-gap-30">
-        <div id="navTabs" class="flex-column flex-gap-10 flex-justify-left flex-align-start">
-            <div>
-                <p>
-                    <span v-if="isMounted && isLoggedIn">
-                        <CircleUserIcon class="color-blue" style="font-size:24px; padding-right:3%;" @click="authStore.onAuthAction" />
-                        Hi, {{ authStore.userName }}
-                    </span>   
-                    <span v-if="isMounted && !isLoggedIn" @click="authStore.onAuthAction" class="color-blue pointer">Log in</span>
-                    &nbsp;
-                </p>
-            </div>
-            <p class="tab section" @click="onSwitchTab('overview')" :class="{ 'selected': showOverviewTab }">Overview</p>
-            <div v-if="isLoggedIn">
-                <p class="tab section showOnLogin" @click="onSwitchTab('qna')" :class="{ 'selected': showQnATab }" >Questions/Answers</p>
-                <p class="tab section showOnLogin" @click="onSwitchTab('media')" :class="{ 'selected': showMediaTab }">Game Media</p>
+        <div id="gamePageMenu" :style="{'height': sideMenuHeight }" class="gamePagePadding flex-column flex-gap-10 flex-justify-left flex-align-start leftMenuWidth">
+            <p class="width-100 flex-column flex-justify-left flex-align-start flex-gap-30">
+                <span v-if="isMounted && isLoggedIn" class="width-100 flex-row flex-justify-left flex-align-center flex-gap-10">
+                    <CircleUserIcon class="color-blue" style="font-size:24px; padding-right:3%;" @click="authStore.onAuthAction" />
+                    Hi, {{ authStore.userName }}
+                </span>   
+                <span v-if="isMounted && !isLoggedIn" @click="authStore.onAuthAction" class="color-blue pointer">Log in</span>
+            </p>
+            <div id="navTabs" class="flex-gap-5 flex-justify-left flex-align-start">
+                <p class="tab section" @click="onSwitchTab('overview')" :class="{ 'selected': showOverviewTab }">Overview</p>
+                <p v-if="isLoggedIn" class="tab section showOnLogin" @click="onSwitchTab('qna')" :class="{ 'selected': showQnATab }" >Questions/Answers</p>
+                <p v-if="isLoggedIn" class="tab section showOnLogin" @click="onSwitchTab('media')" :class="{ 'selected': showMediaTab }">Game Media</p>
             </div>
         </div>
-        <div id="gamePageSubsection" v-if="isMounted">
+        <div id="gamePageSubsection" class="gamePagePadding" v-if="isMounted">
             <div id="headerButtonSection" v-if="isLoggedIn">
                 <IconButton @click="gamesStore.saveGame()" :class="{'toBeSaved': toBeSaved}">
                     <template #icon>
@@ -112,6 +109,7 @@
 
     const showSaveButton = computed( () => toBeSaved.value && !isSaving.value )
     const gameLoaded = computed( () => currentGame.value != undefined )
+    const greetUser = computed( () => `Hi, ${authStore.userName}`)
 
     const showErrors = ref(false)
     const errorsList = ref(new Array<ErrorMessage>)
@@ -122,6 +120,8 @@
     const showOverviewTab = computed( () => gameLoaded.value && (currentTab.value == "overview" || currentTab.value == "") )
     const showQnATab = computed( () => isLoggedIn.value && gameLoaded.value && currentTab.value == "qna" )
     const showMediaTab = computed( () => isLoggedIn.value && gameLoaded.value && currentTab.value == "media" )
+
+    const sideMenuHeight = computed( () => window.innerWidth >= 1024 ? `${window.innerHeight}px` : '' )
 
     // Switch tab when tab is clicked
     function onSwitchTab(tabName:string) {
@@ -168,24 +168,26 @@
 </script>
 
 <style scoped>
-    /* #gamePageContainer { display:flex; flex-wrap: wrap; justify-content: left; align-items: start; gap:5%; } */
+    .gamePagePadding { padding-top:5%; }
+    #gamePageMenu { width: 100%; border-bottom:2px solid white; padding-bottom:5%;  }
+    #navTabs { display:flex; flex-wrap:nowrap; width:100%; }
+    #navTabs .tab { padding:1% 0.5%;  }
+    .tab.selected { background-color: #007FFF;; color:white; }
 
-    #navTabs { display:none; }
     #gamePageSubsection { width:99%; }
 
     .syncDetail { visibility: hidden;}
     .showSyncDetail { visibility: visible !important; }
-    
-    .tab.selected { background-color: white; color:black; }
 
     #headerButtonSection { width:100%; gap:2%; display:flex; flex-wrap: wrap; justify-content: left; align-items: center; padding:0% 0% 2% 0%; }
-
     #errorsSection p { color: red; }
     .toBeSaved { color:limegreen !important; }
 
-
     @media (min-width: 1024px) {
-        #navTabs { width:8%; display: block; }
+        .gamePagePadding { padding-top:1%; }
+
+        #gamePageMenu { width: 8%; border-bottom: none; }
+        #navTabs {  display: block; }
         #navTabs .tab { cursor: pointer; padding:3% 1%; }
         #gamePageSubsection { width:85%; }
     }
