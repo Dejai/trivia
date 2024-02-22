@@ -106,7 +106,7 @@
     const { currentGame, toBeSaved, isSaving, isSaveSuccess } = storeToRefs(gamesStore);
     const { isLoggedIn, userKey } = storeToRefs(authStore)
     const isMounted = ref(false)
-    const tabInPath = (isLoggedIn.value) ? (route.params?.tab ?? defaultTab) : defaultTab
+    const tabInPath = route.params?.tab ?? defaultTab;
     const currentTab = ref(tabInPath)
     const showErrors = ref(false)
     const errorsList = ref(new Array<ErrorMessage>)

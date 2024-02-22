@@ -28,6 +28,8 @@ button { cursor: pointer; border:none; font-weight: bold; }
 .color-black { color:black; }
 .color-white { color:white; }
 .color-gray { color: gray;}
+.color-gold { color: gold;}
+
 
 /* Background-color items */
 .bg-color-green { background-color: limegreen; }
@@ -46,6 +48,7 @@ button { cursor: pointer; border:none; font-weight: bold; }
 .flex-space-between { justify-content: space-between; }
 .flex-justify-space-between { justify-content: space-between; }
 .flex-justify-left { justify-content: left;}
+.flex-justify-center { justify-content: center;}
 .flex-align-start { align-items: start; }
 .flex-align-center { align-items: center; }
 .flex-gap-5 { gap: 5px; } 
@@ -80,7 +83,7 @@ button { cursor: pointer; border:none; font-weight: bold; }
 .modalCloser { text-align:left; }
 
 /* ICONS */
-.iconContainer { cursor:pointer; display:flex; justify-content:left; align-items: center; gap:2%; }
+.iconContainer { cursor:pointer; display:flex; justify-content:left; align-items: center; gap:10%; }
 .iconLabel { cursor: pointer; margin-left:0.2%; }
 
 a,
