@@ -1,5 +1,5 @@
 <template>
-    <main id="teamPageMain" style="" v-if="isMounted">
+    <main id="teamPageMain" class="paddingFromMenu" v-if="isMounted">
         <div class="teamHeader">
             <h2 id="homemade_jeopardy_title" style="font-size:25px; margin-bottom:0px;">
                 Team: <span id="team_code" class="bolder color-orange">{{ currentTeam.Name }}</span>

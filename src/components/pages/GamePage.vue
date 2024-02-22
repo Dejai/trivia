@@ -1,7 +1,4 @@
 <template>
-    <!-- 
-    #gamePageContainer { display:flex; flex-wrap: wrap; justify-content: left; align-items: start; gap:5%; }
-     -->
     <div id="gamePageContainer" class="flex-row flex-wrap flex-justify-left flex-align-start flex-gap-30">
         <div id="gamePageMenu" :style="{'height': sideMenuHeight }" class="gamePagePadding flex-column flex-gap-10 flex-justify-left flex-align-start leftMenuWidth">
             <p class="width-100 flex-column flex-justify-left flex-align-start flex-gap-30">

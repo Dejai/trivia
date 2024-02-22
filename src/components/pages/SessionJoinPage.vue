@@ -1,5 +1,5 @@
 <template>
-    <main class="teamJoinSection">
+    <main class="teamJoinSection paddingFromMenu">
         <div v-if="isMounted">
             <div v-if="hasExistingTeam" class="flex-column flex-gap-10">
                 <div>

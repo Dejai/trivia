@@ -1,9 +1,8 @@
 @import './base.css';
 
 #app {
-  /* max-width: 1280px; */
   margin: 0 auto;
-  padding: 0rem 2rem;
+  padding: 0rem 1rem;
   font-weight: normal;
 }
 
@@ -102,7 +101,7 @@ a,
 
 @media (min-width: 1024px) {
   .leftMenuWidth { width:8%; border-right:2px solid gray;  }
-  .paddingFromMenu { padding-top: 3%; }
+  .paddingFromMenu { padding-top:2%; }
 
 
   /* FLEX */
