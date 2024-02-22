@@ -36,10 +36,7 @@
             <!-- List of existing sessions -->
             <div id="gameSessionSection" v-if="showSessionsTable">
                 <div v-if="currentGame.Sessions.length > 0 && !hasErrors">
-                    <SessionRow 
-                        :key="'headerKey'"
-                        :header="true"
-                    />
+                    <SessionRowHeader />
                     <SessionRow v-for="session in sortedSessions" 
                         :key="session"
                         :gameID="currentGame.GameID"
@@ -78,6 +75,7 @@
     import { useAuthStore } from '@/stores/auth'
     import { useMenuStore } from '@/stores/menu'
     import SessionRow from '@/components/views/game/SessionRow.vue'
+    import SessionRowHeader from '@/components/views/game/SessionRowHeader.vue'
     import SessionForm from '@/components/views/game/SessionForm.vue'
     import { useFiltersStore } from '@/stores/filters'
     import IconButton from '@/components/views/IconButton.vue'
@@ -134,14 +132,8 @@
 
 
 <style scoped>
-    .highlight { font-weight: bolder; }
-    .highlight-orange { color:orange; }
-    .highlight-red { color: red; }
-
     #gameSessionSection { width: 100%; padding-left:2%;}
-
     #gameSessionsHeader { display: flex; flex-wrap: wrap; justify-content:left; gap:20px; align-items: center; }
-
     .teamSubmitSection { display:flex; flex-wrap: wrap; flex-direction: column; justify-content: left; align-items: center; gap:20px; }
     #answerInputField { min-width: 90%; font-size: 22px; }
 
@@ -149,7 +141,7 @@
 
         #answerInputField { min-width:30%; max-width: 40%; }
         .teamSubmitSection { align-items: start; }
-        #gameSessionSection { width: 25%; }
+        #gameSessionSection { width: 35%; }
 
 
     }

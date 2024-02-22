@@ -1,6 +1,9 @@
 <template>
-    <div id="gamePageContainer">
-        <div id="navTabs">
+    <!-- 
+    #gamePageContainer { display:flex; flex-wrap: wrap; justify-content: left; align-items: start; gap:5%; }
+     -->
+    <div id="gamePageContainer" class="flex-row flex-wrap flex-justify-left flex-align-start flex-gap-30">
+        <div id="navTabs" class="flex-column flex-gap-10 flex-justify-left flex-align-start">
             <div>
                 <p>
                     <span v-if="isMounted && isLoggedIn">
@@ -42,7 +45,7 @@
                         <h3>
                             Check for Errors
                             &nbsp;&nbsp;
-                            <span style="color:limegreen;" v-if="showNoErrorsMessage">All set. No errors</span>
+                            <span class="color-green" v-if="showNoErrorsMessage">All set. No errors</span>
                         </h3>
 
                     </template>
@@ -165,7 +168,7 @@
 </script>
 
 <style scoped>
-    #gamePageContainer { display:flex; flex-wrap: wrap; justify-content: left; align-items: start; gap:5%; }
+    /* #gamePageContainer { display:flex; flex-wrap: wrap; justify-content: left; align-items: start; gap:5%; } */
 
     #navTabs { display:none; }
     #gamePageSubsection { width:99%; }
@@ -182,7 +185,7 @@
 
 
     @media (min-width: 1024px) {
-        #navTabs { display:flex; flex-direction: column; gap:10px; justify-content: left; align-items: left ; width:10%; }
+        #navTabs { width:8%; display: block; }
         #navTabs .tab { cursor: pointer; padding:3% 1%; }
         #gamePageSubsection { width:85%; }
     }

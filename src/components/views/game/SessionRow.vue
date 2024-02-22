@@ -1,35 +1,35 @@
 <template>
     <main>
-        <div class="sessionRow"  v-if="showSessionRow">
-            <div class="column1" :class="{ 'header': props.header, 'isExpired': props.session?.IsExpired }" @click="clearFilter">
-                {{ props.session?.Code ?? "Code" }}
+        <div class="sessionRow flex-row flex-justify-left flex-nowrap flex-align-start"  v-if="showSessionRow">
+            <div class="column column1" :class="{ 'header': props.header, 'isExpired': props.session?.IsExpired }" @click="clearFilter">
+                {{ props.session?.Code }}
             </div>
-            <div class="column2" :class="{ 'header': props.header, 'isExpired': props.session?.IsExpired }" @click="clearFilter">
-                {{ expirationDate ?? "Expiration" }}
+            <div class="column column2" :class="{ 'header': props.header, 'isExpired': props.session?.IsExpired }" @click="clearFilter">
+                {{ expirationDate }}
             </div>
-            <div v-if="showButtons" class="column3">
+            <div v-if="showButtons" class="column column3 flex-row flex-justify-left flex-align-center flex-gap-20">
                 <IconButton v-if="isActive" class="color-blue" @click="joinSession">
                     <template #icon>
                         <share-from-square-icon/>
                     </template>
                     <template #content>
-                        <h3>JOIN</h3>
+                        <h4>JOIN</h4>
                     </template>
                 </IconButton>
-                <IconButton v-if="isLoggedIn" style="color:white;"  @click="editSession">
+                <IconButton v-if="isLoggedIn" class="color-white" @click="editSession">
                     <template #icon>
                         <pen-to-square-icon/>
                     </template>
                     <template #content>
-                        <h3>EDIT SESSION</h3>
+                        <h4>EDIT</h4>
                     </template>
                 </IconButton>
-                <IconButton v-if="isLoggedIn && isActive" style="color:limegreen" @click="openBoard">
+                <IconButton v-if="isLoggedIn && isActive" class="color-green openBoardIcon" @click="openBoard">
                     <template #icon>
                         <play-icon/>
                     </template>
                     <template #content>
-                        OPEN BOARD
+                        <h4>OPEN BOARD</h4>
                     </template>
                 </IconButton>
             </div>
@@ -47,13 +47,11 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, computed } from 'vue'
+    import { computed } from 'vue'
     import { storeToRefs } from 'pinia'
     import router from '@/router'
     import { useAuthStore } from '@/stores/auth'
     import { useFiltersStore } from '@/stores/filters'
-    import { useNewTab } from '@/composables/useNewTab'
-    import Game from '@/models/Game'
     import Session from '@/models/Session'
     import SessionForm from '@/components/views/game/SessionForm.vue'
     import IconButton from '@/components/views/IconButton.vue'
@@ -105,17 +103,21 @@ import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
 </script>
 
 <style scoped>
-    .sessionRow { display:flex; flex-wrap: nowrap; justify-content:left; gap:5px; align-items: center; width:100%; text-align:left; }
-    .sessionRow .header { font-size:18px; }
-    .sessionRow .column1 { min-width: 20%; }
-    .sessionRow .column2 { min-width: 35%; }
-    .sessionRow .column3 { max-width:35%; display:flex; justify-content: left; gap:4%; align-items: center; }
+
+    .sessionRow .header { font-size:18px; padding-bottom:2%; }
+    .sessionRow .column { text-align: left; }
+    .sessionRow .column1 { width: 20%; }
+    .sessionRow .column2 { width: 40%; }
+    /* .sessionRow .column3 { display:none; } */
+
+    .openBoardIcon { display:none; }
     .isExpired { text-decoration: line-through !important; font-style: italic; }
 
     @media (min-width: 1024px) {
-    .sessionRow { display:flex; flex-wrap: wrap; justify-content:left; gap:10px; align-items: center; padding:0.5%; width:100%; }
-        .sessionRow .column1 { width: 8%; }
-        .sessionRow .column2 { width: 10%; }
-        .sessionRow .column3 { width: 50%; }
+        .sessionRow .header { font-size:18px; }
+        .openBoardIcon { display:flex; }
+        .sessionRow .column1 { width: 20%; }
+        .sessionRow .column2 { width: 40%; }
+        .sessionRow .column3 { display:flex; width: 90%; }
     }
 </style>

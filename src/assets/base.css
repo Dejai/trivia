@@ -1,8 +1,19 @@
-/* STYLE */
+/* Generic element style */
+button { cursor: pointer; }
+
+/* Generic style */
 .italic { font-style: italic; }
 .bolder { font-weight: bolder; }
-.linkColor{ color:lightblue}
 
+/* Common color items */
+.color-limegreen { color: limegreen; }
+.color-green { color: limegreen; }
+.color-blue { color: #007FFF; }
+.color-red { color: red; }
+.color-orange { color: orange; }
+.color-white { color:white; }
+
+/* FLEX Styles */
 .flex-row { display:flex; flex-wrap:nowrap; }
 .flex-column { display:flex; flex-direction: column;}
 .flex-wrap { flex-wrap: wrap;}
@@ -19,9 +30,6 @@
 .flex-gap-25 { gap: 25px; }
 .flex-gap-30 { gap: 30px; }
 
-.mobileInput { font-size: 16px; }
-.desktopInput { min-width:90%; }
-
 /* INPUT FIELDS */
 .fieldInput { outline: none; }
 .fieldInput.error { border: 2px solid red;  }
@@ -31,18 +39,6 @@
 .fieldInput-half { min-width: 50%; }
 .fieldInput-long { min-width: 95% }
 
-/* Common color items */
-.color-limegreen { color: limegreen; }
-.color-green { color: limegreen; }
-.color-blue { color: #007FFF; }
-.color-red { color: red; }
-.color-orange { color: orange; }
-
-.highlight { font-weight: bolder; }
-.highlight-orange { color:orange; }
-.highlight-red { color: red; }
-
-button { cursor: pointer; }
 
 /* color palette from <https://github.com/vuejs/theme> */
 :root {

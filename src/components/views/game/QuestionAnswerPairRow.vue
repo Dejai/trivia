@@ -1,7 +1,7 @@
 <template>
     <tr class="questionRow rowSection pointer" :class="{'isFirstRow': isFirstRow, 'isLastRow':isLastRow, 'justModified':justModified }">
         <td class="questionValue clickToEdit">
-            <span style="color:limegreen" v-if="props.questionAnswerPair.isDailyDouble() && !showEditQna">*</span>
+            <span class="color-green" v-if="props.questionAnswerPair.isDailyDouble() && !showEditQna">*</span>
             <input class="qnaFormField" type="number" v-model="qnaValue" :disabled="!showEditQna"/>
             <input type="checkbox" name="dailyDouble" v-if="showEditQna" @change="onToggleDailyDouble($event)" :checked="props.questionAnswerPair.isDailyDouble()">
         </td>

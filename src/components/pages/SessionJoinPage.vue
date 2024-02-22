@@ -1,15 +1,12 @@
 <template>
-    <main>
+    <main class="teamJoinSection">
         <div v-if="isMounted">
             <div v-if="hasExistingTeam" class="flex-column flex-gap-10">
                 <div>
                     <h1>Existing Team</h1>
-                    <p>You already joined this session as team:</p>
-                    <p style="padding-left:10%;">
-                        <span class="color-orange italic">{{ teamName }}</span>
-                    </p>
+                    <h3>You already joined this session as <span class="color-orange italic">{{ teamName }}</span></h3>
                 </div>
-                <div class="flex-row flex-space-between">
+                <div class="flex-row flex-justify-left flex-gap-30">
                     <IconButton class="color-green" @click="enterSession">
                         <template #icon>
                             <h3><circle-check-icon/></h3>
@@ -131,7 +128,8 @@
 <style scoped>
     #enterTeamNameSection { display:flex; flex-direction: column; gap:20px; justify-content: left; }
     #teamName { font-size:22px; width:90%; }
+    .teamJoinSection { width: 95%; }
     @media (min-width: 1024px) {
-        
+        .teamJoinSection { width: 20%; }
     }
 </style>

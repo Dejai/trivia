@@ -16,7 +16,7 @@
                     </template>
                     <template #body>
                         <div>
-                            <IconButton @click="onStartGame" style="font-size:24px; color:limegreen;">
+                            <IconButton @click="onStartGame" class="color-green" style="font-size:24px;">
                                 <template #icon>
                                     <play-icon />
                                 </template>
@@ -59,7 +59,7 @@
                 </IconButton>
                 <div class="teamRows">
                     <div class="teamSectionRow" v-for="team in teamsSorted">
-                        <h3 style="max-width:75%;"><span style="color:limegreen" v-if="team.HasWager"><circle-check-icon/> &nbsp;</span>{{ team.Name }}</h3>
+                        <h3 style="max-width:75%;"><span class="color-green" v-if="team.HasWager"><circle-check-icon/> &nbsp;</span>{{ team.Name }}</h3>
                         <h3 v-if="team.HasWager">{{ team.FinalScore }}</h3>
                         <h3 v-else>{{ team.Score }}</h3>
                     </div>

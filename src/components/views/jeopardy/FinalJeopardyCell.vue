@@ -9,7 +9,7 @@
                 </template>
                 <template #body>
                     <div>
-                        <IconButton @click="onConfirmWagers" style="font-size:24px; color:limegreen;">
+                        <IconButton @click="onConfirmWagers" class="color-green" style="font-size:24px;">
                             <template #icon>
                                 <play-icon />
                             </template>

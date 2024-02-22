@@ -50,16 +50,28 @@
         <div v-if="showAddWager && !isSubmittingWager">
             <h2>Enter Wager</h2>
             <input id="wagerInputField" type="number" min="0" placeholder="Enter wager" name="answer" autocomplete="off" v-model="theWager">
-            <h3 class="color-red italic">warning: once you save your wager, it cannot be changed!</h3>
 
-            <div style="display:flex; justify-content: space-between; align-items: center; gap:2%;">
-                <IconButton style="color:limegreen;" @click="onConfirmWager">
+            <h2 v-if="isDoubleConfirmWager">Are you sure?</h2>
+            <h3 class="color-red italic" v-if="isDoubleConfirmWager">WARNING: once you save your wager, it cannot be changed!</h3>
+
+            <div class="flex-row flex-justify-left flex-align-center flex-gap-30">
+                <IconButton class="color-green" @click="onConfirmWager" v-if="!isDoubleConfirmWager">
                     <template #icon>
                         <circle-check-icon/>
                     </template>
                     <template #content>
                         <h2>
                             Confirm Wager
+                        </h2>
+                    </template>
+                </IconButton>
+                <IconButton class="color-green" @click="onSubmitWager" v-if="isDoubleConfirmWager">
+                    <template #icon>
+                        <circle-check-icon/>
+                    </template>
+                    <template #content>
+                        <h2>
+                            Yes, Submit {{ theWager }} 
                         </h2>
                     </template>
                 </IconButton>
@@ -118,6 +130,7 @@
     const showAddWager = ref(false)
     const showWagerSet = ref(false)
     const isSubmittingWager = ref(false)
+    const isDoubleConfirmWager = ref(false)
 
     const canSubmit = computed( () => currentTeam.value.Answer != "")
     const showGames = computed( ()=> gamesLoaded.value)
@@ -141,10 +154,15 @@
 
     function onCancelWager(){
         showAddWager.value = false
+        isDoubleConfirmWager.value = false
     }
 
-    // Confirming the wager
-    async function onConfirmWager() {
+    function onConfirmWager(){
+        isDoubleConfirmWager.value = true
+    }
+
+    // Submig the wager
+    async function onSubmitWager() {
         if(theWager.value != null) {
             currentTeam.value.Wager = theWager.value;
             isSubmittingWager.value = true
