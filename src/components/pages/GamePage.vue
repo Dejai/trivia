@@ -13,12 +13,12 @@
             </p>
             <div id="navTabs" class="flex-gap-5 flex-justify-left flex-align-start">
                 <p class="tab section" @click="onSwitchTab('overview')" :class="{ 'selected': showOverviewTab }">Overview</p>
-                <p v-if="isLoggedIn" class="tab section showOnLogin" @click="onSwitchTab('qna')" :class="{ 'selected': showQnATab }" >Questions/Answers</p>
-                <p v-if="isLoggedIn" class="tab section showOnLogin" @click="onSwitchTab('media')" :class="{ 'selected': showMediaTab }">Game Media</p>
+                <p v-if="isGameAdmin" class="tab section showOnLogin" @click="onSwitchTab('qna')" :class="{ 'selected': showQnATab }" >Questions/Answers</p>
+                <p v-if="isGameAdmin" class="tab section showOnLogin" @click="onSwitchTab('media')" :class="{ 'selected': showMediaTab }">Game Media</p>
             </div>
         </div>
         <div id="gamePageSubsection" class="gamePagePadding" v-if="isMounted">
-            <div id="headerButtonSection" v-if="isLoggedIn">
+            <div id="headerButtonSection" v-if="isGameAdmin">
                 <IconButton @click="gamesStore.saveGame()" :class="{'toBeSaved': toBeSaved}">
                     <template #icon>
                         <floppy-disk-icon/>
@@ -101,28 +101,27 @@
     const filtersStore = useFiltersStore()
     const mediaStore = useMediaStore()
 
+    /* Refs */
     const { currentGame, toBeSaved, isSaving, isSaveSuccess } = storeToRefs(gamesStore);
-    const { isLoggedIn } = storeToRefs(authStore)
+    const { isLoggedIn, userKey } = storeToRefs(authStore)
     const isMounted = ref(false)
     const tabInPath = route.params?.tab ?? "overview"
     const currentTab = ref(tabInPath)
-
-    const showSaveButton = computed( () => toBeSaved.value && !isSaving.value )
-    const gameLoaded = computed( () => currentGame.value != undefined )
-    const greetUser = computed( () => `Hi, ${authStore.userName}`)
-
     const showErrors = ref(false)
     const errorsList = ref(new Array<ErrorMessage>)
     const showNoErrorsMessage = ref(false)
     const isSpinning = ref(false)
 
-    // Showing the different tabs
+    /* Computed */
+    const gameLoaded = computed( () => currentGame.value != undefined )
+    const isGameAdmin = computed( () => gamesStore.isAdmin(userKey.value) )
     const showOverviewTab = computed( () => gameLoaded.value && (currentTab.value == "overview" || currentTab.value == "") )
-    const showQnATab = computed( () => isLoggedIn.value && gameLoaded.value && currentTab.value == "qna" )
-    const showMediaTab = computed( () => isLoggedIn.value && gameLoaded.value && currentTab.value == "media" )
-
+    const showQnATab = computed( () => isGameAdmin.value && gameLoaded.value && currentTab.value == "qna" )
+    const showMediaTab = computed( () => isGameAdmin.value && gameLoaded.value && currentTab.value == "media" )
     const sideMenuHeight = computed( () => window.innerWidth >= 1024 ? `${window.innerHeight}px` : '' )
 
+    /* FUNCTIONS */
+    
     // Switch tab when tab is clicked
     function onSwitchTab(tabName:string) {
         currentTab.value = tabName

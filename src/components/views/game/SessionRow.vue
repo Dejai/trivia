@@ -16,7 +16,7 @@
                         <h4>JOIN</h4>
                     </template>
                 </IconButton>
-                <IconButton v-if="isLoggedIn" class="color-white" @click="editSession">
+                <IconButton v-if="isGameAdmin" class="color-white" @click="editSession">
                     <template #icon>
                         <pen-to-square-icon/>
                     </template>
@@ -24,7 +24,7 @@
                         <h4>EDIT</h4>
                     </template>
                 </IconButton>
-                <IconButton v-if="isLoggedIn && isActive" class="color-green openBoardIcon" @click="openBoard">
+                <IconButton v-if="isGameAdmin && isActive" class="color-green openBoardIcon" @click="openBoard">
                     <template #icon>
                         <play-icon/>
                     </template>
@@ -52,12 +52,13 @@
     import router from '@/router'
     import { useAuthStore } from '@/stores/auth'
     import { useFiltersStore } from '@/stores/filters'
+    import { useGamesStore } from '@/stores/games'
     import Session from '@/models/Session'
     import SessionForm from '@/components/views/game/SessionForm.vue'
     import IconButton from '@/components/views/IconButton.vue'
     import PenToSquareIcon from '@/components/icons/FontAwesome/PenToSquareIcon.vue'
     import ShareFromSquareIcon from '@/components/icons/FontAwesome/ShareFromSquareIcon.vue'
-import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
+    import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
 
     const props = defineProps<{
         session?:Session,
@@ -66,11 +67,17 @@ import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
     }>()
     const emit = defineEmits(["cancel", "save"])
 
+    // STORES
     const authStore = useAuthStore()
     const filtersStore = useFiltersStore()
-    const { isLoggedIn } = storeToRefs(authStore)
+    const gamesStore = useGamesStore()
+
+    // REFS
+    const { isLoggedIn, userKey } = storeToRefs(authStore)
     const { filters } = storeToRefs(filtersStore)
 
+    // COMPUTED
+    const isGameAdmin = computed( () => gamesStore.isAdmin(userKey.value) )
     const expirationDate = computed( () => props.header ? "Expiration" : `${props.session?.Expires?.Month ?? ""} ${props.session?.Expires?.Day ?? ""}, ${props.session?.Expires?.Year ?? ""}`)
     const showButtons = computed( () => !props.header );
     const showSessionRow = computed( () => filters.value.session == "" )

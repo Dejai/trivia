@@ -6,7 +6,7 @@
                     <h1>Existing Team</h1>
                     <h3>You already joined this session as <span class="color-orange italic">{{ teamName }}</span></h3>
                 </div>
-                <div class="flex-row flex-justify-left flex-gap-30">
+                <div class="sessionJoinAction flex-row flex-justify-space-between">
                     <IconButton class="color-green" @click="enterSession">
                         <template #icon>
                             <h3><circle-check-icon/></h3>
@@ -28,7 +28,7 @@
                     <input class="fieldInput" id="teamName" type="text" placeholder="Enter a team name" v-model="teamName" autocomplete="off">
                 </div>
                 
-                <IconButton v-if="!isJoining" @click="enterSession" :class="{ 'color-blue': canJoinSession}">
+                <IconButton v-if="!isJoining" @click="enterSession" :class="{ 'color-green': canJoinSession}">
                     <template #icon>
                         <h3><up-right-from-square-icon/></h3>
                     </template>
@@ -128,8 +128,10 @@
 <style scoped>
     #enterTeamNameSection { display:flex; flex-direction: column; gap:20px; justify-content: left; }
     #teamName { font-size:22px; width:90%; }
-    .teamJoinSection { width: 95%; }
+    .sessionJoinAction { width:100%; }
+    .teamJoinSection { width: 95%; margin-top:5%; }
     @media (min-width: 1024px) {
-        .teamJoinSection { width: 20%; }
+        .sessionJoinAction { width:75%; }
+        .teamJoinSection { width: 20%; margin-top:2%; }
     }
 </style>

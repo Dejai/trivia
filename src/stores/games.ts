@@ -120,12 +120,17 @@ export const useGamesStore = defineStore('games', () => {
     return `${filesBaseUrl}/${path}`;
   }
 
+  // Logged in user is admin of this game
+  function isAdmin(userKey:string){
+    return currentGame.value.Admins.includes(userKey);
+  }
+
   onMounted( async ()=> {
     getGames();
   })
 
   return { 
     gamesLoaded, currentGame, currentSession, games, toBeSaved, isSyncing, syncCountdown, isSaving, isSaveSuccess,
-    getGames, setCurrentGame, getCurrentGame, setCurrentSession, setGameSaveNeeded, saveGame, setSyncNeeded
+    getGames, setCurrentGame, getCurrentGame, setCurrentSession, setGameSaveNeeded, saveGame, setSyncNeeded, isAdmin
   }
 })

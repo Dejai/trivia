@@ -1,6 +1,6 @@
 <template>
     <main>
-        <div v-if="isLoggedIn">
+        <div v-if="isGameAdmin">
             <h2>Game Details</h2>
             <FormContainer>
                 <FormRow :stacked="true" :class="'gameDetailsInput'">
@@ -15,7 +15,7 @@
         </div>
         <div v-else>
             <h2>Game Description</h2>
-            <h3 style="padding-left:2%;">{{ currentGame.Description }}</h3>
+            <h3 style="padding-left:5%;">{{ currentGame.Description }}</h3>
         </div>
         <!-- <div>
             <h2>Type: {{ currentGame.Type }}</h2>
@@ -73,36 +73,38 @@
     import { useGamesStore } from '@/stores/games'
     import { useAuthStore } from '@/stores/auth'
     import { useMenuStore } from '@/stores/menu'
+    import { useFiltersStore } from '@/stores/filters'
     import SessionRow from '@/components/views/game/SessionRow.vue'
     import SessionRowHeader from '@/components/views/game/SessionRowHeader.vue'
     import SessionForm from '@/components/views/game/SessionForm.vue'
-    import { useFiltersStore } from '@/stores/filters'
     import IconButton from '@/components/views/IconButton.vue'
     import FormContainer from '@/components/views/forms/FormContainer.vue'
     import FormRow from '@/components/views/forms/FormRow.vue'
 
+    // STORES
     const gamesStore = useGamesStore()
     const authStore = useAuthStore()
     const menuStore = useMenuStore()
     const filtersStore = useFiltersStore()
+
+    // REFS
     const { currentGame } = storeToRefs(gamesStore)
     const { filters } = storeToRefs(filtersStore)
-    const { isLoggedIn } = storeToRefs(authStore);
+    const { isLoggedIn, userKey } = storeToRefs(authStore);
     const showAddNewSession = ref(false)
 
     const { hasErrors } = currentGame.value.validateGame()
+    // COMPUTED
     const hasCategories = computed ( () => (currentGame.value.Categories.filter( (cat:any) => !cat.isFinalJeopardy()) ?? []).length > 0 )
-
     const isFilteredBySession = computed( () => filters.value.session != "")
+    const isGameAdmin = computed( () => gamesStore.isAdmin(userKey.value) )
     const showSessionColumns = computed( () => filters.value.session == "" )
-    const showAddSessionButton = computed( () => isLoggedIn.value && !showAddNewSession.value && !hasErrors && hasCategories.value && !isFilteredBySession.value )
-    const showSessionErrorMessage = computed ( () => isLoggedIn.value && hasCategories.value && hasErrors)
-    const showSessionInstruction = computed( () => isLoggedIn.value && !showSessionErrorMessage);
+    const showAddSessionButton = computed( () => isGameAdmin.value && !showAddNewSession.value && !hasErrors && hasCategories.value && !isFilteredBySession.value )
+    const showSessionErrorMessage = computed ( () => isGameAdmin.value && hasCategories.value && hasErrors)
+    const showSessionInstruction = computed( () => isGameAdmin.value && !showSessionErrorMessage);
     const showSessionsTable = computed( () => hasCategories.value && !showAddNewSession.value )
     const gameSessionPlurality = computed( () => showAddSessionButton.value && !isFilteredBySession.value ? "s" : "")
-
     const sortedSessions = computed( () =>  currentGame.value.Sessions?.sort( (a:any, b:any) => { return a.getExpirationDate() - b.getExpirationDate() }))
-
 
     // Add a new session
     function onAddSession(){

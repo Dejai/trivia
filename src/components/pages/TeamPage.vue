@@ -51,10 +51,10 @@
             <h2>Enter Wager</h2>
             <input id="wagerInputField" type="number" min="0" placeholder="Enter wager" name="answer" autocomplete="off" v-model="theWager">
 
-            <h2 v-if="isDoubleConfirmWager">Are you sure?</h2>
+            <h1 v-if="isDoubleConfirmWager" class="color-red">Are you sure?</h1>
             <h3 class="color-red italic" v-if="isDoubleConfirmWager">WARNING: once you save your wager, it cannot be changed!</h3>
 
-            <div class="flex-row flex-justify-left flex-align-center flex-gap-30">
+            <div class="flex-row flex-justify-space-between flex-align-center">
                 <IconButton class="color-green" @click="onConfirmWager" v-if="!isDoubleConfirmWager">
                     <template #icon>
                         <circle-check-icon/>
@@ -93,9 +93,6 @@
             </h1>
         </div>
     </main>
-    <h1 v-else>
-        <spinner-icon/>
-    </h1>
 </template>
 
 
@@ -199,7 +196,7 @@
 
 <style scoped>
 
-    #teamPageMain { display:flex; flex-direction: column; align-items: left; width:100%; }
+    #teamPageMain { display:flex; flex-direction: column; align-items: left; width:100%;  margin-top:5%; }
     #teamActionSection{ display:flex; justify-content:space-between; align-items: center; width:100%;  }
     .teamSubmitSection { display:flex; flex-wrap: wrap; flex-direction: column; justify-content: left; align-items: start; gap:20px; }
     #answerInputField { width:100%; font-size: 22px; }
@@ -208,7 +205,7 @@
     @media (min-width: 1024px) {
         /* #answerInputField { width:30%; max-width: 40%; } */
         .teamSubmitSection { align-items: start; justify-content: left; }
-        #teamPageMain { width: 40%; }
+        #teamPageMain { width: 40%; margin-top:3%;  }
 
     }
 
