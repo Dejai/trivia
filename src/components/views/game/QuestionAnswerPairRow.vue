@@ -1,13 +1,13 @@
 <template>
     <tr class="questionRow rowSection pointer" :class="{'isFirstRow': isFirstRow, 'isLastRow':isLastRow, 'justModified':justModified }">
         <td class="questionValue clickToEdit">
-            <span style="color:limegreen" v-if="props.questionAnswerPair.isDailyDouble() && !showEditQna">*</span>
+            <span class="color-green" v-if="props.questionAnswerPair.isDailyDouble() && !showEditQna">*</span>
             <input class="qnaFormField" type="number" v-model="qnaValue" :disabled="!showEditQna"/>
             <input type="checkbox" name="dailyDouble" v-if="showEditQna" @change="onToggleDailyDouble($event)" :checked="props.questionAnswerPair.isDailyDouble()">
         </td>
         <td class="questionText clickToEdit">
             <div class="qnaContentManagement">
-                <image-icon v-if="questionHasImage && !showEditQna" style="color:gold;" title="This question has an image" @click="onPreviewQuestion"/>
+                <image-icon v-if="questionHasImage && !showEditQna" class="color-gold" title="This question has an image" @click="onPreviewQuestion"/>
                 <volume-icon v-if="questionHasAudio && !showEditQna" title="This question has audio" @click="onPreviewQuestion"/>
                 <textarea class="qnaFormField" type="text" v-model="props.questionAnswerPair.Question.Text" :disabled="!showEditQna"></textarea>
                 <br/>
@@ -31,7 +31,7 @@
         </td>
         <td class="answerText clickToEdit">
             <div class="qnaContentManagement">
-                <image-icon v-if="answerHasImage" style="color:gold;" title="This answer has an image" @click="onPreviewQuestion"/>
+                <image-icon v-if="answerHasImage" class="color-gold" title="This answer has an image" @click="onPreviewQuestion"/>
                 <volume-icon v-if="answerHasAudio" title="This answer has audio" @click="onPreviewQuestion"/>
                 <textarea class="qnaFormField" type="text" v-model="props.questionAnswerPair.Answer.Text" :disabled="!showEditQna"></textarea>
             </div>
@@ -52,21 +52,20 @@
                 </div>
             </div>
         </td>
-        <td style="cursor:pointer;">
-            <div class="qnaActionSection pointer">
-                <div v-if="!showEditQna">
-                    <pencil-icon :label="'edit'" @click="onEditQna" :class="'pointer'"/>
-                    &nbsp;
-                    <up-right-from-square :label="'Preview'" @click="onPreviewQuestion"/>
+        <td class="pointer">
+            <div class="qnaActionSection pointer flex-row flex-justify-space-between flex-gap-30">
+                <div class="flex-row flex-gap-30" v-if="!showEditQna">
+                    <pencil-icon class="color-blue" :label="'edit'" @click="onEditQna" :class="'pointer'"/>
+                    <up-right-from-square class="color-white" :label="'Preview'" @click="onPreviewQuestion"/>
                 </div>
-                <div class="qnaEditSubsection" :class="{'editingQnA': showEditIcons}">
-                    <div style="width:100%;" @click="onSaveQnA">
+                <div class="qnaEditSubsection flex-row flex-justify-left flex-align-center flex-gap-20" :class="{'editingQnA': showEditIcons}">
+                    <div class="color-green" @click="onSaveQnA">
                         <floppy-disk-icon :label="'save'" />
                     </div>
-                    <div style="width:100%;" @click="onCancelQnAEdit" >
+                    <div class="color-orange" @click="onCancelQnAEdit" >
                         <x-mark-icon :label="'cancel'" />
                     </div>
-                    <div style="width:100%;" @click="onDeleteQnA" v-if="!isFinalJeopardy && !$props.questionAnswerPair.isNew()">
+                    <div class="color-red" @click="onDeleteQnA" v-if="!isFinalJeopardy && !$props.questionAnswerPair.isNew()">
                         <trash-can-icon :label="'delete'" />
                     </div>
                 </div>
@@ -256,7 +255,7 @@
 
 
     .qnaEditSubsection { width:0px; opacity:0; overflow:hidden; height:0px; }
-    .qnaEditSubsection.editingQnA { transition: width,opacity ease 1s; width:55%; opacity:100; height:inherit;  display:flex; align-items: center; gap:20px; }
+    .qnaEditSubsection.editingQnA { transition: width,opacity ease 1s; width:65%; opacity:100; height:inherit; }
 
    .questionRow:hover .nohover { background-color: var(--color-background) !important; }
 

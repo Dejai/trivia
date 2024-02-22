@@ -16,14 +16,14 @@
                     </template>
                     <template #body>
                         <div>
-                            <HeaderButton @click="onStartGame" style="font-size:24px; color:limegreen;">
+                            <IconButton @click="onStartGame" class="color-green" style="font-size:24px;">
                                 <template #icon>
                                     <play-icon />
                                 </template>
                                 <template #content>
                                     Start Game
                                 </template>
-                            </HeaderButton>
+                            </IconButton>
                         </div>
                     </template>
                 </ModalView>
@@ -37,7 +37,7 @@
             </div>
             <div id="teamSection" style="width:15%;">
                 <h1 style="width:100%;">Teams</h1>
-                <HeaderButton v-if="!isGameStarted" @click="getTeamsForGame()">
+                <IconButton v-if="!isGameStarted" @click="getTeamsForGame()">
                     <template #icon>
                         <h3>
                             <rotate-icon :spinning="isTeamRefreshSpinning"/>
@@ -46,8 +46,8 @@
                     <template #content>
                         <h3>Get Teams</h3>
                     </template>
-                </HeaderButton>
-                <HeaderButton v-if="isFinalJeopardy && !filters.finalQuestionRevealed" @click="getTeamWagers">
+                </IconButton>
+                <IconButton v-if="isFinalJeopardy && !filters.finalQuestionRevealed" @click="getTeamWagers">
                     <template #icon>
                         <h3>
                             <rotate-icon :spinning="isWagerRefreshSpinning"/>
@@ -56,10 +56,10 @@
                     <template #content>
                         <h3>Check for Wagers</h3>
                     </template>
-                </HeaderButton>
+                </IconButton>
                 <div class="teamRows">
                     <div class="teamSectionRow" v-for="team in teamsSorted">
-                        <h3 style="max-width:75%;"><span style="color:limegreen" v-if="team.HasWager"><circle-check-icon/> &nbsp;</span>{{ team.Name }}</h3>
+                        <h3 style="max-width:75%;"><span class="color-green" v-if="team.HasWager"><circle-check-icon/> &nbsp;</span>{{ team.Name }}</h3>
                         <h3 v-if="team.HasWager">{{ team.FinalScore }}</h3>
                         <h3 v-else>{{ team.Score }}</h3>
                     </div>
@@ -92,7 +92,7 @@
     import { useFiltersStore } from '@/stores/filters'
     import ModalView from '@/components/views/ModalView.vue'
     import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
-    import HeaderButton from '@/components/views/game/HeaderButton.vue'
+    import IconButton from '@/components/views/IconButton.vue'
     import RotateIcon from '@/components/icons/FontAwesome/RotateIcon.vue'
     import  CircleCheckIcon from '@/components/icons/FontAwesome/CircleCheckIcon.vue'
 

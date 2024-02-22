@@ -31,7 +31,7 @@
     import { ref } from 'vue'
     import JeopardyCell from '@/components/views/jeopardy/JeopardyCell.vue'
     import Category from '@/models/Category'
-import FinalJeopardyCell from './FinalJeopardyCell.vue';
+    import FinalJeopardyCell from '@/components/views/jeopardy/FinalJeopardyCell.vue';
 
     const props = defineProps<{
         category: Category 

@@ -1,41 +1,42 @@
 <template>
     <main>
-        <h3>Session Details </h3>
-        <div id="sessionForm">
-            <div class="sessionFormRow hover">
-                <label for="">Session Code</label> 
-                <input type="text" name="sessionCode" v-model="sessionCode"/> 
-                <button @click="_getNewCode">New Code</button>
-            </div>
-            <div class="sessionFormRow hover">
+        <FormContainer>
+            <FormRow>
+                <label for="">Session Code</label>
+                <div class="flex-row flex-gap-5">
+                    <input type="text" name="sessionCode" v-model="sessionCode"/> 
+                    <button @click="_getNewCode">New Code</button>
+                </div>
+            </FormRow>
+            <FormRow>
                 <label for="">Session Expires</label> 
-                <select name="expireMonth" id="expireMonth" v-model="expireMonth">
-                    <option v-for="month in months" :value="month">{{ month }}</option>
-                </select>
-                <select name="expireDay" id="expireDay" v-model="expireDay">
-                    <option v-for="day in days" :value="day">{{ day }}</option>
-                </select>
-                <input name="expireYear" id="expireYear" v-model="expireYear" type="number">
-            </div>
-            <SessionSetting :class="'sessionFormRow hover'" v-for="setting in sessionSettings"
+                <div class="flex-row flex-justify-left flex-align-center flex-gap-5">
+                    <select name="expireMonth" id="expireMonth" v-model="expireMonth">
+                        <option v-for="month in months" :value="month">{{ month }}</option>
+                    </select>
+                    <select name="expireDay" id="expireDay" v-model="expireDay">
+                        <option v-for="day in days" :value="day">{{ day }}</option>
+                    </select>
+                    <input name="expireYear" id="expireYear" style="max-width:25%;" v-model="expireYear" type="number">
+                </div>
+            </FormRow>
+            <SessionSetting v-for="setting in sessionSettings"
                 :setting="setting"
                 :rules="rules"
                 @change="onSettingChange"
                 />
-            <div class="sessionFormRow" style="padding-top:3%;">
-                <div class="sessionFormActions" style="width:50%;">
-                    <div>
-                        <button v-if="isNewSession" @click="onAddSession">ADD SESSION</button>
-                        <button v-else @click="onUpdateSession">UPDATE SESSION</button>
-                        &nbsp;
-                        <button @click="onCancelSessionChange">CANCEL</button> 
-                    </div>
-                    <div v-if="!isNewSession">
-                        <button @click="onDeleteSession">DELETE</button>
-                    </div>
+            <FormActions>
+                <div>
+                    <button v-if="isNewSession" class="button-round bg-color-green color-block" @click="onAddSession">ADD SESSION</button>
+                    <button v-else class="button-round bg-color-blue color-white" @click="onUpdateSession">UPDATE SESSION</button>
+                    &nbsp;
+                    <button class="button-round color-black" @click="onCancelSessionChange">CANCEL</button> 
                 </div>
-            </div>
-        </div>
+                <div v-if="!isNewSession">
+                    <button class="button-round bg-color-red color-white" @click="onDeleteSession">DELETE</button>
+                </div>
+            </FormActions>
+        </FormContainer>
     </main>
 </template>
 
@@ -44,14 +45,17 @@
     import { onMounted, ref, computed } from 'vue'
     import { storeToRefs } from 'pinia'
     import { useCode } from '@/composables/useCode'
-    import { useDateFormat } from '@/composables/useDateFormat'
     import { useGamesStore } from '@/stores/games'
     import { useFiltersStore } from '@/stores/filters'
+    import { useDateParts } from '@/composables/useDateParts'
     import Session from '@/models/Session'
     import Setting from '@/models/Setting'
     import SessionSetting from '@/components/views/game/SessionSetting.vue'
+    import FormContainer from '@/components/views/forms/FormContainer.vue'
+    import FormRow from '@/components/views/forms/FormRow.vue'
+    import FormActions from '@/components/views/forms/FormActions.vue'
+
     import rules from '@/assets/config/rules2.json'
-    import { useDateParts } from '@/composables/useDateParts'
 
     const props = defineProps<{
         session?:Session,
@@ -157,7 +161,6 @@
 <style scoped>
     #sessionForm { display:flex; flex-direction: column; gap:10px; padding-left:5%; margin-bottom:3%; }
     .sessionFormRow { display:flex; flex-wrap: wrap; gap:10px; justify-content: left; align-items: center;  }
-    /* .sessionFormRow.hover:hover { background-color:gray; color:white; cursor:pointer; } */
-    .sessionFormRow label { width:15%; }
+    /* .sessionFormRow label { width:15%; } */
     .sessionFormActions { display:flex; flex-wrap: wrap; justify-content:space-between; align-items: center; }
 </style>

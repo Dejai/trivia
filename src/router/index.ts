@@ -30,9 +30,9 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/play/:gameID/session/:sessionID',
-      name: 'play',
-      component: () => import('../components/pages/PlayPage.vue')
+      path: '/join/:gameID/session/:sessionID',
+      name: 'join',
+      component: () => import('../components/pages/SessionJoinPage.vue')
     },
     {
       path: '/board/:gameID/session/:sessionID',

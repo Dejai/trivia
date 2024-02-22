@@ -20,6 +20,7 @@ export default class Game {
         this.Categories = details?.Categories?.map( (obj:any) => new Category(obj)) ?? [];
         this.Sessions = details?.Sessions?.map( (obj:any) => new Session(obj) ) ?? [];
         this.Type = details?.Type ?? ""
+        this.Admins = details?.Admins ?? []
     }
 
     addAdmin(admin:string){

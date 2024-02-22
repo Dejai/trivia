@@ -33,14 +33,14 @@
                     {{ questionText }}
                 </div>
                 <div v-if=" (showRevealAnswer || props.isPreview ) && !showAnswer">
-                    <HeaderButton @click="revealAnswer">
+                    <IconButton @click="revealAnswer">
                         <template  #icon>
                            <h2><eye-icon /></h2>
                         </template>
                         <template #content>
                             <h2>Reval Answer</h2>
                         </template>
-                    </HeaderButton>
+                    </IconButton>
                 </div>
                 <div class="qnaSection answerSection" v-if="showAnswer">
                     <Image v-if="showAnswerImage" :url="answerImageUrl" :is-jeopardy="true" />
@@ -60,22 +60,22 @@
                         />
                     </div>
                     <div style="margin-top:5%; width:100%; display:flex; flex-direction: column; align-items: center; justify-content: right;">
-                        <HeaderButton class="assignmentButton" :class="{'clickable': isAssignEnabled }"  @click="assignPoints">
+                        <IconButton class="assignmentButton" :class="{'clickable': isAssignEnabled }"  @click="assignPoints">
                             <template #icon>
                                 <h3><plus-icon/></h3>
                             </template>
                             <template #content>
                                 <h3>Assign Points</h3>
                             </template>
-                        </HeaderButton>
-                        <HeaderButton class="assignmentButton" :class="{'clickable': isNobodyRightEnabled }"  @click="nobodyRight">
+                        </IconButton>
+                        <IconButton class="assignmentButton" :class="{'clickable': isNobodyRightEnabled }"  @click="nobodyRight">
                             <template #icon>
                                 <h3><x-mark-icon/></h3>
                             </template>
                             <template #content>
                                <h3>Nobody got it correct</h3>
                             </template>
-                        </HeaderButton>
+                        </IconButton>
                     </div>
                     <!-- <button id="assignScoresButton" class="pointer" :disabled="isAssignDisabled" @click="assignPoints">Assign Points</button> -->
                     <!-- <button id="nobodyGotItRightButton" class="pointer" :disabled="isNobodyRightDisabled" @click="nobodyRight"></button> -->
@@ -99,9 +99,9 @@
     import QuestionAnswerPair from '@/models/QuestionAnswerPair'
     import WhoGotItRight from '@/components/views/jeopardy/WhoGotItRight.vue'
     import Image from '@/components/views/media/Image.vue'
-    import TimerCountdownView from '../TimerCountdownView.vue'
+    import TimerCountdownView from '@/components/views/TimerCountdownView.vue'
     import SpinnerIcon from '@/components/icons/FontAwesome/SpinnerIcon.vue'
-    import HeaderButton from '../game/HeaderButton.vue'
+    import IconButton from '@/components/views/IconButton.vue'
     import EyeIcon from '@/components/icons/FontAwesome/EyeIcon.vue'
     import XMarkIcon from '@/components/icons/FontAwesome/XMarkIcon.vue'
     import PlusIcon from '@/components/icons/FontAwesome/PlusIcon.vue'

@@ -1,5 +1,5 @@
 <template>
-    <main>
+    <FormRow>
         <label>{{  props.setting?.Name }}</label>
         <div class="selectOptions" v-if="isDropdown">
             <select v-model="optionID" @change="emitChange">
@@ -13,13 +13,14 @@
         <div class="inputOptions" v-if="isTextField">
             <input :type="props.setting?.Type" v-model="textFieldValue" :placeholder="textFieldPlaceholder" @keyup="emitChange" @change="emitChange" />
         </div>
-    </main>
+    </FormRow>
 </template>
 
 <script setup lang="ts">
 
     import Setting from '@/models/Setting'
-    import { onMounted, ref, computed } from 'vue'
+    import { ref, computed } from 'vue'
+    import FormRow from '@/components/views/forms/FormRow.vue'
 
     const props = defineProps<{
         setting?:Setting,

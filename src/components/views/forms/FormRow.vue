@@ -1,10 +1,11 @@
 <template>
-    <div class="formContainerRow">
+    <div class="flex-wrap flex-gap-10" :class="{'flex-column': props.stacked, 'flex-row': !props.stacked}">
         <slot></slot>
     </div>
 </template>
 
-<style scoped>
-    .formContainerRow { display:flex; flex-wrap: wrap; gap:10px; justify-content: left; align-items: center;  }
-    .formContainerRow label { width:15%; }
-</style>
+<script setup lang="ts">
+    const props = defineProps<{
+        stacked?:boolean
+    }>()
+</script>

@@ -1,13 +1,13 @@
 <template>
     <main>
-        <div class="timerBlock" style="color:gold;">
-            <div v-if="isCounting">
-                <stopwatch-icon  :class="{'warningColor': isWarning, 'alertColor': isAlert }" /> &nbsp;
-                <span v-if="!isTimeUp" :class="{'warningColor': isWarning, 'alertColor': isAlert }">{{ secondsRemaining }}</span>
+        <div class="timerBlock flex-row flex-nowrap flex-justify-center pointer color-gold width-100">
+            <div v-if="isCounting" class="flex-row flex-nowrap flex-justify-center flex-align-center" >
+                <stopwatch-icon  :class="{'color-orange': isWarning, 'color-red': isAlert }" /> &nbsp;
+                <span v-if="!isTimeUp" :class="{'color-orange': isWarning, 'color-red': isAlert }">{{ secondsRemaining }}</span>
                 <span :class="{'alertColor': isAlert}" v-if="isTimeUp">TIME UP</span>
                 &nbsp;
             </div>
-            <span v-if="!isCounting" @click="startTimer" style="cursor:pointer;">
+            <span class="pointer flex-row flex-nowrap flex-justify-center flex-align-center" v-if="!isCounting" @click="startTimer" style="cursor:pointer;">
                 <play-icon />&nbsp;
                 <span>Start Timer</span>
             </span>
@@ -17,8 +17,8 @@
 
 <script setup lang="ts">
     import { ref, computed } from 'vue'
-    import PlayIcon from '../icons/FontAwesome/PlayIcon.vue';
-    import StopwatchIcon from '../icons/FontAwesome/StopwatchIcon.vue';
+    import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue';
+    import StopwatchIcon from '@/components/icons/FontAwesome/StopwatchIcon.vue';
 
     const props = defineProps<{
         seconds:number

@@ -1,25 +1,22 @@
 <template>
-    <div id="gamePageContainer">
-        <div id="navTabs" class="navTabs">
-            <div>
-                <p>
-                    <span v-if="isMounted && isLoggedIn">
-                        <CircleUserIcon style="font-size:24px; color:blue; padding-right:3%;" />
-                        Hi, {{ authStore.userName }}
-                    </span>   
-                    <span v-if="isMounted && !isLoggedIn" @click="authStore.onAuthAction" style="color:blue; cursor:pointer">Log in</span>
-                    &nbsp;
-                </p>
-            </div>
-            <p class="tab section" @click="onSwitchTab('overview')" :class="{ 'selected': showOverviewTab }">Overview</p>
-            <div v-if="isLoggedIn">
-                <p class="tab section showOnLogin" @click="onSwitchTab('qna')" :class="{ 'selected': showQnATab }" >Questions/Answers</p>
-                <p class="tab section showOnLogin" @click="onSwitchTab('media')" :class="{ 'selected': showMediaTab }">Game Media</p>
+    <div id="gamePageContainer" class="flex-row flex-wrap flex-justify-left flex-align-start flex-gap-30">
+        <div id="gamePageMenu" :style="{'height': sideMenuHeight }" class="gamePagePadding flex-column flex-gap-10 flex-justify-left flex-align-start leftMenuWidth">
+            <p class="width-100 flex-column flex-justify-left flex-align-start flex-gap-30">
+                <span v-if="isMounted && isLoggedIn" class="width-100 flex-row flex-justify-left flex-align-center flex-gap-10">
+                    <CircleUserIcon class="color-blue" style="font-size:24px; padding-right:3%;" @click="authStore.onAuthAction" />
+                    Hi, {{ authStore.userName }}
+                </span>   
+                <span v-if="isMounted && !isLoggedIn" @click="authStore.onAuthAction" class="color-blue pointer">Log in</span>
+            </p>
+            <div id="navTabs" class="flex-gap-5 flex-justify-left flex-align-start">
+                <p class="tab section" @click="onSwitchTab('overview')" :class="{ 'selected': showOverviewTab }">Overview</p>
+                <p v-if="isGameAdmin" class="tab section showOnLogin" @click="onSwitchTab('qna')" :class="{ 'selected': showQnATab }" >Questions/Answers</p>
+                <p v-if="isGameAdmin" class="tab section showOnLogin" @click="onSwitchTab('media')" :class="{ 'selected': showMediaTab }">Game Media</p>
             </div>
         </div>
-        <div id="gamePageSubsection" v-if="isMounted">
-            <div id="headerButtonSection" v-if="isLoggedIn">
-                <HeaderButton @click="gamesStore.saveGame()" :class="{'toBeSaved': toBeSaved}">
+        <div id="gamePageSubsection" class="gamePagePadding" v-if="isMounted">
+            <div id="headerButtonSection" v-if="isGameAdmin">
+                <IconButton @click="gamesStore.saveGame()" :class="{'toBeSaved': toBeSaved}">
                     <template #icon>
                         <floppy-disk-icon/>
                     </template>
@@ -28,13 +25,13 @@
                         <h3 v-if="isSaving">Saving ... <spinner-icon /></h3>
                         <h3 v-if="isSaveSuccess">Saved!</h3>
                     </template>
-                </HeaderButton>
-                <HeaderButton @click="onAddCategory" v-if="showQnATab" style="color:white;">
+                </IconButton>
+                <IconButton @click="onAddCategory" v-if="showQnATab" style="color:white;">
                     <template #content>
                         <h3>Add New Category</h3>
                     </template>
-                </HeaderButton>
-                <HeaderButton @click="onValidateCategories" v-if="showQnATab" style="color:white;">
+                </IconButton>
+                <IconButton @click="onValidateCategories" v-if="showQnATab" style="color:white;">
                     <template #icon>
                         <rotate-icon :spinning="isSpinning" />
                     </template>
@@ -42,16 +39,16 @@
                         <h3>
                             Check for Errors
                             &nbsp;&nbsp;
-                            <span style="color:limegreen;" v-if="showNoErrorsMessage">All set. No errors</span>
+                            <span class="color-green" v-if="showNoErrorsMessage">All set. No errors</span>
                         </h3>
 
                     </template>
-                </HeaderButton>
-                <HeaderButton v-if="showMediaTab" @click="onShowMediaForm" style="color:white;">
+                </IconButton>
+                <IconButton v-if="showMediaTab" @click="onShowMediaForm" style="color:white;">
                     <template #content>
                         <h3>Add Content</h3>
                     </template>
-                </HeaderButton>
+                </IconButton>
             </div>
             <div id="errorsSection" v-if="showErrors">
                 <div v-for="error in errorsList">
@@ -83,13 +80,11 @@
     import OverviewView from '@/components/views/game/_OverviewView.vue'
     import QuestionsAnswersView from '@/components/views/game/QuestionsAnswersView.vue'
     import MediaView from '@/components/views/game/MediaView.vue'
-    import HeaderButton from '@/components/views/game/HeaderButton.vue'
+    import IconButton from '@/components/views/IconButton.vue'
     import CircleUserIcon from '@/components/icons/FontAwesome/CircleUserIcon.vue'
-    import FloppyDiskIcon from '../icons/FontAwesome/FloppyDiskIcon.vue'
-    import SpinnerIcon from '../icons/FontAwesome/SpinnerIcon.vue'
+    import FloppyDiskIcon from '@/components/icons/FontAwesome/FloppyDiskIcon.vue'
+    import SpinnerIcon from '@/components/icons/FontAwesome/SpinnerIcon.vue'
     import RotateIcon from '@/components/icons/FontAwesome/RotateIcon.vue'
-import { useTeamsStore } from '@/stores/teams'
-
 
     const props = defineProps<{
         gameID:string
@@ -103,25 +98,28 @@ import { useTeamsStore } from '@/stores/teams'
     const filtersStore = useFiltersStore()
     const mediaStore = useMediaStore()
 
+    /* Refs */
+    const defaultTab = "overview"
     const { currentGame, toBeSaved, isSaving, isSaveSuccess } = storeToRefs(gamesStore);
-    const { isLoggedIn } = storeToRefs(authStore)
+    const { isLoggedIn, userKey } = storeToRefs(authStore)
     const isMounted = ref(false)
-    const tabInPath = route.params?.tab ?? "overview"
+    const tabInPath = route.params?.tab ?? defaultTab;
     const currentTab = ref(tabInPath)
-
-    const showSaveButton = computed( () => toBeSaved.value && !isSaving.value )
-    const gameLoaded = computed( () => currentGame.value != undefined )
-
     const showErrors = ref(false)
     const errorsList = ref(new Array<ErrorMessage>)
     const showNoErrorsMessage = ref(false)
     const isSpinning = ref(false)
 
-    // Showing the different tabs
+    /* Computed */
+    const gameLoaded = computed( () => currentGame.value != undefined )
+    const isGameAdmin = computed( () => gamesStore.isAdmin(userKey.value) )
     const showOverviewTab = computed( () => gameLoaded.value && (currentTab.value == "overview" || currentTab.value == "") )
-    const showQnATab = computed( () => isLoggedIn.value && gameLoaded.value && currentTab.value == "qna" )
-    const showMediaTab = computed( () => isLoggedIn.value && gameLoaded.value && currentTab.value == "media" )
+    const showQnATab = computed( () => isGameAdmin.value && gameLoaded.value && currentTab.value == "qna" )
+    const showMediaTab = computed( () => isGameAdmin.value && gameLoaded.value && currentTab.value == "media" )
+    const sideMenuHeight = computed( () => window.innerWidth >= 1024 ? `${window.innerHeight}px` : '' )
 
+    /* FUNCTIONS */
+    
     // Switch tab when tab is clicked
     function onSwitchTab(tabName:string) {
         currentTab.value = tabName
@@ -164,26 +162,31 @@ import { useTeamsStore } from '@/stores/teams'
     onBeforeUnmount(() => {
         menuStore.clearMenuValue("subtitle1")
     })
-
 </script>
 
-
 <style scoped>
-    #gamePageContainer { display:flex; flex-wrap: wrap; justify-content: left; align-items: start; gap:5%; }
+    .gamePagePadding { padding-top:5%; }
+    #gamePageMenu { width: 100%; border-bottom:2px solid white; padding-bottom:5%;  }
+    #navTabs { display:flex; flex-wrap:nowrap; width:100%; }
+    #navTabs .tab { padding:1% 0.5%;  }
+    .tab.selected { background-color: #007FFF;; color:white; }
 
-    #navTabs { display:flex; flex-direction: column; gap:10px; justify-content: left; align-items: left ; min-width:10%; max-width:15%; }
-    #navTabs .tab { cursor: pointer; padding:5% 1%; }
-
-    #gamePageSubsection { width:85%; }
+    #gamePageSubsection { width:99%; }
 
     .syncDetail { visibility: hidden;}
     .showSyncDetail { visibility: visible !important; }
-    
-    .tab.selected { background-color: white; color:black; }
 
     #headerButtonSection { width:100%; gap:2%; display:flex; flex-wrap: wrap; justify-content: left; align-items: center; padding:0% 0% 2% 0%; }
-
     #errorsSection p { color: red; }
     .toBeSaved { color:limegreen !important; }
+
+    @media (min-width: 1024px) {
+        .gamePagePadding { padding-top:1%; }
+
+        #gamePageMenu { width: 8%; border-bottom: none; }
+        #navTabs {  display: block; }
+        #navTabs .tab { cursor: pointer; padding:3% 1%; }
+        #gamePageSubsection { width:85%; }
+    }
 
 </style>

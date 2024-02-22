@@ -15,7 +15,6 @@
 </script>
 
 <style scoped>
-    /* .formMain { padding-left: 2%; } */
     .formMain { width:100%; }
     .formContainer { display:flex; flex-direction: column; gap:10px; padding-left:2%; margin-bottom:3%; }
 </style>
