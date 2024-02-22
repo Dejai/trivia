@@ -9,8 +9,3 @@
         stacked?:boolean
     }>()
 </script>
-
-<style scoped>
-    .formContainerRow { display:flex; flex-wrap: wrap; gap:10px; justify-content: left; align-items: center;  }
-    .formContainerRow label { min-width:15%; }
-</style>

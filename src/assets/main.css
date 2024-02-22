@@ -11,7 +11,7 @@
 .leftMenuWidth { width:100%; border-right:none; }
 
 /* Buttons */
-button { cursor: pointer; border:none; }
+button { cursor: pointer; border:none; font-weight: bold; }
 .button-round { border-radius: 55px; }
 
 /* Generic style */
@@ -26,6 +26,7 @@ button { cursor: pointer; border:none; }
 .color-orange { color: orange; }
 .color-black { color:black; }
 .color-white { color:white; }
+.color-gray { color: gray;}
 
 /* Background-color items */
 .bg-color-green { background-color: limegreen; }
@@ -46,10 +47,10 @@ button { cursor: pointer; border:none; }
 .flex-justify-left { justify-content: left;}
 .flex-align-start { align-items: start; }
 .flex-align-center { align-items: center; }
+.flex-gap-5 { gap: 5px; } 
+.flex-gap-10 { gap: 10px; }
+.flex-gap-15 { gap: 15px; }
 /* Gaps scaled for mobile; divided by 10 */
-.flex-gap-5 { gap: 0.5px; } 
-.flex-gap-10 { gap: 1px; }
-.flex-gap-15 { gap: 1.5px; }
 .flex-gap-20 { gap: 2px; }
 .flex-gap-25 { gap: 2.5px; }
 .flex-gap-30 { gap: 3px; }

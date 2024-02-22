@@ -15,13 +15,12 @@
 </template>
 
 <style scoped>
-
-    .sessionRowHeader .header { font-size:18px; padding-bottom:2%; }
+    .sessionRowHeader { border-bottom:1px dashed white; padding-bottom:1%; margin-bottom:1%; }
+    .sessionRowHeader h3 { font-weight: bold; }
     .sessionRowHeader .column { text-align: left; }
     .sessionRowHeader .column1 { width: 20%; }
     .sessionRowHeader .column2 { width: 40%; }
     @media (min-width: 1024px) {
-        .sessionRowHeader .header { font-size:18px; }
         .sessionRowHeader .column1 { width: 20%; }
         .sessionRowHeader .column2 { width: 40%; }
         .sessionRowHeader .column3 { display:flex; width: 90%; }
