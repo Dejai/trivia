@@ -9,6 +9,7 @@
 
 /* MENU */
 .leftMenuWidth { width:100%; border-right:none; }
+.paddingFromMenu { padding-top: 5%; }
 
 /* Buttons */
 button { cursor: pointer; border:none; font-weight: bold; }
@@ -98,6 +99,8 @@ a,
 
 @media (min-width: 1024px) {
   .leftMenuWidth { width:8%; border-right:2px solid gray;  }
+  .paddingFromMenu { padding-top: 3%; }
+
 
   /* FLEX */
   .flex-gap-5 { gap: 5px; }

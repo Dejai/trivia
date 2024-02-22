@@ -1,14 +1,16 @@
 <template>
-    <main>
-        <!-- <span style="font-size:smaller;"> {{ newGame.GameID }} </span> -->
-        <FormContainer>
-            <p>
-                {{ newGame.GameID }}
-                <button @click="_getNewCode">Change Code</button>
-            </p>
+    <main v-if="isMounted" class="paddingFromMenu">
+        <FormContainer v-if="isLoggedIn" :title="'Game Details'">
             <FormRow>
+                <label>Game Code</label>
+                <div class="flex-row flex-gap-10">
+                    <span class="color-orange italic">{{ newGame.GameID }}</span>
+                    <button @click="_getNewCode">New Code</button>
+                </div>
+            </FormRow>
+            <FormRow :style="'width:20%'">
                 <label for="">Game Name</label> 
-                <input type="text" :class="{'missingRequiredField': missingGameName}" name="categoryName" autocomplete="off" v-model="newGame.Name" placeholder="Enter a name for your game"/> 
+                <input style="width:55%;" type="text" :class="{'missingRequiredField': missingGameName}" name="categoryName" autocomplete="off" v-model="newGame.Name" placeholder="Enter a name for your game"/> 
             </FormRow>
             <FormRow>
                 <label for="">Game Type</label> 
@@ -16,17 +18,38 @@
                     <option v-for="option in gameTypeOptions" :value="option">{{ option }}</option>
                 </select>
             </FormRow>
-            <FormActions>
-                <div>
-                    <button @click="onAddGame">CREATE GAME</button>
-                    &nbsp;
-                    <button @click="onCancel">CANCEL</button> 
+            <FormActions :style="'width:15%'">
+                <div class="flex-row flex-justify-space-between width-100">
+                    <IconButton @click="onAddGame" :class="{'color-green': hasGameName }">
+                        <template #content>
+                            <h3>CREATE GAME</h3>
+                        </template>
+                    </IconButton>
+                    <IconButton @click="onCancel" class="color-red">
+                        <template #icon>
+                            <x-mark-icon/>
+                        </template>
+                        <template #content>
+                            <h3>CANCEL</h3>
+                        </template>
+                    </IconButton>
                 </div>
             </FormActions>
             <div v-if="isFetching">
                 <spinner-icon style="font-size:44px;" />
             </div>
         </FormContainer>
+        <div v-else>
+            <IconButton @click="authStore.onAuthAction()">
+                <template #icon>
+                    <up-right-from-square-icon/>
+                </template>
+                <template #content>
+                    <h2>LOG IN</h2>
+                </template>
+            </IconButton>
+            <p>You must log in to create a new game</p>
+        </div>
     </main>
 </template>
 
@@ -43,25 +66,25 @@
     import Game from '@/models/Game'
     import router from '@/router'
     import SpinnerIcon from '@/components/icons/FontAwesome/SpinnerIcon.vue'
+    import UpRightFromSquareIcon from '@/components/icons/FontAwesome/UpRightFromSquareIcon.vue'
+    import XMarkIcon from '@/components/icons/FontAwesome/XMarkIcon.vue'
     import FormContainer from '@/components/views/forms/FormContainer.vue'
     import FormRow from '@/components/views/forms/FormRow.vue'
     import FormActions from '@/components/views/forms/FormActions.vue'
+    import IconButton from '@/components/views/IconButton.vue'
 
     
     const authStore = useAuthStore()
     const { isLoggedIn, userKey } = storeToRefs(authStore)
 
-    // If not logged in, make sure we are
-    if(!isLoggedIn){
-        authStore.onAuthAction()
-    }
-
     const saveAttempts = ref(0)
     const isFetching = ref(false)
     const menuStore = useMenuStore()
     const gamesStore = useGamesStore()
+    const isMounted = ref(false)
 
     // Form validation
+    const hasGameName = computed( () => newGame.value.Name != "")
     const missingGameName = computed( () => saveAttempts.value > 0 && newGame.value.Name == "")
 
     const newGame = ref(new Game(GameTemplate));
@@ -104,6 +127,7 @@
             _getNewCode()
         }
         menuStore.setMenuValue("subtitle1", `Create New Game`)
+        isMounted.value = true
     })
 
     onBeforeUnmount(() => {

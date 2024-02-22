@@ -102,10 +102,11 @@
     const mediaStore = useMediaStore()
 
     /* Refs */
+    const defaultTab = "overview"
     const { currentGame, toBeSaved, isSaving, isSaveSuccess } = storeToRefs(gamesStore);
     const { isLoggedIn, userKey } = storeToRefs(authStore)
     const isMounted = ref(false)
-    const tabInPath = route.params?.tab ?? "overview"
+    const tabInPath = (isLoggedIn.value) ? (route.params?.tab ?? defaultTab) : defaultTab
     const currentTab = ref(tabInPath)
     const showErrors = ref(false)
     const errorsList = ref(new Array<ErrorMessage>)

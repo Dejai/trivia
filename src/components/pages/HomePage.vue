@@ -1,8 +1,8 @@
 <template>
     <div id="homePageSection" v-if="showGames">
-        <IconButton @click="onNavigateNewGame">
+        <IconButton @click="onNavigateNewGame" class="color-green" style="padding-bottom:2%;">
                 <template #content>
-                    <h2>Add New Game</h2>
+                    <h3>Add New Game</h3>
                 </template>
             </IconButton>
         <div id="gameCoversSection" class="flex-row flex-wrap flex-align-start flex-gap-25">

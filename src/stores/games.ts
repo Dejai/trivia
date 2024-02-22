@@ -122,7 +122,7 @@ export const useGamesStore = defineStore('games', () => {
 
   // Logged in user is admin of this game
   function isAdmin(userKey:string){
-    return currentGame.value.Admins.includes(userKey);
+    return currentGame.value?.Admins?.includes(userKey) ?? false;
   }
 
   onMounted( async ()=> {
