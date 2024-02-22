@@ -5,7 +5,7 @@
                     <h3>Add New Game</h3>
                 </template>
             </IconButton>
-        <div id="gameCoversSection" class="flex-row flex-wrap flex-align-start flex-gap-25">
+        <div id="gameCoversSection" class="flex-row flex-wrap flex-align-start">
             <GameCover class="gameBlock gameCoverCard" v-for="game in sortedGames"
                 :key="game.GameID"
                 :game="game"
@@ -45,7 +45,7 @@
 
 <style scoped>
     #addNewGameButton { padding-bottom: 5%; }
-    #gameCoversSection { width:100%; justify-content: center; gap:25px }
+    #gameCoversSection { width:100%; justify-content: center; gap:35px }
     @media (min-width: 1024px) {
         #addNewGameButton { padding-bottom: 2%; }  
         #gameCoversSection { justify-content: left; gap:25px; }

@@ -40,10 +40,10 @@
 
 <style scoped>
     .gameCoverName { color:white; }
-    .gameCoverCard { box-shadow: 0 4px 8px 0 rgba(224, 224, 236, 0.2); transition: 0.3s; padding:1%; cursor:pointer; width:95%; min-height:100px; }
+    .gameCoverCard { box-shadow: 0 4px 8px 0 rgba(224, 224, 236, 0.2); transition: 0.3s; padding:5%; cursor:pointer; width:95%; min-height:100px; border-radius: 25px; }
     .gameCoverCard:hover { transform: scale(1.02) }
 
     @media (min-width: 1024px) {
-        .gameCoverCard { width: 15%; }
+        .gameCoverCard { width: 15%; padding:1%; }
     }
 </style>
