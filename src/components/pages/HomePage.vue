@@ -1,12 +1,12 @@
 <template>
-    <div id="homePageSection" v-if="showGames">
-        <IconButton @click="onNavigateNewGame" class="color-green" style="padding-bottom:2%;">
+    <div id="homePageSection" class="paddingFromMenu" v-if="showGames">
+        <IconButton id="addNewGameButton" @click="onNavigateNewGame" class="color-green">
                 <template #content>
                     <h3>Add New Game</h3>
                 </template>
             </IconButton>
         <div id="gameCoversSection" class="flex-row flex-wrap flex-align-start flex-gap-25">
-            <GameCover class="gameBlock gameCoverCard" v-for="game in games"
+            <GameCover class="gameBlock gameCoverCard" v-for="game in sortedGames"
                 :key="game.GameID"
                 :game="game"
             />
@@ -27,10 +27,13 @@
   import router from '@/router'
   import SpinnerIcon from '@/components/icons/FontAwesome/SpinnerIcon.vue';
   import IconButton from '@/components/views/IconButton.vue'
+  import type Game from '@/models/Game'
 
 
   const gamesStore = useGamesStore()
   const { games, gamesLoaded } = storeToRefs(gamesStore)
+
+  const sortedGames = computed( () => games.value.sort( (a:Game, b:Game) => a.Name.localeCompare(b.Name) ))
 
   const showGames = computed( ()=> gamesLoaded.value)
 
@@ -41,10 +44,10 @@
 </script>
 
 <style scoped>
-    #homePageSection { padding-top:5%;}
-    #gameCoversSection { width:100%; justify-content: center; }
+    #addNewGameButton { padding-bottom: 5%; }
+    #gameCoversSection { width:100%; justify-content: center; gap:25px }
     @media (min-width: 1024px) {
-        #homePageSection { padding-top:2%;}
-        #gameCoversSection { justify-content: left; }
+        #addNewGameButton { padding-bottom: 2%; }  
+        #gameCoversSection { justify-content: left; gap:25px; }
     }
 </style>

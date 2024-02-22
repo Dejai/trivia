@@ -106,7 +106,7 @@
     const showSessionErrorMessage = computed ( () => isGameAdmin.value && hasErrors)
     const showSessionInstruction = computed( () => isGameAdmin.value && sortedSessions.value.length == 0 && !showAddNewSession.value );
     const showSessionsTable = computed( () => !showAddNewSession.value && hasSessions.value )
-    const gameSessionPlurality = computed( () => showAddSessionButton.value && !isFilteredBySession.value ? "s" : "")
+    const gameSessionPlurality = computed( () => !isFilteredBySession.value && !showAddNewSession.value ? "s" : "")
 
     // Add a new session
     function onAddSession(){
