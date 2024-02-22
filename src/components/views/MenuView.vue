@@ -1,6 +1,6 @@
 <template>
     <div id="menuSection" class="width-100 flex-row flex-justify-left flex-align-center flex-nowrap" >
-        <div id="menuItems" class="pointer width-100 flex-row flex-justify-left flex-gap-30">
+        <div id="menuItems" class="pointer width-100 flex-row flex-justify-left flex-align-center flex-gap-30">
             <h1 @click="onNavigateHome" class="leftMenuWidth">Trivia</h1>
             <h1 v-if="showMenuSubTitle1" class="gameTitle" @click="onNavigateGamePage">
                 <span v-if="isLoading">
@@ -10,14 +10,14 @@
                     {{ subtitle1 }}
                 </p>
             </h1>
-            <h2 v-if="showMenuSubTitle2">
-                | 
-                <span style="font-style:italic;font-size:smaller;">
+            <h1 v-if="showMenuSubTitle2" style="border-left:2px solid gray;padding-left:1%;">
+                <span class="italic" style="font-size:80%;">
                     session:
                      <span style="color:orange; font-style: italic;">{{ route.params?.sessionID ?? "" }} 
                     </span>
                 </span> 
-            </h2>
+            </h1>
+            
         </div>
     </div>
 </template>
@@ -40,7 +40,6 @@
     const { gameName, subtitle1, subtitle2 } = storeToRefs(menuStore)
 
     const isLoading = computed( () => subtitle1.value == "loading" )
-    const isGameBoard = computed( () => route.name == "game" )
     const showMenuSubTitle1 = computed( () =>  subtitle1.value != "" )
     const showMenuSubTitle2 = computed( () =>  subtitle2.value != "" )
 
@@ -52,10 +51,6 @@
     // Go back to game page
     function onNavigateGamePage(){
         router.push({name: "game", params: { gameID: currentGame.value.GameID , tab: route.params.tab }})
-    }
-
-    function _routeNameMatch(routeName:string|undefined = ""){
-        return ["board", "game", "play", "team"].includes(routeName)
     }
 
     onMounted( async () => {

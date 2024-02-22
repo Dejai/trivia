@@ -1,5 +1,5 @@
 <template>
-    <main>
+    <main class="sessionRowContainer">
         <div class="sessionRow flex-row flex-justify-left flex-nowrap flex-align-start"  v-if="showSessionRow">
             <div class="column column1" :class="{ 'header': props.header, 'isExpired': props.session?.IsExpired }" @click="clearFilter">
                 {{ props.session?.Code }}
@@ -111,6 +111,7 @@
 
 <style scoped>
 
+    .sessionRowContainer { padding:5% 0%;}
     .sessionRow .header { font-size:18px; padding-bottom:2%; }
     .sessionRow .column { text-align: left; }
     .sessionRow .column1 { width: 20%; }
@@ -121,6 +122,7 @@
     .isExpired { text-decoration: line-through !important; font-style: italic; }
 
     @media (min-width: 1024px) {
+        .sessionRowContainer { padding:3% 0%;}
         .sessionRow .header { font-size:18px; }
         .openBoardIcon { display:flex; }
         .sessionRow .column1 { width: 20%; }

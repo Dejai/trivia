@@ -2,7 +2,7 @@
     <div class="gameCoverCard flex-column flex-gap-15" @click="openGame">
         <h3 class="gameCoverName"> {{gameName}}</h3>
         <p style="width:90%;">{{gameDesc}}</p>
-        <IconButton  >
+        <IconButton class="color-blue" >
             <template #icon>
                 <share-from-square-icon/>
             </template>

@@ -33,4 +33,9 @@
 </script>
 
 <style scoped>
+    #boardSection { padding-top:5%; }
+
+    @media (min-width:1024px){
+        #boardSection { padding-top:2%; }
+    }
 </style>

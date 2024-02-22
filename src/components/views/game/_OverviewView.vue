@@ -51,7 +51,7 @@
                     </div>
                 </div>
             </div>
-            <h3 v-if="showSessionErrorMessage" style="color:orange;">
+            <h3 v-if="showSessionErrorMessage" class="color-orange">
                 <p>Cannot add/play sessions for this game because it has errors. Check for any errors on the "Questions/Answers" tab</p>
             </h3>
             <!-- Adding a new Session -->
@@ -95,16 +95,18 @@
 
     const { hasErrors } = currentGame.value.validateGame()
     // COMPUTED
+    const sortedSessions = computed( () =>  currentGame.value.Sessions?.sort( (a:any, b:any) => { return a.getExpirationDate() - b.getExpirationDate() }))
+    const hasSessions = computed( () => sortedSessions.value.length > 0)
     const hasCategories = computed ( () => (currentGame.value.Categories.filter( (cat:any) => !cat.isFinalJeopardy()) ?? []).length > 0 )
     const isFilteredBySession = computed( () => filters.value.session != "")
     const isGameAdmin = computed( () => gamesStore.isAdmin(userKey.value) )
     const showSessionColumns = computed( () => filters.value.session == "" )
-    const showAddSessionButton = computed( () => isGameAdmin.value && !showAddNewSession.value && !hasErrors && hasCategories.value && !isFilteredBySession.value )
-    const showSessionErrorMessage = computed ( () => isGameAdmin.value && hasCategories.value && hasErrors)
-    const showSessionInstruction = computed( () => isGameAdmin.value && !showSessionErrorMessage);
-    const showSessionsTable = computed( () => hasCategories.value && !showAddNewSession.value )
+    // const showAddSessionButton = computed( () => isGameAdmin.value && !showAddNewSession.value && !hasErrors && !isFilteredBySession.value )
+    const showAddSessionButton = computed( () => isGameAdmin.value && !showAddNewSession.value && !isFilteredBySession.value )
+    const showSessionErrorMessage = computed ( () => isGameAdmin.value && hasErrors)
+    const showSessionInstruction = computed( () => isGameAdmin.value && sortedSessions.value.length == 0 && !showAddNewSession.value );
+    const showSessionsTable = computed( () => !showAddNewSession.value && hasSessions.value )
     const gameSessionPlurality = computed( () => showAddSessionButton.value && !isFilteredBySession.value ? "s" : "")
-    const sortedSessions = computed( () =>  currentGame.value.Sessions?.sort( (a:any, b:any) => { return a.getExpirationDate() - b.getExpirationDate() }))
 
     // Add a new session
     function onAddSession(){
