@@ -2,8 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/components/pages/HomePage.vue'
 import GamePage from '@/components/pages/GamePage.vue'
 import { useMenuStore } from '@/stores/menu'
-import { useGamesStore } from '@/stores/games'
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,10 +10,10 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomePage,
-      beforeEnter: async (t, from ) => {
+      beforeEnter: async (to, from ) => {
         const menuStore = useMenuStore()
-        const gamesStore = useGamesStore()
-        menuStore.setGameDetails({ name: "", code: ""}) // clear the menu game details if loading the home
+        menuStore.setMenuValue("subtitle1", "")
+        menuStore.setMenuValue("subtitle2", "")
       }
     },
     {
