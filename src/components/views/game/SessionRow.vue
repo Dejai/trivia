@@ -61,7 +61,7 @@
     import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
 
     const props = defineProps<{
-        session?:Session,
+        session:Session,
         gameID?:string,
         header?:boolean
     }>()

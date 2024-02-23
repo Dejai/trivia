@@ -57,6 +57,7 @@
             <!-- Adding a new Session -->
             <div id="sessionSection" v-if="showAddNewSession">
                 <SessionForm 
+                    :session="newSession"
                     :isNew="true"
                     @save="afterSaveNewSession"
                     @cancel="hideNewSessionForm"
@@ -74,6 +75,7 @@
     import { useAuthStore } from '@/stores/auth'
     import { useMenuStore } from '@/stores/menu'
     import { useFiltersStore } from '@/stores/filters'
+    import Session from '@/models/Session'
     import SessionRow from '@/components/views/game/SessionRow.vue'
     import SessionRowHeader from '@/components/views/game/SessionRowHeader.vue'
     import SessionForm from '@/components/views/game/SessionForm.vue'
@@ -92,6 +94,7 @@
     const { filters } = storeToRefs(filtersStore)
     const { isLoggedIn, userKey } = storeToRefs(authStore);
     const showAddNewSession = ref(false)
+    const newSession = ref(new Session({}))
 
     const { hasErrors } = currentGame.value.validateGame()
     // COMPUTED
@@ -110,6 +113,7 @@
 
     // Add a new session
     function onAddSession(){
+        newSession.value = new Session({})
         showAddNewSession.value = true
     }
 

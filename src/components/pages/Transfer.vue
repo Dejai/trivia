@@ -44,7 +44,6 @@
             var reader = new FileReader();
             reader.readAsText(file, "UTF-8");
             reader.onload = function (evt) {
-                console.log(evt)
                 trelloJson.value = evt.target?.result?.toString() ?? ""; 
                 convert()
             }
@@ -89,9 +88,7 @@
                     }
                 }
                 // Adding new category
-                console.log(category)
                 let categoryObj = new Category(category)
-                console.log(categoryObj)
                 currentGame.value.manageCategories("add", categoryObj)
             }
             newJson.value = JSON.stringify(currentGame.value.Categories)

@@ -152,13 +152,9 @@
 
     onMounted( async () => {
         menuStore.setMenuValue("subtitle1", "loading")
-        // let gameID = route.params.gameID?.toString() ?? ""
         await gamesStore.getCurrentGame()
         isMounted.value = true
         menuStore.setMenuValue("subtitle1", currentGame.value.Name)
-
-        console.log("MOUNTING")
-        
     })
 </script>
 

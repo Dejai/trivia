@@ -37,7 +37,6 @@
 
     // Start counting down
     function startTimer(){
-        console.log("Starting timer")
         emit("started")
         isCounting.value = true
         timerCounter = setInterval( () => {

@@ -25,13 +25,11 @@ export const useTeamsStore = defineStore('teams', () => {
   async function getTeams(){
     let gameID = route.params.gameID
     let {data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/teams/?key=${gameID}`);
-    console.log(data)
     if(data != undefined){
       teams.value = data.map( (x:any) => new Team(x))
     }
 
     // Adding example teams
-    console.log(route.params.sessionID)
     if(route.params.sessionID == "TEST" || route.params.sessionID == undefined){
       teams.value = teams.value.concat( exampleTeams.map( (x:any) => new Team(x)) )
     }
@@ -79,10 +77,8 @@ export const useTeamsStore = defineStore('teams', () => {
   async function getTeamWagers(){
     let gameID = route.params.gameID
     let { data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/team/answers/?key=${gameID}`)
-    console.log(data);
     if(data != undefined){
       for(let team of teams.value){
-          console.log(team.Wager);
           let match = data.filter( (t:any) => t.code == team.Code)?.[0];
           if(match != undefined && match.wager != undefined){
             team.setWager(match.wager)
@@ -103,7 +99,6 @@ export const useTeamsStore = defineStore('teams', () => {
       code: team.Code,
       wager: team.Wager
     }
-    console.log(updateObj)
     let { data, error } = await useFetch("POST", `${appConfig.Urls.kv}/trivia/team`, { body: JSON.stringify(updateObj) } )
     if(data != undefined){
       currentTeam.value = new Team(data);
