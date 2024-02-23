@@ -62,8 +62,8 @@ export const useGamesStore = defineStore('games', () => {
     }
   }
 
-  function setCurrentSession(){
-    let sessionID = route.params?.sessionID?.toString() ?? ""
+  function setCurrentSession(specificSession:string = ""){
+    let sessionID = route.params?.sessionID?.toString() ?? specificSession
     if(sessionID != "" && currentGame.value != undefined){
       currentSession.value = currentGame.value.Sessions?.filter( (x:any) => x.Code == sessionID )?.[0] ?? undefined;
     }

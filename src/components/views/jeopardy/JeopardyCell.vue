@@ -17,6 +17,7 @@
                         <tr>
                             <td>
                                 <span>{{ props.categoryName }}</span>
+                               
                             </td>
                             <td>
                                 <TimerCountdownView :seconds="timerSeconds" @timeup="onShowRevealAnswer"/> 
@@ -163,10 +164,8 @@ import { useGamesStore } from '@/stores/games'
         showAnswer.value = true 
         let answers = await teamsStore.getTeamAnswers()
         for(let team of teams.value){
-            console.log(team)
             let match = answers.filter( (ans:any) => ans.code == team.Code)?.[0];
             team.Answer = (match != undefined) ? match.answer : defaultAnswer
-            console.log(team.Answer);
         }
         showWhoGotItRight.value = true
     }
@@ -178,8 +177,6 @@ import { useGamesStore } from '@/stores/games'
 
         let isSelectable = target?.classList?.contains("selectableCell") ?? false
         let prevViewed = wasOpened.value
-
-        console.log("Clicking this cell?")
 
         if(isSelectable || prevViewed){
             let proceed = prevViewed ? confirm("Already opened. Open again?") : true

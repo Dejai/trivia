@@ -11,19 +11,19 @@
             <FormRow>
                 <label for="">Session Expires</label> 
                 <div class="flex-row flex-justify-left flex-align-center flex-gap-5">
-                    <select name="expireMonth" id="expireMonth" v-model="expireMonth">
+                    <select name="expireMonth" id="expireMonth" v-model="props.session.Expires.Month">
                         <option v-for="month in months" :value="month">{{ month }}</option>
                     </select>
-                    <select name="expireDay" id="expireDay" v-model="expireDay">
+                    <select name="expireDay" id="expireDay" v-model="props.session.Expires.Day">
                         <option v-for="day in days" :value="day">{{ day }}</option>
                     </select>
-                    <input name="expireYear" id="expireYear" style="max-width:25%;" v-model="expireYear" type="number">
+                    <input name="expireYear" id="expireYear" style="max-width:25%;" v-model="props.session.Expires.Year" type="number">
                 </div>
             </FormRow>
-            <SessionSetting v-for="setting in sessionSettings"
+            <SessionSetting v-for="setting in props.session?.Settings"
                 :setting="setting"
+                :session="props.session"
                 :rules="rules"
-                @change="onSettingChange"
                 />
             <FormActions>
                 <div>
@@ -55,10 +55,10 @@
     import FormRow from '@/components/views/forms/FormRow.vue'
     import FormActions from '@/components/views/forms/FormActions.vue'
 
-    import rules from '@/assets/config/rules2.json'
+    import rules from '@/assets/config/rules.json'
 
     const props = defineProps<{
-        session?:Session,
+        session:Session,
         isNew?:boolean
     }>()
     const emit = defineEmits(["cancel", "save"])
@@ -67,30 +67,16 @@
     const filtersStore = useFiltersStore()
     const { currentGame } = storeToRefs(gamesStore)
 
+    const { filters } = storeToRefs(filtersStore)
     const { months, currMonth, year, days, currDay } = useDateParts()
     const expireMonth = ref( props.session?.Expires?.Month ?? currMonth)
     const expireDay = ref( props.session?.Expires?.Day ?? currDay+3) // expire in 3 days
     const expireYear = ref( props.session?.Expires?.Year ?? year)
-
-    // Some staples to use below
-    const defaultSettings = rules.map( (r:any) => new Setting({ "Name": r.Name, "Type": r.Type, "OptionID": r.Options?.[0]?.optionID ?? 1 } ) )
-    let settingsMap : { [id: string] : any} = {}
-    for(let setting of defaultSettings){
-        settingsMap[setting?.Name] = setting
-    }
-
-    // Session form details
     const sessionCode = ref(props.session?.Code ?? "")
-    const sessionSettings = ref(props.session?.Settings ?? defaultSettings )
 
     const isNewSession = computed( () => props.isNew )
     const gameExists = computed( () => currentGame.value != undefined )
 
-
-    // Account for changes to settings
-    function onSettingChange(data:any){
-        settingsMap[data?.Name] = data
-    }
 
     // Cancel making changes to a session
     function onCancelSessionChange(){
@@ -101,7 +87,8 @@
     // Add a session
     function onAddSession(){
         if(gameExists.value){
-            currentGame.value.manageSessions("add", _getSessionObj())
+            props.session.Code = sessionCode.value
+            currentGame.value.Sessions.push(props.session)
             _clearFilter()
             emit("save")
         }
@@ -110,7 +97,7 @@
     // Update a session 
     function onUpdateSession(){
         if(gameExists.value){
-            currentGame.value.manageSessions("update", _getSessionObj())
+            props.session.Code = sessionCode.value
             _clearFilter()
             emit("save")
         }
@@ -123,20 +110,6 @@
             currentGame.value.manageSessions("delete", props.session)
             _clearFilter()
         }
-    }
-
-    // Get the added/updated session object
-    function _getSessionObj(){
-        let sessionObj =  {
-            "Code": sessionCode.value,
-            "Expires": {
-                "Month": expireMonth.value,
-                "Day": expireDay.value,
-                "Year": expireYear.value
-            },
-            "Settings": Object.values(settingsMap)
-        }
-        return sessionObj
     }
 
     // Clear filter on session form 

@@ -40,8 +40,10 @@
                 "Year": 2099
             },
             "Settings": [
-                { "Name": "Answering Questions", "Type": "select", "option": 2 },
-                { "Name": "Selecting Questions", "Type": "select", "option": 3 }
+                { "Name": "Answering Questions", "Type": "select", "OptionID": 2 },
+                { "Name": "Selecting Questions", "Type": "select", "OptionID": 3 },
+                {"Name": "Seconds to Answer", "Type": "Number", "OptionID": 1, "Value": 15},
+                {"Name": "Final Jeopardy Wager", "Type": "select", "OptionID": 1}
             ]
         }
     ]

@@ -18,7 +18,6 @@
     import { useRoute } from 'vue-router'
     import { storeToRefs } from 'pinia';
     import { useGamesStore } from '@/stores/games'
-    import json from '@/assets/config/rules.json'
 
     const gamesStore = useGamesStore()
     const { currentGame } = storeToRefs(gamesStore)

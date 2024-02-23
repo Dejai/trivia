@@ -1,11 +1,12 @@
 import Setting from './Setting';
+import rules from '@/assets/config/rules.json'
 
 export default class Session { 
 
     // Name: string;
     Code: string; 
     Expires: any;
-    Settings?: Setting[]; 
+    Settings: Setting[]; 
     IsExpired: boolean = false;
 
     constructor(details:any){
@@ -13,6 +14,9 @@ export default class Session {
         this.Code = details?.Code ?? "";
         this.Expires = details?.Expires ?? {};
         this.Settings = this._mapToSettings(details?.Settings) ?? undefined;
+
+        // Add missing settings ono load
+        this._addMissingSettings()
 
         this.setIsExpired()
     }
@@ -26,9 +30,23 @@ export default class Session {
         this.setIsExpired();
     }
 
+    getSetting(settingName:string){
+        return this.Settings?.filter( (x:Setting) => x.Name == settingName)?.[0] ?? undefined
+    }
+
     _mapToSettings(settingList:any){
         // return undefined
         return (settingList != undefined) ? settingList?.map( (setting:any) => new Setting(setting) ) : [];
+    }
+
+    _addMissingSettings(){
+        for(let rule of rules){
+            let settingName = rule.Name
+            let exists = this.Settings.filter( (x:Setting) => x.Name == settingName)?.[0] ?? undefined
+            if(exists == undefined){
+                this.Settings.push( new Setting(rule))
+            }
+        }
     }
 
     // Get the expiration date 

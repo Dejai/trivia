@@ -29,12 +29,14 @@
                     </template>
                 </IconButton>
             </div>
-            <div v-if="showSessionInstruction">
-                <p>Add new sessions for players to join & play a new instance of this game.</p>
-            </div>
+            <!-- Session Messages -->
+            <p v-if="showSessionInstruction">Add new sessions for players to join & play a new instance of this game.</p>
+            <p v-if="showNoAvailableSessionMessage">This game doesn't have any open sessions right now. </p>
+            <p v-if="showSessionErrorMessage" class="color-orange">Cannot add/play sessions for this game because it has errors. Check for any errors on the "Questions/Answers" tab</p>
+           
             <!-- List of existing sessions -->
             <div id="gameSessionSection" v-if="showSessionsTable">
-                <div v-if="currentGame.Sessions.length > 0 && !hasErrors">
+                <div>
                     <SessionRowHeader v-if="showSessionColumns" />
                     <SessionRow v-for="session in sortedSessions" 
                         :key="session"
@@ -45,18 +47,11 @@
                         @cancel="hideNewSessionForm"
                     />
                 </div>
-                <div v-else>
-                    <div>
-                        <p>This game doesn't have any open session right now. </p>
-                    </div>
-                </div>
             </div>
-            <h3 v-if="showSessionErrorMessage" class="color-orange">
-                <p>Cannot add/play sessions for this game because it has errors. Check for any errors on the "Questions/Answers" tab</p>
-            </h3>
             <!-- Adding a new Session -->
             <div id="sessionSection" v-if="showAddNewSession">
                 <SessionForm 
+                    :session="newSession"
                     :isNew="true"
                     @save="afterSaveNewSession"
                     @cancel="hideNewSessionForm"
@@ -74,6 +69,7 @@
     import { useAuthStore } from '@/stores/auth'
     import { useMenuStore } from '@/stores/menu'
     import { useFiltersStore } from '@/stores/filters'
+    import Session from '@/models/Session'
     import SessionRow from '@/components/views/game/SessionRow.vue'
     import SessionRowHeader from '@/components/views/game/SessionRowHeader.vue'
     import SessionForm from '@/components/views/game/SessionForm.vue'
@@ -92,24 +88,28 @@
     const { filters } = storeToRefs(filtersStore)
     const { isLoggedIn, userKey } = storeToRefs(authStore);
     const showAddNewSession = ref(false)
+    const newSession = ref(new Session({}))
 
     const { hasErrors } = currentGame.value.validateGame()
+
     // COMPUTED
-    const sortedSessions = computed( () =>  currentGame.value.Sessions?.sort( (a:any, b:any) => { return a.getExpirationDate() - b.getExpirationDate() }))
-    const hasSessions = computed( () => sortedSessions.value.length > 0)
-    const hasCategories = computed ( () => (currentGame.value.Categories.filter( (cat:any) => !cat.isFinalJeopardy()) ?? []).length > 0 )
-    const isFilteredBySession = computed( () => filters.value.session != "")
     const isGameAdmin = computed( () => gamesStore.isAdmin(userKey.value) )
+
+    const visibleSessions = computed( () => (isGameAdmin.value) ? currentGame.value.Sessions : currentGame.value.Sessions.filter( (x:Session) => !x.IsExpired && x.Code != "TEST" ) )
+    const sortedSessions = computed( () =>  visibleSessions.value?.sort( (a:any, b:any) => { return a.getExpirationDate() - b.getExpirationDate() }))
+    const hasVisibleSessions = computed( () => visibleSessions.value.length > 0)
+    const showSessionsTable = computed( () => !showAddNewSession.value && hasVisibleSessions.value && !hasErrors )
+    const isFilteredBySession = computed( () => filters.value.session != "")
     const showSessionColumns = computed( () => filters.value.session == "" )
-    // const showAddSessionButton = computed( () => isGameAdmin.value && !showAddNewSession.value && !hasErrors && !isFilteredBySession.value )
     const showAddSessionButton = computed( () => isGameAdmin.value && !showAddNewSession.value && !isFilteredBySession.value )
+    const showNoAvailableSessionMessage = computed( () => (isGameAdmin.value && !hasErrors && !hasVisibleSessions.value) || (!isGameAdmin.value && !hasVisibleSessions.value) )
     const showSessionErrorMessage = computed ( () => isGameAdmin.value && hasErrors)
     const showSessionInstruction = computed( () => isGameAdmin.value && sortedSessions.value.length == 0 && !showAddNewSession.value );
-    const showSessionsTable = computed( () => !showAddNewSession.value && hasSessions.value )
     const gameSessionPlurality = computed( () => !isFilteredBySession.value && !showAddNewSession.value ? "s" : "")
 
     // Add a new session
     function onAddSession(){
+        newSession.value = new Session({})
         showAddNewSession.value = true
     }
 

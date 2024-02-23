@@ -57,6 +57,7 @@ button { cursor: pointer; border:none; font-weight: bold; }
 .flex-justify-center { justify-content: center;}
 .flex-align-start { align-items: start; }
 .flex-align-center { align-items: center; }
+.flex-align-stretch { align-items: stretch; }
 .flex-gap-5 { gap: 5px; } 
 .flex-gap-10 { gap: 10px; }
 .flex-gap-15 { gap: 15px; }

@@ -172,20 +172,16 @@
         for(let team of teams.value){
             let match = answers.filter( (ans:any) => ans.code == team.Code)?.[0];
             team.Answer = (match != undefined) ? match.answer : defaultAnswer
-            console.log(team.Answer);
         }
         showWhoGotItRIght.value = true
     }
     
     // Confirm that we are ready to proceed with the wagers
     function onConfirmWagers(){ 
-        console.log("confirming wagers")
         isWagersReady.value = true;  isWagersNeedConfirmed.value = false; }
 
     function onCancelConfirmWagers(ev:any) { 
-        console.info("Canceling wagers")
         isWagersNeedConfirmed.value = false; 
-        console.log(isWagersNeedConfirmed.value);
         ev.stopPropagation()
     }
 

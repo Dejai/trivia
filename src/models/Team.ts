@@ -30,7 +30,6 @@ export default class Team {
     setFinalScore(){
         let wagerVal = (this.Wager != undefined) ? this.Wager : 0
         let modifier = (this.FinalAnswerCorrect) ? wagerVal : -(wagerVal)
-        console.log("Modifying: " + modifier)
         this.FinalScore = (this.Score + modifier)
     }
     setFinalAnswerPass(status:boolean){

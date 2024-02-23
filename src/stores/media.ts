@@ -9,7 +9,6 @@ import appConfig from '@/assets/config/app.json'
 export const useMediaStore = defineStore('media', () => {
 
   const route = useRoute()
-  const gameID = route.params?.gameID ?? ""
 
   const media = ref(new Array<Media>())
   const mediaLoaded = ref(false)
@@ -17,6 +16,7 @@ export const useMediaStore = defineStore('media', () => {
 
   // Function to load the games
   async function getMedia() {
+    let gameID = route.params?.gameID ?? ""
     let { data, error } = await useFetch("GET", `https://files.the-dancinglion.workers.dev/trivia/media/?key=${gameID}`)
     if(data != null && error == null){
         media.value = data?.map( (media:any) => new Media( {Name: media, GameID:gameID, Url: getMediaURL(media) } ));
@@ -32,6 +32,11 @@ export const useMediaStore = defineStore('media', () => {
     return `${mediaUrl}/${mediaName}`
   }
 
+  // Clear out media stored (in case navigating between games)
+  function clearMedia(){
+    media.value = new Array<Media>()
+  }
+
   // Refresh the game media
   async function refreshMedia(){
     await getMedia()
@@ -41,5 +46,5 @@ export const useMediaStore = defineStore('media', () => {
     getMedia()
   })
 
-  return { media, getMediaURL, refreshMedia }
+  return { media, getMediaURL, refreshMedia, clearMedia }
 })

@@ -41,7 +41,6 @@
                             &nbsp;&nbsp;
                             <span class="color-green" v-if="showNoErrorsMessage">All set. No errors</span>
                         </h3>
-
                     </template>
                 </IconButton>
                 <IconButton v-if="showMediaTab" @click="onShowMediaForm" style="color:white;">
@@ -153,14 +152,9 @@
 
     onMounted( async () => {
         menuStore.setMenuValue("subtitle1", "loading")
-        // let gameID = route.params.gameID?.toString() ?? ""
         await gamesStore.getCurrentGame()
         isMounted.value = true
         menuStore.setMenuValue("subtitle1", currentGame.value.Name)
-    })
-
-    onBeforeUnmount(() => {
-        menuStore.clearMenuValue("subtitle1")
     })
 </script>
 
