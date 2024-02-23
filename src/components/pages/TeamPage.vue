@@ -9,7 +9,7 @@
             </h2>
         </div>
         <div class="teamSubmitSection" style="width:100%;" v-if="!showAddWager">
-            <input id="answerInputField" class="fieldInput" type="text" placeholder="Enter answer here..." name="answer" autocomplete="off" v-model="currentTeam.Answer">
+            <input id="answerInputField" class="fieldInput" type="text" placeholder="Enter answer here..." name="answer" spellcheck="false" autocomplete="off" v-model="currentTeam.Answer">
         </div>
         <div id="teamActionSection" style="" v-if="!showAddWager">
             <IconButton v-if="!isSubmitting" :class="{'color-green': canSubmit }" @click="onSubmitAnswer">
