@@ -64,8 +64,6 @@ export default class Game {
             case "add":
             case "update":
                 if(matchingCategory != undefined){
-                    console.log("Matching");
-                    console.log(matchingCategory)
                     matchingCategory.updateCategory(categoryDetails)
                 } else {
                     this.Categories?.push( new Category(categoryDetails) )

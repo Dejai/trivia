@@ -47,7 +47,7 @@
 	{
 		"Name": "Seconds to Answer",
 		"Type": "number",
-		"Value": 7,
+		"Value": 10,
 		"Options": [
 			{
 				"optionID": 1,

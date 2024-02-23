@@ -104,8 +104,5 @@ export const useTeamsStore = defineStore('teams', () => {
       currentTeam.value = new Team(data);
     }
   }
-
-  
-  //   const mapped = example.map( (obj:any) => new Team(obj) )
     return { currentTeam, teams, getTeams, createTeam, getTeam, updateTeam, getTeamAnswers, getTeamWagers }
 })
