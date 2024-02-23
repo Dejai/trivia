@@ -27,6 +27,14 @@ export default class Game {
         this.Admins.push(admin)
     }
 
+    // Check if this game contains certain text (for home page filtering)
+    containsText(text:string){
+        let lowerText = text.toLowerCase()
+        let inName = this.Name.toLowerCase().includes(lowerText)
+        let inDesc = this.Description.toLowerCase().includes(text)
+        return inName || inDesc
+    }
+
     // Get a single session
     getSession(sessionCode:string){
         return this.Sessions?.filter( (sess:Session) => sess.Code == sessionCode)?.[0] ?? undefined
