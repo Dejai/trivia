@@ -17,14 +17,16 @@ export const useTeamsStore = defineStore('teams', () => {
   ]
 
   const route = useRoute()
-  const gameID = route.params.gameID
-  const teams = ref(exampleTeams.map( (x:any) => new Team(x)))
+  const sessionID = route.params.sessionID ?? ""
+  const defaultTeams = (sessionID == "TEST") ? exampleTeams.map( (x:any) => new Team(x)) : new Array<Team>
+  const teams = ref(defaultTeams)
   const currentTeam = ref(new Team({}))
 
   // Get teams for this game
   async function getTeams(){
     let gameID = route.params.gameID
     let {data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/teams/?key=${gameID}`);
+    console.log(data)
     if(data != undefined){
       teams.value = data.map( (x:any) => new Team(x))
     }

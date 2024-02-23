@@ -58,8 +58,16 @@
                     </template>
                 </IconButton>
                 <div class="teamRows">
-                    <div class="teamSectionRow" v-for="team in teamsSorted">
-                        <h3 style="max-width:75%;"><span class="color-green" v-if="team.HasWager"><circle-check-icon/> &nbsp;</span>{{ team.Name }}</h3>
+                    <div class="teamSectionRow color-white" v-for="(team, idx) in teamsSorted">
+                        <h3 style="max-width:75%;" class="flex-row flex-nowrap">
+                            <p class="color-gray">{{ idx+1 }} &nbsp;</p>
+                            <span class="color-green" v-if="team.HasWager">
+                                <circle-check-icon/> &nbsp;
+                            </span>
+                            <p>
+                                {{ team.Name }}
+                            </p>
+                        </h3>
                         <h3 v-if="team.HasWager">{{ team.FinalScore }}</h3>
                         <h3 v-else>{{ team.Score }}</h3>
                     </div>
@@ -209,10 +217,6 @@
     .teamSectionRow { display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 30px; }
 
     #teamSection { display:flex; flex-direction: column; gap:10px; justify-content: left; align-items: start; }
-
-    .teamRows .teamSectionRow:nth-child(1) { color: gold !important; }
-    .teamRows .teamSectionRow:nth-child(2) { color: white !important; }
-    .teamRows .teamSectionRow:nth-child(3) { color: maroon !important; }
 
     .boardModal{ 
         position: absolute;

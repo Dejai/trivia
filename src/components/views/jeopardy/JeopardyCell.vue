@@ -47,15 +47,30 @@
                     <Image v-if="showAnswerImage" :url="answerImageUrl" :is-jeopardy="true" />
                     {{  answerText  }}
                 </div>
-                <h2><spinner-icon v-if="showWhoGotItRightLoading" /></h2>
+                <h3 class="flex-row flex-justify-center flex-align-center flex-gap-10" v-if="showWhoGotItRightLoading">
+                    <spinner-icon/>
+                    <span>Loading team answers</span>
+                </h3>
                 <div v-if="showWhoGotItRight" style="width:25%; overflow:hidden;">
                     <h2>Who Got it Right?</h2>
+                    <p class="flex-row flex-justify-center">
+                        <IconButton @click="refreshAnswers()">
+                            <template #icon>
+                                <rotate-icon :spinning="isRefreshAnswersSpinning"/>
+                            </template>
+                            <template #content>
+                                <p>Refresh answers</p>
+                            </template>
+                        </IconButton>
+                    </p>
+                    
                     <div id="teamAnswerList">
                         <WhoGotItRight v-for="team in teams"
                             :key="team.Code"
                             :type="'jeopardy1'"
                             :score-value="cellValuNumber"
                             :team="team"
+
                             @add="onAddRight"
                             @subtract="onSubtractRight"
                         />
@@ -97,6 +112,7 @@
     import { useFiltersStore } from '@/stores/filters'
     import { useMediaStore } from '@/stores/media'
     import { useTeamsStore } from '@/stores/teams'
+    import { useGamesStore } from '@/stores/games'
     import QuestionAnswerPair from '@/models/QuestionAnswerPair'
     import WhoGotItRight from '@/components/views/jeopardy/WhoGotItRight.vue'
     import Image from '@/components/views/media/Image.vue'
@@ -106,7 +122,7 @@
     import EyeIcon from '@/components/icons/FontAwesome/EyeIcon.vue'
     import XMarkIcon from '@/components/icons/FontAwesome/XMarkIcon.vue'
     import PlusIcon from '@/components/icons/FontAwesome/PlusIcon.vue'
-import { useGamesStore } from '@/stores/games'
+    import RotateIcon from '@/components/icons/FontAwesome/RotateIcon.vue'
     
     const props = defineProps<{
         pair?: QuestionAnswerPair ,
@@ -120,12 +136,12 @@ import { useGamesStore } from '@/stores/games'
     const filtersStore = useFiltersStore()
     const teamsStore = useTeamsStore()
     const gamesStore = useGamesStore()
+
     const { filters } = storeToRefs(filtersStore)
     const { teams } = storeToRefs(teamsStore)
     const { media } = storeToRefs(mediaStore)
     const { currentGame, currentSession } = storeToRefs(gamesStore)
-
-
+    const isRefreshAnswersSpinning = ref(false)
     const isOpen = ref( props.isPreview ?? false)
     const wasOpened = ref(false)
     const showQuestion = ref(true)
@@ -162,12 +178,23 @@ import { useGamesStore } from '@/stores/games'
         let defaultAnswer = (route.params.sessionID == "TEST") ? "test answer" : ""
         showQuestion.value = false
         showAnswer.value = true 
+        // Add a 2-second delay in retrieving answers
+        setTimeout( async () => {
+            await refreshAnswers()
+            showWhoGotItRight.value = true
+        }, 2000)
+    }
+
+    // Get the team answers
+    async function refreshAnswers(){
+        isRefreshAnswersSpinning.value = true
+        let defaultAnswer = (route.params.sessionID == "TEST") ? "test answer" : ""
         let answers = await teamsStore.getTeamAnswers()
         for(let team of teams.value){
             let match = answers.filter( (ans:any) => ans.code == team.Code)?.[0];
             team.Answer = (match != undefined) ? match.answer : defaultAnswer
         }
-        showWhoGotItRight.value = true
+        isRefreshAnswersSpinning.value = false
     }
 
     function openCell(event:any){
@@ -227,7 +254,7 @@ import { useGamesStore } from '@/stores/games'
 
 
     .questionSection {width:50%; font-size:2.5em; padding: 2em; }
-    .qnaSection { width:50%; font-size:2.5em; padding: 2em; }
+    .qnaSection { width:50%; font-size:2.5em; padding:1em; }
 
 
     #value_header { position:fixed; top:7px; right:7px; font-size:22px; width:20%; font-weight:bolder;}
