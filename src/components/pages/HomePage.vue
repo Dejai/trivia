@@ -30,7 +30,7 @@
                 </IconButton>
             </div>
         </div>
-        <div id="gameCoversSection" class="flex-row flex-wrap flex-align-center dtk-after-sticky paddingFromMenu">
+        <div id="gameCoversSection" class="flex-row flex-wrap flex-align-center paddingFromMenu">
             <GameCover class="gameBlock gameCoverCard" v-for="game in sortedGames"
                 :key="game.GameID"
                 :game="game"
@@ -87,7 +87,7 @@
     #gameCoversSection { width:100%; justify-content: center; gap:35px }
     #homePageSearch { border-radius: 25px; font-size:22px; border:none;}
     @media (min-width: 1024px) {
-        #homeIconSection { gap: 20px; padding:3% 0%; }
+        #homeIconSection { gap: 20px; padding:0% 0%; }
         #addNewGameButton { padding-bottom: 2%; }  
         #gameCoversSection { justify-content: left; gap:25px; }
     }
