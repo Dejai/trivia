@@ -8,7 +8,7 @@
         <td class="questionText clickToEdit">
             <div class="qnaContentManagement">
                 <image-icon v-if="questionHasImage && !showEditQna" class="color-gold" title="This question has an image" @click="onPreviewQuestion"/>
-                <volume-icon v-if="questionHasAudio && !showEditQna" title="This question has audio" @click="onPreviewQuestion"/>
+                <volume-icon v-if="questionHasAudio && !showEditQna" class="color-gold" title="This question has audio" @click="onPreviewQuestion"/>
                 <textarea class="qnaFormField" type="text" v-model="props.questionAnswerPair.Question.Text" :disabled="!showEditQna"></textarea>
                 <br/>
             </div>
@@ -32,7 +32,7 @@
         <td class="answerText clickToEdit">
             <div class="qnaContentManagement">
                 <image-icon v-if="answerHasImage" class="color-gold" title="This answer has an image" @click="onPreviewQuestion"/>
-                <volume-icon v-if="answerHasAudio" title="This answer has audio" @click="onPreviewQuestion"/>
+                <volume-icon v-if="answerHasAudio" class="color-gold" title="This answer has audio" @click="onPreviewQuestion"/>
                 <textarea class="qnaFormField" type="text" v-model="props.questionAnswerPair.Answer.Text" :disabled="!showEditQna"></textarea>
             </div>
             <div class="mediaSection" v-if="showEditQna">

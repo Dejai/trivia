@@ -1,9 +1,11 @@
 <template>
     <div>
+        <h3 class="italic" style="padding-bottom:1%;" v-if="showMediaForm">
+            NOTE: Only JPEG and MP3 files are allowed
+        </h3>
         <FormContainer v-if="showMediaForm">
             <FormRow>
                 <label>Select File</label>
-                <p class="italic">Only JPEG and MP3 files allowed</p>
                 <input type="file" id="mediaFileInput" name="filename" accept="image/jpeg,audio/mp3" @change="getFileDetails">
             </FormRow>
             <FormRow>
@@ -34,12 +36,20 @@
                 :label="image.DisplayName"
                 :is-preview="true"
                 />
+            <Audio v-for="audio in audios"
+                :key="audio.Name"
+                :url="audio.Url"
+                :label="audio.DisplayName"
+                :is-preview="true"
+                :controls="true"
+                :auto-play="false"
+                />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { ref, computed } from 'vue'
+    import { ref, computed, onMounted } from 'vue'
     import { useRoute } from 'vue-router'
     import { storeToRefs } from 'pinia'
     import { useMediaStore } from '@/stores/media'
@@ -48,6 +58,7 @@
     import type Media from '@/models/Media'
     import useFileEncode from '@/composables/useFileEncode'
     import Image from '@/components/views/media/Image.vue'
+    import Audio from '@/components/views/media/Audio.vue'
     import FormContainer from '@/components/views/forms/FormContainer.vue'
     import FormRow from '@/components/views/forms/FormRow.vue'
     import FormActions from '@/components/views/forms/FormActions.vue'
@@ -132,6 +143,13 @@
     function onCancelFileUpload(){
         filtersStore.clearFilter("mediaForm")
     }
+
+    // Refresh media on loading of this tab
+    onMounted( async ()=> {
+        mediaStore.clearMedia()
+        await mediaStore.refreshMedia()
+    })
+    
 </script>
 
 <style scoped>

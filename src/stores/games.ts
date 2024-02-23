@@ -97,6 +97,7 @@ export const useGamesStore = defineStore('games', () => {
     let saveUrl = _getFilesUrl(`/trivia/?key=${gameID}`)
     let { data, error } = await useFetch("POST", saveUrl, { body: gameJson });
     isSaving.value = false;
+    console.log(data)
     if(data != null && error == null){
       isSaveSuccess.value = true
         setTimeout( () => {

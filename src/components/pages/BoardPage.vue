@@ -1,6 +1,9 @@
 <template>
     <main id="boardSection">
         <JeopardyBoard />
+        <audio ref="timeUpAudio" id="timeUpAudio" style="font-size:1px; visibility: hidden;" controls>
+            <source src="@/assets/audio/timesUp.mp3" type="audio/mpeg">
+        </audio>
     </main>
 </template>
 

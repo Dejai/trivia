@@ -59,18 +59,20 @@ export default class Game {
     // Manage categories in a game
     manageCategories(action:string, categoryDetails:any|undefined) {
         let categoryID = categoryDetails?.CategoryID ?? ""
-        let matchingSession = this.Categories?.filter( (cat:any) => cat.CategoryID == categoryID )?.[0] ?? undefined
+        let matchingCategory = this.Categories?.filter( (cat:any) => cat.CategoryID == categoryID )?.[0] ?? undefined
         switch(action){
             case "add":
             case "update":
-                if(matchingSession != undefined){
-                    matchingSession.updateCategory(categoryDetails)
+                if(matchingCategory != undefined){
+                    console.log("Matching");
+                    console.log(matchingCategory)
+                    matchingCategory.updateCategory(categoryDetails)
                 } else {
                     this.Categories?.push( new Category(categoryDetails) )
                 }
                 break;
             case "delete":
-                if(matchingSession != undefined){
+                if(matchingCategory != undefined){
                     this.Categories = this.Categories?.filter( (cat:any) => cat.CategoryID != categoryID) ?? []
                 }
                 break;

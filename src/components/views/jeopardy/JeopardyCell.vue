@@ -17,6 +17,7 @@
                         <tr>
                             <td>
                                 <span>{{ props.categoryName }}</span>
+                               
                             </td>
                             <td>
                                 <TimerCountdownView :seconds="timerSeconds" @timeup="onShowRevealAnswer"/> 

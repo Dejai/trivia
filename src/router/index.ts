@@ -19,6 +19,11 @@ const router = createRouter({
       }
     },
     {
+      path: '/game/:gameID/transfer',
+      name: 'transfer',
+      component: () => import('../components/pages/Transfer.vue')
+    },
+    {
       path: '/game/new',
       name: 'newgame',
       component: () => import('../components/pages/NewGamePage.vue')
