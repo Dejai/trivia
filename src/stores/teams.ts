@@ -33,7 +33,7 @@ export const useTeamsStore = defineStore('teams', () => {
     }
 
     // Adding example teams
-    if(route.params.sessionID == "TEST" || route.params.sessionID == undefined){
+    if(route.params.sessionID == "TEST" || route.params.sessionID == "DEMO" || route.params.sessionID == undefined){
       teams.value = teams.value.concat( exampleTeams.map( (x:any) => new Team(x)) )
     }
   }
