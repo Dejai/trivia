@@ -12,6 +12,7 @@
                 <p class="tab section" @click="onSwitchTab('overview')" :class="{ 'selected': showOverviewTab }">Overview</p>
                 <p v-if="isGameAdmin" class="tab section showOnLogin" @click="onSwitchTab('qna')" :class="{ 'selected': showQnATab }" >Questions/Answers</p>
                 <p v-if="isGameAdmin" class="tab section showOnLogin" @click="onSwitchTab('media')" :class="{ 'selected': showMediaTab }">Game Media</p>
+                <p class="tab section showOnLogin" @click="onSwitchTab('archives')" :class="{ 'selected': showArchiveTab }">Archives</p>
             </div>
         </div>
         <div id="gamePageSubsection" class="gamePagePadding" v-if="isMounted">
@@ -61,6 +62,7 @@
             <OverviewView :key="props.gameID" v-if="showOverviewTab"/>
             <QuestionsAnswersView :key="props.gameID" v-if="showQnATab"/>
             <MediaView :key="props.gameID" v-if="showMediaTab"/>
+            <ArchiveView :key="props.gameID" v-if="showArchiveTab"/>
         </div>
     </div>
 </template>
@@ -79,6 +81,7 @@
     import OverviewView from '@/components/views/game/_OverviewView.vue'
     import QuestionsAnswersView from '@/components/views/game/QuestionsAnswersView.vue'
     import MediaView from '@/components/views/game/MediaView.vue'
+    import ArchiveView from '@/components/views/game/ArchiveView.vue'
     import IconButton from '@/components/views/IconButton.vue'
     import CircleUserIcon from '@/components/icons/FontAwesome/CircleUserIcon.vue'
     import FloppyDiskIcon from '@/components/icons/FontAwesome/FloppyDiskIcon.vue'
@@ -115,6 +118,7 @@
     const showOverviewTab = computed( () => gameLoaded.value && (currentTab.value == "overview" || currentTab.value == "") )
     const showQnATab = computed( () => isGameAdmin.value && gameLoaded.value && currentTab.value == "qna" )
     const showMediaTab = computed( () => isGameAdmin.value && gameLoaded.value && currentTab.value == "media" )
+    const showArchiveTab = computed( () => gameLoaded.value && currentTab.value == "archives" )
     const sideMenuHeight = computed( () => window.innerWidth >= 1024 ? `${window.innerHeight}px` : '' )
 
     /* FUNCTIONS */

@@ -129,14 +129,19 @@ export const useGamesStore = defineStore('games', () => {
 
   // Archive game details
   async function archiveGame(session:string, teams:any){
+    // Don't archive tests and demos
+    if(session == "TEST" || session == "DEMO" || session == ""){
+      return
+    }
+    
     let archive = new Archive({
       "Data": gameStartDate.value,
       "Session":session
     })
     archive.Teams = teams
     console.log(archive)
-    console.log(currentGame)
     currentGame.value.Archives.push(archive)
+    console.log(currentGame)
     await _saveGame()
   }
 

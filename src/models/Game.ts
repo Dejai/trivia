@@ -22,7 +22,7 @@ export default class Game {
         this.Sessions = details?.Sessions?.map( (obj:any) => new Session(obj) ) ?? [];
         this.Type = details?.Type ?? ""
         this.Admins = details?.Admins ?? []
-        this.Archives = details?.Archives ?? []
+        this.Archives = details?.Archives?.map( (x:any) => new Archive(x) ) ?? []
     }
 
     addAdmin(admin:string){
