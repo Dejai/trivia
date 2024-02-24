@@ -36,7 +36,7 @@
                     <table style="width:100%;">
                         <tr>
                             <td>
-                                <TimerCountdownView :seconds="30" @click="playFinalJeopardyAudio" /> 
+                                <TimerCountdownView :seconds="30" :silent-time-up="true" @click="playFinalJeopardyAudio" /> 
                                 <audio ref="finalJeopardyAudio" id="finalJeopardyAudio" class="hidden" controls>
                                     <source src="@/assets/audio/finalJeopardy.mp3" type="audio/mpeg">
                                 </audio>
@@ -101,9 +101,11 @@
     import { useRoute } from 'vue-router'
     import { storeToRefs } from 'pinia'
     import { useFiltersStore } from '@/stores/filters'
+    import { useGamesStore } from '@/stores/games'
     import { useMediaStore } from '@/stores/media'
     import { useTeamsStore } from '@/stores/teams'
     import QuestionAnswerPair from '@/models/QuestionAnswerPair'
+    import Team from '@/models/Team'
     import WhoGotItRight from '@/components/views/jeopardy/WhoGotItRight.vue'
     import Image from '@/components/views/media/Image.vue'
     import TimerCountdownView from '@/components/views/TimerCountdownView.vue'
@@ -127,6 +129,9 @@
     const mediaStore = useMediaStore();
     const filtersStore = useFiltersStore()
     const teamsStore = useTeamsStore()
+    const gamesStore = useGamesStore()
+
+    const { currentGame, currentSession } = storeToRefs(gamesStore)
     const { filters } = storeToRefs(filtersStore)
     const { teams } = storeToRefs(teamsStore)
     const { media } = storeToRefs(mediaStore)
@@ -218,8 +223,12 @@
     }
 
     async function assignFinalPoints(){
+        let wagerSetting = currentSession.value.getSetting("Final Jeopardy Wager")
+        let maxTeamScore = Math.max(...teams.value.map( (x:Team) => x.Score))
+        let wagerOption = wagerSetting?.OptionID ?? 1
         for(let team of teams.value){
-            team.setFinalScore()
+            let maxWager = (wagerOption == 2) ? maxTeamScore : team.Score
+            team.setFinalScore(maxWager)
         }
         closeCell()
     }

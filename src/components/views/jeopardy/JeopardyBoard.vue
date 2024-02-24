@@ -61,15 +61,18 @@
                     <div class="teamSectionRow color-white" v-for="(team, idx) in teamsSorted">
                         <h3 style="max-width:75%;" class="flex-row flex-nowrap">
                             <p class="color-gray">{{ idx+1 }} &nbsp;</p>
-                            <span class="color-green" v-if="team.HasWager">
-                                <circle-check-icon/> &nbsp;
-                            </span>
                             <p>
                                 {{ team.Name }}
+                                
                             </p>
                         </h3>
-                        <h3 v-if="team.HasWager">{{ team.FinalScore }}</h3>
+                        <h3 v-if="team.HasWager">{{ team.FinalScore }}
+                            
+                        </h3>
                         <h3 v-else>{{ team.Score }}</h3>
+                        <h3 class="color-green flex-row flex-align-center" v-if="team.HasWager">
+                            <circle-check-icon/> &nbsp;
+                        </h3>
                     </div>
                 </div>
             </div>
@@ -110,7 +113,7 @@
     const teamsStore = useTeamsStore()
     const filtersStore = useFiltersStore()
 
-    const { currentGame } = storeToRefs(gamesStore)
+    const { currentGame, currentSession } = storeToRefs(gamesStore)
     const { teams } = storeToRefs(teamsStore)
     const { filters } = storeToRefs(filtersStore)
 
@@ -124,7 +127,6 @@
     const isTeamRefreshSpinning = ref(false)
     const isWagerRefreshSpinning = ref(false)
 
-    const currentSession = computed( () => currentGame?.value.getSession(route.params.sessionID ))
     const mainCategories = computed( () => currentGame?.value?.Categories.filter( (cat:Category) => !cat.isFinalJeopardy()) )
     const mainCategoryWidths = computed( () => (96 / mainCategories.value.length ) + "%" )
     const finalJeopardy = computed( () => currentGame?.value?.Categories.filter( (cat:Category) => cat.isFinalJeopardy()) )
@@ -197,6 +199,7 @@
             await gamesStore.getCurrentGame()
         }
         categories.value = currentGame?.value?.Categories
+        gamesStore.setCurrentSession()
         await teamsStore.getTeams()
     })
 

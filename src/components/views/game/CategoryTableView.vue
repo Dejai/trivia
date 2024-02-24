@@ -165,8 +165,8 @@
     const showAddQuestion = computed( () => !isFinalJeopardy )
     const isFirstCategory = computed( () => props.index == 0)
     const isLastCategory = computed( () => props.index == (props.count ?? 0)-2 )
-    const showEditAll = computed( () => questionsBeingEdited.value < props.category.QuestionAnswerPairs.length)
-    const showSaveAll = computed( () => questionsBeingEdited.value == props.category.QuestionAnswerPairs.length)
+    const showEditAll = computed( () => questionAnswerPairs.value.length > 1 &&  questionsBeingEdited.value < props.category.QuestionAnswerPairs.length)
+    const showSaveAll = computed( () => questionAnswerPairs.value.length > 1 && questionsBeingEdited.value == props.category.QuestionAnswerPairs.length)
     
 
     // Keeping track of questions being edited
