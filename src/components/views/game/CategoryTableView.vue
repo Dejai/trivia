@@ -10,20 +10,52 @@
                         <option v-for="option in categorySortOptions" :value="option">{{ option }}</option>
                     </select>
                 </div>
+                <div v-if="!isFinalJeopardy" class="flex-row flex-justify-space-between">
+                    <p>Move: &nbsp;</p>
+                    <div class="flex-row flex-justify-space-between">
+                        <IconButton v-if="!isFirstCategory" class="color-white">
+                            <template #icon>
+                                <arrow-up-icon class="orderIcon upIcon pointer" @click="onMoveCategoryUp"/>
+                            </template>
+                            <template #content>&nbsp;</template>
+                        </IconButton>
+                        <IconButton v-if="!isLastCategory" class="color-white">
+                            <template #icon>
+                                <arrow-down-icon class="orderIcon downIcon pointer" @click="onMoveCategoryDown"/>
+                            </template>
+                            <template #content>&nbsp;</template>
+                        </IconButton>
+                    </div>
+                </div>
+                <div>
+                    <IconButton class="color-green" @click="onSaveCategory">
+                        <template #icon>
+                            <floppy-disk-icon/>
+                        </template>
+                        <template #content>
+                            save
+                        </template>
+                    </IconButton>
+                </div>
+                <div>
+                    <IconButton class="color-orange" @click="onCancelCategoryEdit">
+                        <template #icon>
+                            <x-mark-icon />
+                        </template>
+                        <template #content>
+                            cancel
+                        </template>
+                    </IconButton>
+                </div>
                 <div v-if="!isFinalJeopardy">
-                    Move: &nbsp;
-                    <arrow-up-icon v-if="!isFirstCategory" class="orderIcon upIcon pointer" @click="onMoveCategoryUp"/> 
-                    <arrow-down-icon v-if="!isLastCategory" class="orderIcon downIcon pointer" @click="onMoveCategoryDown" />
-                </div>
-                <div @click="onSaveCategory" >
-                    <floppy-disk-icon :label="'save'"/>
-                </div>
-                <div @click="onCancelCategoryEdit">
-                    <x-mark-icon :label="'cancel'"/>
-                </div>
-                <div @click="onDeleteCategory">
-                <!-- <div @click="onDeleteCategory"  v-if="!isFinalJeopardy"> -->
-                    <trash-can-icon :label="'delete'"/>
+                    <IconButton class="color-red"  @click="onDeleteCategory">
+                        <template #icon>
+                            <trash-can-icon />
+                        </template>
+                        <template #content>
+                            delete
+                        </template>
+                    </IconButton>
                 </div>
             </div>
             <div v-if="isDeleting">
@@ -33,7 +65,7 @@
                 <button class="button-round bg-color-white color-black" @click="onCancelDeleteCategory">CANCEL</button>
             </div>
         </h2>
-        <table class="categoryQuestionsTable" style="border-spacing: 0px;">
+        <table class="categoryQuestionsTable" style="border-spacing: 0px; padding:1% 0% 0% 2%;">
             <colgroup>
                 <col style="width:5%">
                 <col style="width:40%">
@@ -42,9 +74,9 @@
             </colgroup>
             <thead v-if="showTableHeaders">
                 <tr style="text-align:left;">
-                    <th>Value</th>
-                    <th>Question</th>
-                    <th>Answer</th>
+                    <th> <h4 class="bold color-white">Value</h4></th>
+                    <th> <h4 class="bold color-white">Question</h4></th>
+                    <th> <h4 class="bold color-white">Answer</h4></th>
                     <th>
                         <IconButton class="color-blue" v-if="showEditAll" @click="onEditAllQuestions($event)">
                             <template #icon>
@@ -231,7 +263,7 @@
     .categoryTitle span.orderIcon { margin-right:1%; color:white;}
 
     .categoryName { font-size: inherit; }
-    .categoryName[disabled] { color:inherit; background-color: transparent; border:none;}
+    .categoryName[disabled] { color:white; background-color: transparent; border:none;}
 
     .categoryTitle { display:flex; flex-wrap:nowrap; justify-content: left; align-items: center; gap:10px; }
     .categoryEditSubsection { width:0px; opacity:0; overflow:hidden; height:0px; }

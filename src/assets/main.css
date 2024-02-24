@@ -23,6 +23,7 @@ button { cursor: pointer; border:none; font-weight: bold; }
 
 /* Generic style */
 .italic { font-style: italic; }
+.bold { font-weight: bolder; }
 .bolder { font-weight: bolder; }
 
 /* Common color items */
