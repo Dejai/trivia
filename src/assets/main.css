@@ -1,5 +1,11 @@
 @import './base.css';
 
+@keyframes fade-in {
+  0% { opacity: 0; }
+  50% { opacity: 50%; }
+  100% { opacity: 1; }
+}
+
 #app {
   margin: 0 auto;
   padding: 0rem 1rem;
@@ -55,6 +61,7 @@ button { cursor: pointer; border:none; font-weight: bold; }
 .flex-space-between { justify-content: space-between; }
 .flex-justify-space-between { justify-content: space-between; }
 .flex-justify-left { justify-content: left;}
+.flex-justify-right { justify-content: right;}
 .flex-justify-center { justify-content: center;}
 .flex-align-start { align-items: start; }
 .flex-align-center { align-items: center; }
@@ -93,6 +100,10 @@ button { cursor: pointer; border:none; font-weight: bold; }
 /* ICONS */
 .iconContainer { cursor:pointer; display:flex; justify-content:left; align-items: center; gap:10%; }
 .iconLabel { cursor: pointer; margin-left:0.2%; }
+
+/* JEOPARDY CELLS */
+.answerSection { opacity: 0;  }
+.answerSection.revealed {  animation: fade-in 1s forwards; }
 
 a,
 .green {

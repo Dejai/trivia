@@ -24,8 +24,8 @@
             </div>
             <div v-else id="enterTeamNameSection">
                 <div>
-                    <h2>Team Name</h2>
-                    <input class="fieldInput" id="teamName" type="text" placeholder="Enter a team name" v-model="teamName" autocomplete="off">
+                    <h2>Enter a Team Name</h2>
+                    <input class="fieldInput" id="teamName" type="text" placeholder="Team name" v-model="teamName" autocomplete="off">
                 </div>
                 
                 <IconButton v-if="!isJoining" @click="enterSession" :class="{ 'color-green': canJoinSession}">

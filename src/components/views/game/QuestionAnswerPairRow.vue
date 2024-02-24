@@ -12,7 +12,7 @@
                 <textarea class="qnaFormField" type="text" v-model="props.questionAnswerPair.Question.Text" :disabled="!showEditQna"></textarea>
             </div>
             <div>
-                <input class="qnaFormField" type="text" placeholder="Subtext (shown below text in italics)" v-model="props.questionAnswerPair.Question.SubText" v-if="showQuestionSubText" :disabled="!showEditQna" />
+                <input class="qnaFormField italic" type="text" placeholder="Subtext (shown below text in italics)" v-model="props.questionAnswerPair.Question.SubText" v-if="showQuestionSubText" :disabled="!showEditQna" />
             </div>
             <div class="mediaSection" v-if="showEditQna">
                 <div>
@@ -38,7 +38,7 @@
                 <textarea class="qnaFormField" type="text" v-model="props.questionAnswerPair.Answer.Text" :disabled="!showEditQna"></textarea>
             </div>
             <div>
-                <input class="qnaFormField" type="text" placeholder="Subtext (shown below text in italics)" v-model="props.questionAnswerPair.Answer.SubText" v-if="showAnswerSubText" :disabled="!showEditQna" />
+                <input class="qnaFormField italic" type="text" placeholder="Subtext (shown below text in italics)" v-model="props.questionAnswerPair.Answer.SubText" v-if="showAnswerSubText" :disabled="!showEditQna" />
             </div>
             <div class="mediaSection" v-if="showEditQna">
                 <div>

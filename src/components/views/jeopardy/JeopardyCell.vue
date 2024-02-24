@@ -45,7 +45,7 @@
                         </template>
                     </IconButton>
                 </div>
-                <div class="qnaSection answerSection" v-if="showAnswer">
+                <div class="qnaSection answerSection" :class="{'revealed': showAnswer}" v-if="showAnswer">
                     <Image v-if="showAnswerImage" :url="answerImageUrl" :is-jeopardy="true" />
                     <Audio v-if="showAnswerAudio" :url="answerAudioUrl" :is-jeopardy="true" :controls="true"/>
                     {{  answerText  }}
@@ -278,7 +278,7 @@
 
     #teamAnswerList { max-height:500px; overflow-y:scroll; position:relative; padding: 2%; text-align: center; }
 
-    .subtext { font-size: 80%; }
+    .subtext { font-size: 80%; font-style:italic; }
 
     @keyframes tilt-shaking {
         0% { transform: rotate(0deg); }

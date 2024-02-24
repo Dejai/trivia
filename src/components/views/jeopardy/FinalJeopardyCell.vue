@@ -58,7 +58,7 @@
                         </template>
                     </IconButton>
                 </div>
-                <div class="qnaSection answerSection" v-if="showAnswer">
+                <div class="qnaSection answerSection" :class="{'revealed': showAnswer}" v-if="showAnswer">
                     <Image v-if="showAnswerImage" :url="answerImageUrl" :is-jeopardy="true" />
                     {{  answerText  }}
                 </div>

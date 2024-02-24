@@ -23,7 +23,7 @@
 <style scoped>
     .imagePreview { max-width: 22%; }
     .isJeopardy { max-width:95%; max-height:500px;  transition: all ease 1.2s;  }
-    .isJeopardy:hover{ transform: scale(1.5); cursor:pointer;}
+    .isJeopardy:hover{ transform: scale(1.5); cursor:pointer; transition-delay: 1s;}
     .isPreview { width: 100%;  border: 1px solid white; }
     
 
