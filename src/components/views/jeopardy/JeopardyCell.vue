@@ -31,6 +31,7 @@
 
                 <div class="qnaSection questionSection" v-if="showQuestion">
                     <Image v-if="showQuestionImage" :url="questionImageUrl" :is-jeopardy="true" />
+                    <Audio v-if="showQuestionAudio" :url="questionAudioUrl" :is-jeopardy="true" :controls="true" />
                     {{ questionText }}
                 </div>
                 <div v-if=" (showRevealAnswer || props.isPreview ) && !showAnswer">
@@ -45,6 +46,7 @@
                 </div>
                 <div class="qnaSection answerSection" v-if="showAnswer">
                     <Image v-if="showAnswerImage" :url="answerImageUrl" :is-jeopardy="true" />
+                    <Audio v-if="showAnswerAudio" :url="answerAudioUrl" :is-jeopardy="true" :controls="true"/>
                     {{  answerText  }}
                 </div>
                 <h3 class="flex-row flex-justify-center flex-align-center flex-gap-10" v-if="showWhoGotItRightLoading">
@@ -116,6 +118,7 @@
     import QuestionAnswerPair from '@/models/QuestionAnswerPair'
     import WhoGotItRight from '@/components/views/jeopardy/WhoGotItRight.vue'
     import Image from '@/components/views/media/Image.vue'
+    import Audio from '@/components/views/media/Audio.vue'
     import TimerCountdownView from '@/components/views/TimerCountdownView.vue'
     import SpinnerIcon from '@/components/icons/FontAwesome/SpinnerIcon.vue'
     import IconButton from '@/components/views/IconButton.vue'
@@ -159,14 +162,21 @@
     const cellValuNumber = Number(cellValue)
     const questionKey = `${props.categoryName} for ${cellValue}`
 
+    // Question details
     const question = props.pair?.Question
     const questionText = question?.Text ?? ""
     const questionImageUrl = mediaStore.getMediaURL(question?.ImageRef)
+    const questionAudioUrl = mediaStore.getMediaURL(question?.AudioRef)
     const showQuestionImage = (questionImageUrl != "")
+    const showQuestionAudio = (questionAudioUrl != "")
+    // Answer details
     const answer = props.pair?.Answer
     const answerText = answer?.Text ?? ""
     const answerImageUrl = mediaStore.getMediaURL(answer?.ImageRef)
+    const answerAudioUrl = mediaStore.getMediaURL(answer?.AudioRef)
     const showAnswerImage = (answerImageUrl != "")
+    const showAnswerAudio = (answerAudioUrl != "")
+
 
     // Show the button to reveal the answer
     function onShowRevealAnswer(){

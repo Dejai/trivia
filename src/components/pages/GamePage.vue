@@ -21,8 +21,8 @@
                         <floppy-disk-icon/>
                     </template>
                     <template #content>
-                        <h3 v-if="!isSaving && !isSaveSuccess">Save Game</h3>
-                        <h3 v-if="isSaving">Saving ... <spinner-icon /></h3>
+                        <h3 v-if="!isSaving && !isSaveSuccess">SAVE</h3>
+                        <h3 v-if="isSaving">SAVING... <spinner-icon /></h3>
                         <h3 v-if="isSaveSuccess">Saved!</h3>
                     </template>
                 </IconButton>
@@ -162,7 +162,7 @@
     .gamePagePadding { padding-top:5%; }
     #gamePageMenu { width: 100%; border-bottom:2px solid white; padding-bottom:5%;  }
     #navTabs { display:flex; flex-wrap:nowrap; width:100%; }
-    #navTabs .tab { padding:1% 3%; text-align:center;}
+    #navTabs .tab { padding:1% 3%; text-align:center; cursor:pointer; }
     .tab.selected { background-color: #007FFF;; color:white; }
 
     #gamePageSubsection { width:99%; }
