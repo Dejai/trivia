@@ -5,6 +5,7 @@ import { useFetch } from '@/composables/useFetch'
 import Game from '@/models/Game'
 import Session from '@/models/Session'
 import appConfig from '@/assets/config/app.json'
+import Archive from '@/models/Archive'
 
 export const useGamesStore = defineStore('games', () => {
 
@@ -21,6 +22,7 @@ export const useGamesStore = defineStore('games', () => {
   const changes = ref(new Array<Date>)
   const lastSyncDate = ref(new Date())
   const newChanges = computed( () => changes.value.filter( (changeDate:Date) => changeDate > lastSyncDate.value) ?? [] )
+  const gameStartDate = ref(new Date())
   const toBeSaved = ref(false)
   const isSaveSuccess = ref(false)
   const isSyncing = ref(false)
@@ -41,7 +43,7 @@ export const useGamesStore = defineStore('games', () => {
   // Get the current game (based on )
   async function getCurrentGame(){
     let gameID = route.params?.gameID ?? ""
-    let { data, error } = await useFetch("GET", `https://files.the-dancinglion.workers.dev/trivia/?key=${gameID}`)
+    let { data, error } = await useFetch("GET", `${filesBaseUrl}/trivia/?key=${gameID}`)
     if(data != null && error == null){
       currentGame.value = new Game(data)
     }
@@ -53,7 +55,7 @@ export const useGamesStore = defineStore('games', () => {
     if(existingGame){
       currentGame.value = existingGame
     } else { 
-      let { data, error } = await useFetch("GET", `https://files.the-dancinglion.workers.dev/trivia/?key=${gameID}`)
+      let { data, error } = await useFetch("GET", `${filesBaseUrl}/trivia/?key=${gameID}`)
       if(data != null && error == null){
         let theGame = new Game(data)
         currentGame.value = theGame
@@ -110,7 +112,7 @@ export const useGamesStore = defineStore('games', () => {
 
   // Sync the games list
   async function _syncGames(){
-    await useFetch("GET", "https://files.the-dancinglion.workers.dev/trivia/sync/?key=1")
+    await useFetch("GET", `${filesBaseUrl}/trivia/sync/?key=1`)
     await getGames()
   }
 
@@ -125,12 +127,25 @@ export const useGamesStore = defineStore('games', () => {
     return currentGame.value?.Admins?.includes(userKey) ?? false;
   }
 
+  // Archive game details
+  async function archiveGame(session:string, teams:any){
+    let archive = new Archive({
+      "Data": gameStartDate.value,
+      "Session":session
+    })
+    archive.Teams = teams
+    console.log(archive)
+    console.log(currentGame)
+    currentGame.value.Archives.push(archive)
+    await _saveGame()
+  }
+
   onMounted( async ()=> {
     getGames();
   })
 
   return { 
-    gamesLoaded, currentGame, currentSession, games, toBeSaved, isSyncing, syncCountdown, isSaving, isSaveSuccess,
-    getGames, setCurrentGame, getCurrentGame, setCurrentSession, setGameSaveNeeded, saveGame, setSyncNeeded, isAdmin
+    gamesLoaded, currentGame, currentSession, games, toBeSaved, isSyncing, syncCountdown, isSaving, isSaveSuccess, gameStartDate,
+    getGames, setCurrentGame, getCurrentGame, setCurrentSession, setGameSaveNeeded, saveGame, setSyncNeeded, isAdmin, archiveGame
   }
 })

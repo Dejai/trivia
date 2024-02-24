@@ -1,7 +1,7 @@
 import Category from "./Category";
 import Session from "./Session";
 import ErrorMessage from "./ErrorMessage";
-import QuestionAnswerPair from './QuestionAnswerPair'
+import Archive from "./Archive";
 
 export default class Game { 
 
@@ -12,6 +12,7 @@ export default class Game {
     Categories: Category[];
     Sessions?: Session[];
     Admins: string[] = []
+    Archives: Archive[]
 
     constructor(details:any){
         this.Name = details?.Name ?? "";
@@ -21,6 +22,7 @@ export default class Game {
         this.Sessions = details?.Sessions?.map( (obj:any) => new Session(obj) ) ?? [];
         this.Type = details?.Type ?? ""
         this.Admins = details?.Admins ?? []
+        this.Archives = details?.Archives ?? []
     }
 
     addAdmin(admin:string){

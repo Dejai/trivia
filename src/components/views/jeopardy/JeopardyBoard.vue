@@ -57,13 +57,8 @@
                                 
                             </p>
                         </h3>
-                        <h3 v-if="team.HasWager">{{ team.FinalScore }}
-                            
-                        </h3>
+                        <h3 v-if="team.HasWager" :class="{'color-green': team.HasWager}">{{ team.FinalScore }}</h3>
                         <h3 v-else>{{ team.Score }}</h3>
-                        <h3 class="color-green flex-row flex-align-center" v-if="team.HasWager">
-                            <circle-check-icon/> &nbsp;
-                        </h3>
                     </div>
                 </div>
                     <IconButton @click="getTeamsForGame()" style="text-align:right;">
@@ -108,19 +103,21 @@
     import RotateIcon from '@/components/icons/FontAwesome/RotateIcon.vue'
     import  CircleCheckIcon from '@/components/icons/FontAwesome/CircleCheckIcon.vue'
 
+    // STORES
     const route = useRoute()
     const gamesStore = useGamesStore()
     const menuStore = useMenuStore()
     const teamsStore = useTeamsStore()
     const filtersStore = useFiltersStore()
 
-    const { currentGame, currentSession } = storeToRefs(gamesStore)
+    // REFS
+    const { currentGame, gameStartDate } = storeToRefs(gamesStore)
     const { teams } = storeToRefs(teamsStore)
     const { filters } = storeToRefs(filtersStore)
-
     const isFinalJeopardy = ref(false)
     const canPlayGame = ref(false)
     const isGameStarted = ref(false)
+    const gameStartedDate = ref(new Date())
     const columnsRevealed = ref(0)
     const categories = ref(currentGame?.value?.Categories)
     const nextQuestion = ref("")
@@ -128,15 +125,13 @@
     const isTeamRefreshSpinning = ref(false)
     const isWagerRefreshSpinning = ref(false)
 
+    // COMPUTED
     const mainCategories = computed( () => currentGame?.value?.Categories.filter( (cat:Category) => !cat.isFinalJeopardy()) )
     const mainCategoryWidths = computed( () => (96 / mainCategories.value.length ) + "%" )
     const finalJeopardy = computed( () => currentGame?.value?.Categories.filter( (cat:Category) => cat.isFinalJeopardy()) )
     const teamsSorted = computed( ()=> teams.value.sort( (a,b) => b.Score - a.Score ))
 
-    // Game settings
-    // const sessionSettings = computed( () => currentSession?.value?.Settings ?? {} )
-    // const userPicksQuestion = computed( () => currentSession?.value.getSettingValue("Selecting Questions")?.optionID == 2)
-
+    // FUNCTIONS 
     async function getTeamsForGame(){
         isTeamRefreshSpinning.value = true
         await teamsStore.getTeams()
@@ -144,6 +139,7 @@
             isTeamRefreshSpinning.value = false
         }, 1000);
     }
+
     async function getTeamWagers(){
         isWagerRefreshSpinning.value = true
         await teamsStore.getTeamWagers()
@@ -154,7 +150,6 @@
 
     // Pick the next available question
     function getRandomQuestion(){
-
         try { 
             let availableCells = Array.from(document.querySelectorAll(".questionCell:not(.cellViewed)"))
             for(let cell of availableCells){
@@ -178,6 +173,7 @@
     // Start a new game
     function onStartGame(){
         isGameStarted.value = true
+        gameStartDate.value = new Date()
         filtersStore.setFilter("gameStarted", true)
         getRandomQuestion();
     }
