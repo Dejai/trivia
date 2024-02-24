@@ -24,9 +24,10 @@ export const useTeamsStore = defineStore('teams', () => {
 
   // Get teams for this game
   async function getTeams(){
-    let gameID = route.params.gameID
-    let {data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/teams/?key=${gameID}`);
-    console.log(data)
+    let gameID = route.params.gameID?.toString().toLowerCase()
+    let sessionID = route.params.sessionID?.toString().toLowerCase()
+    let {data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/teams/?key=${gameID}_${sessionID}`);
+    console.info(data)
     if(data != undefined){
       teams.value = data.map( (x:any) => new Team(x))
     }
