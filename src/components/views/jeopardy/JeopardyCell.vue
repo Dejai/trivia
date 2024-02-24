@@ -33,6 +33,7 @@
                     <Image v-if="showQuestionImage" :url="questionImageUrl" :is-jeopardy="true" />
                     <Audio v-if="showQuestionAudio" :url="questionAudioUrl" :is-jeopardy="true" :controls="true" />
                     {{ questionText }}
+                    <p class="subtext italic">{{ props.pair.Question.SubText }}</p>
                 </div>
                 <div v-if=" (showRevealAnswer || props.isPreview ) && !showAnswer">
                     <IconButton @click="revealAnswer">
@@ -48,6 +49,7 @@
                     <Image v-if="showAnswerImage" :url="answerImageUrl" :is-jeopardy="true" />
                     <Audio v-if="showAnswerAudio" :url="answerAudioUrl" :is-jeopardy="true" :controls="true"/>
                     {{  answerText  }}
+                    <p class="subtext italic">{{ props.pair.Answer.SubText }}</p>
                 </div>
                 <h3 class="flex-row flex-justify-center flex-align-center flex-gap-10" v-if="showWhoGotItRightLoading">
                     <spinner-icon/>
@@ -128,7 +130,7 @@
     import RotateIcon from '@/components/icons/FontAwesome/RotateIcon.vue'
     
     const props = defineProps<{
-        pair?: QuestionAnswerPair ,
+        pair: QuestionAnswerPair ,
         categoryName?: string,
         isPreview?:boolean
     }>()
@@ -275,6 +277,8 @@
     #close_question_view { position:fixed; z-index:1000; top:0; left:0; width:10%; padding:1%; text-align:left; cursor:pointer; }
 
     #teamAnswerList { max-height:500px; overflow-y:scroll; position:relative; padding: 2%; text-align: center; }
+
+    .subtext { font-size: 80%; }
 
     @keyframes tilt-shaking {
         0% { transform: rotate(0deg); }

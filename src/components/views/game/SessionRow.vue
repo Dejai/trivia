@@ -99,7 +99,10 @@
         filtersStore.setFilter("session", props.session?.Code ?? "")
     }
 
-    function onSave(){ emit("save") }
+    function onSave(){ 
+        props.session?.setIsExpired()
+        emit("save") 
+    }
     function onCancel(){ emit("cancel") }
 
      // Open up the board

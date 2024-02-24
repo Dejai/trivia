@@ -10,7 +10,9 @@
                 <image-icon v-if="questionHasImage && !showEditQna" class="color-gold" title="This question has an image" @click="onPreviewQuestion"/>
                 <volume-icon v-if="questionHasAudio && !showEditQna" class="color-gold" title="This question has audio" @click="onPreviewQuestion"/>
                 <textarea class="qnaFormField" type="text" v-model="props.questionAnswerPair.Question.Text" :disabled="!showEditQna"></textarea>
-                <br/>
+            </div>
+            <div>
+                <input class="qnaFormField" type="text" placeholder="Subtext (shown below text in italics)" v-model="props.questionAnswerPair.Question.SubText" v-if="showQuestionSubText" :disabled="!showEditQna" />
             </div>
             <div class="mediaSection" v-if="showEditQna">
                 <div>
@@ -34,6 +36,9 @@
                 <image-icon v-if="answerHasImage && !showEditQna" class="color-gold" title="This answer has an image" @click="onPreviewQuestion"/>
                 <volume-icon v-if="answerHasAudio && !showEditQna" class="color-gold" title="This answer has audio" @click="onPreviewQuestion"/>
                 <textarea class="qnaFormField" type="text" v-model="props.questionAnswerPair.Answer.Text" :disabled="!showEditQna"></textarea>
+            </div>
+            <div>
+                <input class="qnaFormField" type="text" placeholder="Subtext (shown below text in italics)" v-model="props.questionAnswerPair.Answer.SubText" v-if="showAnswerSubText" :disabled="!showEditQna" />
             </div>
             <div class="mediaSection" v-if="showEditQna">
                 <div>
@@ -114,8 +119,8 @@
                 
             </div>
         </td>
-        <td v-if="isCustomOrder">
-            <div style="text-align:center;">
+        <td v-if="isCustomOrder" class="qnaOrderIcons">
+            <div class="flex-row flex-justify-center flex-align-center flex-gap-10 width-100">
                 <arrow-up-icon class="orderIcon upIcon pointer" @click="onMoveQuestionUp"/> 
                 <arrow-down-icon class="orderIcon downIcon pointer" @click="onMoveQuestionDown" />
             </div>
@@ -164,39 +169,41 @@
     const props = defineProps<{
         category:Category,
         questionAnswerPair:QuestionAnswerPair,
-        index?:number,
-        count?:number
+        index:number,
+        count:number
     }>()
     const emits = defineEmits(["editing", "saved"])
+
+    // STORES
     const mediaStore = useMediaStore();
     const gamesStore = useGamesStore()
     const { media } = storeToRefs(mediaStore)
-    const images = computed( () => media.value.filter( (x:Media) => x.Type == "Image" ) )
-    const audios = computed( () => media.value.filter( (x:Media) => x.Type == "Audio" ) )
 
+    // REFS
     const qnaValue = ref(props.questionAnswerPair.Value)
     const qnaPair = ref(props.questionAnswerPair)
     const isFinalJeopardy = props.category.isFinalJeopardy()
-
     const justModified = ref(false)
-
-    // Keep track of category values (before edited)
     const qnaCopy = ref(new QuestionAnswerPair({}, 0))
     const showPreview = ref(false)
     const showEditQna = ref(props.questionAnswerPair.isNew() ?? false)
     const isDeleting = ref(false)
 
-    // Confirm if the question or answer has media
+    // COMPUTED
+    const images = computed( () => media.value.filter( (x:Media) => x.Type == "Image" ) )
+    const audios = computed( () => media.value.filter( (x:Media) => x.Type == "Audio" ) )
     const questionHasImage = computed( () => props.questionAnswerPair.Question.ImageRef != "")
     const questionHasAudio = computed( () => props.questionAnswerPair.Question.AudioRef != "")
     const answerHasImage = computed( () => props.questionAnswerPair.Answer.ImageRef != "")
     const answerHasAudio = computed( () => props.questionAnswerPair.Answer.AudioRef != "")
-
     const showEditIcons = computed( () => showEditQna.value && !isDeleting.value )
     const isCustomOrder  = computed( () => props.category?.SortBy == "Custom Order")
     const isFirstRow = computed( () => props.index == 0)
-    const isLastRow = computed( () => props.index == props.count)
+    const isLastRow = computed( () => props.index == (props.count-1) )
+    const showQuestionSubText = computed( () => props.questionAnswerPair.Question.SubText != "" || showEditQna.value )
+    const showAnswerSubText = computed( () => props.questionAnswerPair.Answer.SubText != "" || showEditQna.value )
 
+    // FUNCTIONS
     function onToggleDailyDouble(event:any){
         let target = event.target;
         if(target.checked){
@@ -283,10 +290,10 @@
 <style scoped>
 
     .questionRow td { vertical-align: top; }
-
-    span.orderIcon { margin-right:7%; color:white;}
-   .isFirstRow span.upIcon { color:gray; }
-   .isLastRow span.downIcon { color:gray; }
+    
+    .qnaOrderIcons .orderIcon { margin-right:7%; color:white;}
+   .isFirstRow .qnaOrderIcons .upIcon { color:gray; }
+   .isLastRow .qnaOrderIcons .downIcon { color:gray; }
 
    .questionRow td { padding: 0.5% 0%; }
    .previwLink { color:lightblue; }
