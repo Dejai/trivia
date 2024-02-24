@@ -162,7 +162,7 @@
     .gamePagePadding { padding-top:5%; }
     #gamePageMenu { width: 100%; border-bottom:2px solid white; padding-bottom:5%;  }
     #navTabs { display:flex; flex-wrap:nowrap; width:100%; }
-    #navTabs .tab { padding:1% 0.5%;  }
+    #navTabs .tab { padding:1% 3%; text-align:center;}
     .tab.selected { background-color: #007FFF;; color:white; }
 
     #gamePageSubsection { width:99%; }

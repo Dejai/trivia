@@ -1,7 +1,7 @@
 <template>
     <div id="menuSection" class="width-100 flex-row flex-justify-left flex-align-center flex-nowrap" >
         <div id="menuItems" class="pointer width-100 flex-row flex-justify-left flex-align-center flex-gap-30">
-            <h1 @click="onNavigateHome" class="leftMenuWidth">Trivia</h1>
+            <h1 @click="onNavigateHome" class="leftMenuWidth color-blue">Trivia</h1>
             <h1 v-if="showMenuSubTitle1" class="gameTitle" @click="onNavigateGamePage">
                 <span v-if="isLoading">
                     <spinner-icon/>
