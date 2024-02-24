@@ -116,7 +116,6 @@
     import PlusIcon from '@/components/icons/FontAwesome/PlusIcon.vue'
     import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
     import ModalView from '@/components/views/ModalView.vue'
-
     
     const props = defineProps<{
         pair?: QuestionAnswerPair ,
@@ -125,17 +124,18 @@
     }>()
     const emit = defineEmits(["next"])
 
+    // STORES
     const route = useRoute()
     const mediaStore = useMediaStore();
     const filtersStore = useFiltersStore()
     const teamsStore = useTeamsStore()
     const gamesStore = useGamesStore()
-
+    
+    // REFS
     const { currentGame, currentSession } = storeToRefs(gamesStore)
     const { filters } = storeToRefs(filtersStore)
     const { teams } = storeToRefs(teamsStore)
     const { media } = storeToRefs(mediaStore)
-
     const finalJeopardyAudio = ref(null)
     const isOpen = ref( props.isPreview ?? false)
     const wasOpened = ref(false)
@@ -144,21 +144,20 @@
     const showWhoGotItRIght = ref(false)
     const numberRight = ref(0)
     const isCategoryVisible = ref(false)
-
     const isWagersReady = ref(false)
     const isWagersNeedConfirmed = ref(false)
 
+    // COMPUTED
     const isAssignDisabled = computed( () => numberRight.value == 0 )
     const isAssignEnabled = computed( () => numberRight.value > 0 )
     const isNobodyRightDisabled = computed( () => numberRight.value > 0 )
     const isNobodyRightEnabled = computed( () => numberRight.value == 0 )
     const showWhoGotItRIghtLoading = computed( () => showAnswer.value && !showWhoGotItRIght.value)
 
-
+    // VARIABLES
     const cellValue = props.categoryName
     const cellValuNumber = Number(cellValue)
     const questionKey = `${props.categoryName} for ${cellValue}`
-
     const question = props.pair?.Question
     const questionText = question?.Text ?? ""
     const questionImageUrl = mediaStore.getMediaURL(question?.ImageRef)
@@ -168,6 +167,7 @@
     const answerImageUrl = mediaStore.getMediaURL(answer?.ImageRef)
     const showAnswerImage = (answerImageUrl != "")
 
+    // FUNCTIONS
     // Revealing the answers given
     async function revealAnswer() {
         let defaultAnswer = (route.params.sessionID == "TEST") ? "test answer" : ""
@@ -231,6 +231,10 @@
             team.setFinalScore(maxWager)
         }
         closeCell()
+
+        // Archive the game
+        let sessionID = route.params.sessionID?.toString()
+        await gamesStore.archiveGame(sessionID, teams.value)
     }
 
     function closeCell(){

@@ -4,10 +4,10 @@ export default class Team {
     Code:string;
     Answer:string;
     Score: number;
+    FinalScore: number = 0;
     Wager?:number = undefined;
 
     // Calculated fields
-    FinalScore: number = 0;
     FinalAnswerCorrect: boolean = false;
     HasWager:boolean = false;
 
@@ -15,6 +15,7 @@ export default class Team {
         this.Name = details?.name ?? details?.Name ?? ""
         this.Code = details?.code ?? details?.Code ?? ""
         this.Score = details?.score ?? details?.Score ?? 0
+        this.FinalScore = details?.finalScore ?? details?.FinalScore ?? 0;
         this.Answer = details?.answer ?? details.Answer ?? ""
         // this.Wager = details?.wager ?? undefined;
         // Set wager
