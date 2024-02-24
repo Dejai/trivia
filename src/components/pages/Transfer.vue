@@ -74,6 +74,7 @@
 
                 // Change name of questions
                 category["QuestionAnswerPairs"] = category.Questions
+                console.log(category)
 
                 // Make sure category is tagged
                 if(category.FinalJeopardy == "Yes"){

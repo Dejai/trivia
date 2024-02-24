@@ -27,9 +27,10 @@ export default class Team {
     }
 
     // Setting final score
-    setFinalScore(){
+    setFinalScore(maxValue:number){
         let wagerVal = (this.Wager != undefined) ? this.Wager : 0
-        let modifier = (this.FinalAnswerCorrect) ? wagerVal : -(wagerVal)
+        let wagerMin = Math.min(maxValue, wagerVal)
+        let modifier = (this.FinalAnswerCorrect) ? wagerMin : -(wagerMin)
         this.FinalScore = (this.Score + modifier)
     }
     setFinalAnswerPass(status:boolean){

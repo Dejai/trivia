@@ -24,7 +24,8 @@
     import Audio from '@/components/views/media/Audio.vue'
 
     const props = defineProps<{
-        seconds:number
+        seconds:number,
+        silentTimeUp?:boolean
     }>()
     const emit = defineEmits(["started", "timeup"])
 
@@ -51,6 +52,9 @@
 
     // Play time up sound
     function playTimeUpSound(){
+        if(props.silentTimeUp){
+            return
+        }
         let audioEle = document.querySelector("#timeUpAudio") as HTMLAudioElement
         if (audioEle != undefined){
             audioEle.play()

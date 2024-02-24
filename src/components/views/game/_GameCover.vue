@@ -28,7 +28,7 @@
     const gamesStore = useGamesStore()
     
     const gameName = props.game.Name;
-    const gameDesc = props.game.Description;
+    const gameDesc = (props.game.Description.length > 55) ? props.game.Description.substring(0,53)+"...": props.game.Description;
     const gameID = props.game.GameID
 
     // Open up the selected game
@@ -40,7 +40,7 @@
 
 <style scoped>
     .gameCoverName { color:white; }
-    .gameCoverCard { box-shadow: 0 4px 8px 0 rgba(224, 224, 236, 0.2); transition: 0.3s; padding:5%; cursor:pointer; width:95%; min-height:100px; border-radius: 25px; }
+    .gameCoverCard { box-shadow: 0 4px 8px 0 rgba(224, 224, 236, 0.2); transition: 0.3s; padding:5%; cursor:pointer; width:95%; height:160px; border-radius: 25px; }
     .gameCoverCard:hover { transform: scale(1.02) }
 
     @media (min-width: 1024px) {

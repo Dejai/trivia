@@ -10,29 +10,62 @@
                         <option v-for="option in categorySortOptions" :value="option">{{ option }}</option>
                     </select>
                 </div>
+                <div v-if="!isFinalJeopardy" class="flex-row flex-justify-space-between">
+                    <p>Move: &nbsp;</p>
+                    <div class="flex-row flex-justify-space-between">
+                        <IconButton v-if="!isFirstCategory" class="color-white">
+                            <template #icon>
+                                <arrow-up-icon class="orderIcon upIcon pointer" @click="onMoveCategoryUp"/>
+                            </template>
+                            <template #content>&nbsp;</template>
+                        </IconButton>
+                        <IconButton v-if="!isLastCategory" class="color-white">
+                            <template #icon>
+                                <arrow-down-icon class="orderIcon downIcon pointer" @click="onMoveCategoryDown"/>
+                            </template>
+                            <template #content>&nbsp;</template>
+                        </IconButton>
+                    </div>
+                </div>
+                <div>
+                    <IconButton class="color-green" @click="onSaveCategory">
+                        <template #icon>
+                            <floppy-disk-icon/>
+                        </template>
+                        <template #content>
+                            save
+                        </template>
+                    </IconButton>
+                </div>
+                <div>
+                    <IconButton class="color-orange" @click="onCancelCategoryEdit">
+                        <template #icon>
+                            <x-mark-icon />
+                        </template>
+                        <template #content>
+                            cancel
+                        </template>
+                    </IconButton>
+                </div>
                 <div v-if="!isFinalJeopardy">
-                    Move: &nbsp;
-                    <arrow-up-icon v-if="!isFirstCategory" class="orderIcon upIcon pointer" @click="onMoveCategoryUp"/> 
-                    <arrow-down-icon v-if="!isLastCategory" class="orderIcon downIcon pointer" @click="onMoveCategoryDown" />
-                </div>
-                <div @click="onSaveCategory" >
-                    <floppy-disk-icon :label="'save'"/>
-                </div>
-                <div @click="onCancelCategoryEdit">
-                    <x-mark-icon :label="'cancel'"/>
-                </div>
-                <div @click="onDeleteCategory"  v-if="!isFinalJeopardy">
-                    <trash-can-icon :label="'delete'"/>
+                    <IconButton class="color-red"  @click="onDeleteCategory">
+                        <template #icon>
+                            <trash-can-icon />
+                        </template>
+                        <template #content>
+                            delete
+                        </template>
+                    </IconButton>
                 </div>
             </div>
             <div v-if="isDeleting">
                 <h3>Are you sure?</h3>
-                <button @click="onYesDeleteCategory">YES, DELETE</button>
+                <button class="button-round bg-color-red color-white" @click="onYesDeleteCategory">YES, DELETE CATEGORY</button>
                 &nbsp;
-                <button @click="onCancelDeleteCategory">CANCEL</button>
+                <button class="button-round bg-color-white color-black" @click="onCancelDeleteCategory">CANCEL</button>
             </div>
         </h2>
-        <table class="categoryQuestionsTable" style="border-spacing: 0px;">
+        <table class="categoryQuestionsTable" style="border-spacing: 0px; padding:1% 0% 0% 2%;">
             <colgroup>
                 <col style="width:5%">
                 <col style="width:40%">
@@ -41,10 +74,27 @@
             </colgroup>
             <thead v-if="showTableHeaders">
                 <tr style="text-align:left;">
-                    <th>Value</th>
-                    <th>Question</th>
-                    <th>Answer</th>
-                    <th>&nbsp;</th>
+                    <th> <h4 class="bold color-white">Value</h4></th>
+                    <th> <h4 class="bold color-white">Question</h4></th>
+                    <th> <h4 class="bold color-white">Answer</h4></th>
+                    <th>
+                        <IconButton class="color-blue" v-if="showEditAll" @click="onEditAllQuestions($event)">
+                            <template #icon>
+                                <pencil-icon/>
+                            </template>
+                            <template #content>
+                                edit all
+                            </template>
+                        </IconButton>
+                        <IconButton class="color-green saveQnAIcon" v-if="showSaveAll" @click="onSaveAllQuestions">
+                            <template #icon>
+                                <floppy-disk-icon />
+                            </template>
+                            <template #content>
+                                save all
+                            </template>
+                        </IconButton>
+                    </th>
                     <th>
                        <p v-if="isCustomOrder" style="text-align:center !important;">{{  props.category?.SortBy }}</p>
                     </th>
@@ -57,6 +107,9 @@
                     :question-answer-pair="questionPair"
                     :index="idx"
                     :count="questionAnswerPairs?.length ?? 0"
+
+                    @editing="onQnAEdit"
+                    @saved="onQnASave"
                     />
                 <tr v-if="showAddQuestion">
                     <td colspan="5" style="text-align:left;padding-top:1%;">
@@ -82,6 +135,8 @@
     import FloppyDiskIcon from '@/components/icons/FontAwesome/FloppyDiskIcon.vue'
     import XMarkIcon from '@/components/icons/FontAwesome/XMarkIcon.vue'
     import TrashCanIcon from '@/components/icons/FontAwesome/TrashCanIcon.vue'
+    import PencilIcon from '@/components/icons/FontAwesome/PencilIcon.vue'
+    import IconButton from '@/components/views/IconButton.vue'
     import appConfig from "@/assets/config/app.json"
 
     const props = defineProps<{
@@ -97,9 +152,9 @@
     const showEditCategory = ref(false)
     const isDeleting = ref(false)
     const isFinalJeopardy = props.category.isFinalJeopardy()
-
     // Keep track of category values (before edited)
     const categoryCopy = ref(new Category({}))
+    const questionsBeingEdited = ref(0)
 
     const showTableHeaders = computed( () => (props.category.QuestionAnswerPairs?.length ?? 0) > 0 )
     const isCustomOrder  = computed( () => props.category?.SortBy === "Custom Order")
@@ -110,7 +165,13 @@
     const showAddQuestion = computed( () => !isFinalJeopardy )
     const isFirstCategory = computed( () => props.index == 0)
     const isLastCategory = computed( () => props.index == (props.count ?? 0)-2 )
+    const showEditAll = computed( () => questionAnswerPairs.value.length > 1 &&  questionsBeingEdited.value < props.category.QuestionAnswerPairs.length)
+    const showSaveAll = computed( () => questionAnswerPairs.value.length > 1 && questionsBeingEdited.value == props.category.QuestionAnswerPairs.length)
+    
 
+    // Keeping track of questions being edited
+    function onQnAEdit(){ questionsBeingEdited.value++ }
+    function onQnASave(){ questionsBeingEdited.value-- }
 
     // Edit a question
     function addQuestion() {
@@ -118,6 +179,28 @@
         let nextOrder = props.category.getNextQnAOrder()
         let newQnA = new QuestionAnswerPair({ Value: nextValue}, nextOrder, true)
         props.category.addNewPair(newQnA)
+    }
+
+    // A way to edit all questions
+    function onEditAllQuestions(ev:any){
+        let target = ev.target
+        let table = target.closest("table")
+        let buttons = table.querySelectorAll(".editQnAIcon")
+        console.log(buttons)
+        buttons.forEach( (element:any) => {
+            element.click()
+        });
+    }
+
+    function onSaveAllQuestions(ev:any){
+        let target = ev.target
+        let table = target.closest("table")
+        let buttons = table.querySelectorAll(".saveQnAIcon")
+        console.log(buttons)
+        buttons.forEach( (element:any) => {
+            element.click()
+        });
+        questionsBeingEdited.value = 0
     }
 
     // Editing the category
@@ -128,6 +211,7 @@
 
     function onSaveCategory(){
         showEditCategory.value = false
+        gamesStore.setGameSaveNeeded();
     }
 
     function onCancelCategoryEdit(){
@@ -142,7 +226,9 @@
 
     function onYesDeleteCategory(){
         currentGame.value.manageCategories("delete", props.category)
+        gamesStore.setGameSaveNeeded();
     }
+
     function onCancelDeleteCategory(){
         isDeleting.value = false
     }
@@ -151,11 +237,13 @@
     function onMoveCategoryUp(){
         if(isFirstCategory.value){ return }
         onSwapCategoryOrder("up")
+        gamesStore.setGameSaveNeeded();
     }
 
     function onMoveCategoryDown(){
         if(isLastCategory.value){ return }
         onSwapCategoryOrder("down")
+        gamesStore.setGameSaveNeeded();
     }
 
     function onSwapCategoryOrder(direction:string) {
@@ -175,7 +263,7 @@
     .categoryTitle span.orderIcon { margin-right:1%; color:white;}
 
     .categoryName { font-size: inherit; }
-    .categoryName[disabled] { color:inherit; background-color: transparent; border:none;}
+    .categoryName[disabled] { color:white; background-color: transparent; border:none;}
 
     .categoryTitle { display:flex; flex-wrap:nowrap; justify-content: left; align-items: center; gap:10px; }
     .categoryEditSubsection { width:0px; opacity:0; overflow:hidden; height:0px; }

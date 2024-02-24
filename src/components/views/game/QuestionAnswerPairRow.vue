@@ -10,7 +10,9 @@
                 <image-icon v-if="questionHasImage && !showEditQna" class="color-gold" title="This question has an image" @click="onPreviewQuestion"/>
                 <volume-icon v-if="questionHasAudio && !showEditQna" class="color-gold" title="This question has audio" @click="onPreviewQuestion"/>
                 <textarea class="qnaFormField" type="text" v-model="props.questionAnswerPair.Question.Text" :disabled="!showEditQna"></textarea>
-                <br/>
+            </div>
+            <div>
+                <input class="qnaFormField italic" type="text" placeholder="Subtext (shown below text in italics)" v-model="props.questionAnswerPair.Question.SubText" v-if="showQuestionSubText" :disabled="!showEditQna" />
             </div>
             <div class="mediaSection" v-if="showEditQna">
                 <div>
@@ -31,9 +33,12 @@
         </td>
         <td class="answerText clickToEdit">
             <div class="qnaContentManagement">
-                <image-icon v-if="answerHasImage" class="color-gold" title="This answer has an image" @click="onPreviewQuestion"/>
-                <volume-icon v-if="answerHasAudio" class="color-gold" title="This answer has audio" @click="onPreviewQuestion"/>
+                <image-icon v-if="answerHasImage && !showEditQna" class="color-gold" title="This answer has an image" @click="onPreviewQuestion"/>
+                <volume-icon v-if="answerHasAudio && !showEditQna" class="color-gold" title="This answer has audio" @click="onPreviewQuestion"/>
                 <textarea class="qnaFormField" type="text" v-model="props.questionAnswerPair.Answer.Text" :disabled="!showEditQna"></textarea>
+            </div>
+            <div>
+                <input class="qnaFormField italic" type="text" placeholder="Subtext (shown below text in italics)" v-model="props.questionAnswerPair.Answer.SubText" v-if="showAnswerSubText" :disabled="!showEditQna" />
             </div>
             <div class="mediaSection" v-if="showEditQna">
                 <div>
@@ -55,30 +60,67 @@
         <td class="pointer">
             <div class="qnaActionSection pointer flex-row flex-justify-space-between flex-gap-30">
                 <div class="flex-row flex-gap-30" v-if="!showEditQna">
-                    <pencil-icon class="color-blue" :label="'edit'" @click="onEditQna" :class="'pointer'"/>
-                    <up-right-from-square class="color-white" :label="'Preview'" @click="onPreviewQuestion"/>
-                </div>
-                <div class="qnaEditSubsection flex-row flex-justify-left flex-align-center flex-gap-20" :class="{'editingQnA': showEditIcons}">
-                    <div class="color-green" @click="onSaveQnA">
-                        <floppy-disk-icon :label="'save'" />
-                    </div>
-                    <div class="color-orange" @click="onCancelQnAEdit" >
-                        <x-mark-icon :label="'cancel'" />
-                    </div>
-                    <div class="color-red" @click="onDeleteQnA" v-if="!isFinalJeopardy && !$props.questionAnswerPair.isNew()">
-                        <trash-can-icon :label="'delete'" />
-                    </div>
+                    <IconButton class="color-blue editQnAIcon" @click="onEditQna">
+                        <template #icon>
+                            <pencil-icon/>
+                        </template>
+                        <template #content>
+                            edit
+                        </template>
+                    </IconButton>
+                    <IconButton class="color-white" @click="onPreviewQuestion">
+                        <template #icon>
+                            <up-right-from-square/>
+                        </template>
+                        <template #content>
+                            preview
+                        </template>
+                    </IconButton>
                 </div>
                 <div v-if="isDeleting">
                     <p>Are you sure?</p>
-                    <button @click="onYesDeleteQnA">YES, DELETE</button>
+                    <button class="button-round bg-color-red color-white" @click="onYesDeleteQnA">YES, DELETE</button>
                     &nbsp;
-                    <button @click="onCancelDeleteQnA">CANCEL</button>
+                    <button class="button-round bg-color-white color-black" @click="onCancelDeleteQnA">CANCEL</button>
                 </div>
+                <div class="qnaEditSubsection flex-row flex-justify-left flex-align-center flex-gap-20" :class="{'editingQnA': showEditIcons}">
+                    
+                    <div>
+                        <IconButton class="color-green saveQnAIcon" @click="onSaveQnA">
+                            <template #icon>
+                                <floppy-disk-icon />
+                            </template>
+                            <template #content>
+                                save
+                            </template>
+                        </IconButton>
+                    </div>
+                    <div>
+                        <IconButton class="color-orange" @click="onCancelQnAEdit">
+                            <template #icon>
+                                <x-mark-icon/>
+                            </template>
+                            <template #content>
+                                cancel
+                            </template>
+                        </IconButton>
+                    </div>
+                    <div v-if="!isFinalJeopardy && !$props.questionAnswerPair.isNew()">
+                        <IconButton class="color-red" @click="onDeleteQnA">
+                            <template #icon>
+                                <trash-can-icon />
+                            </template>
+                            <template #content>
+                                delete
+                            </template>
+                        </IconButton>
+                    </div>
+                </div>
+                
             </div>
         </td>
-        <td v-if="isCustomOrder">
-            <div style="text-align:center;">
+        <td v-if="isCustomOrder" class="qnaOrderIcons">
+            <div class="flex-row flex-justify-center flex-align-center flex-gap-10 width-100">
                 <arrow-up-icon class="orderIcon upIcon pointer" @click="onMoveQuestionUp"/> 
                 <arrow-down-icon class="orderIcon downIcon pointer" @click="onMoveQuestionDown" />
             </div>
@@ -105,6 +147,7 @@
     import { ref, computed } from 'vue'
     import { storeToRefs } from 'pinia'
     import { useGamesStore } from '@/stores/games'
+    import { useMediaStore } from '@/stores/media'
     import QuestionAnswerPair from '@/models/QuestionAnswerPair'
     import type Category from '@/models/Category'
     import type Media from '@/models/Media'
@@ -120,43 +163,47 @@
     import ArrowDownIcon from '@/components/icons/FontAwesome/ArrowDownIcon.vue'
     import ArrowUpIcon from '@/components/icons/FontAwesome/ArrowUpIcon.vue'
     import appConfig from '@/assets/config/app.json'
-    import { useMediaStore } from '@/stores/media'
+    import IconButton from '@/components/views/IconButton.vue'
+
 
     const props = defineProps<{
         category:Category,
         questionAnswerPair:QuestionAnswerPair,
-        index?:number,
-        count?:number
+        index:number,
+        count:number
     }>()
+    const emits = defineEmits(["editing", "saved"])
+
+    // STORES
     const mediaStore = useMediaStore();
     const gamesStore = useGamesStore()
     const { media } = storeToRefs(mediaStore)
-    const images = computed( () => media.value.filter( (x:Media) => x.Type == "Image" ) )
-    const audios = computed( () => media.value.filter( (x:Media) => x.Type == "Audio" ) )
 
+    // REFS
     const qnaValue = ref(props.questionAnswerPair.Value)
     const qnaPair = ref(props.questionAnswerPair)
     const isFinalJeopardy = props.category.isFinalJeopardy()
-
     const justModified = ref(false)
-
-    // Keep track of category values (before edited)
     const qnaCopy = ref(new QuestionAnswerPair({}, 0))
     const showPreview = ref(false)
     const showEditQna = ref(props.questionAnswerPair.isNew() ?? false)
     const isDeleting = ref(false)
 
-    // Confirm if the question or answer has media
+    // COMPUTED
+    const images = computed( () => media.value.filter( (x:Media) => x.Type == "Image" ) )
+    const audios = computed( () => media.value.filter( (x:Media) => x.Type == "Audio" ) )
     const questionHasImage = computed( () => props.questionAnswerPair.Question.ImageRef != "")
     const questionHasAudio = computed( () => props.questionAnswerPair.Question.AudioRef != "")
     const answerHasImage = computed( () => props.questionAnswerPair.Answer.ImageRef != "")
     const answerHasAudio = computed( () => props.questionAnswerPair.Answer.AudioRef != "")
-
     const showEditIcons = computed( () => showEditQna.value && !isDeleting.value )
     const isCustomOrder  = computed( () => props.category?.SortBy == "Custom Order")
     const isFirstRow = computed( () => props.index == 0)
-    const isLastRow = computed( () => props.index == props.count)
+    const isLastRow = computed( () => props.index == (props.count-1) )
+    const showQuestionSubText = computed( () => props.questionAnswerPair.Question.SubText != "" || showEditQna.value )
+    const showAnswerSubText = computed( () => props.questionAnswerPair.Answer.SubText != "" || showEditQna.value )
 
+    // FUNCTIONS
     function onToggleDailyDouble(event:any){
         let target = event.target;
         if(target.checked){
@@ -169,6 +216,7 @@
     function onEditQna(){
         showEditQna.value = true
         qnaCopy.value = new QuestionAnswerPair(props.questionAnswerPair, props.questionAnswerPair.Order)
+        emits("editing")
     }
 
     function onSaveQnA(){
@@ -176,6 +224,7 @@
         props.questionAnswerPair.Value = qnaValue.value
         props.questionAnswerPair.removeTag(appConfig.Tags.NewQuestion)
         gamesStore.setGameSaveNeeded()
+        emits("saved")
     }
 
     function onCancelQnAEdit(){
@@ -241,10 +290,10 @@
 <style scoped>
 
     .questionRow td { vertical-align: top; }
-
-    span.orderIcon { margin-right:7%; color:white;}
-   .isFirstRow span.upIcon { color:gray; }
-   .isLastRow span.downIcon { color:gray; }
+    
+    .qnaOrderIcons .orderIcon { margin-right:7%; color:white;}
+   .isFirstRow .qnaOrderIcons .upIcon { color:gray; }
+   .isLastRow .qnaOrderIcons .downIcon { color:gray; }
 
    .questionRow td { padding: 0.5% 0%; }
    .previwLink { color:lightblue; }
@@ -262,7 +311,5 @@
    .justModified td { border-top: 1px dashed white; border-bottom: 1px dashed white; }
 
    .qnaContentManagement { display:flex; justify-content: left; align-items: start; width:100%; gap:5px; }
-
-   /* .mediaSection { display:flex; flex-wrap: wrap; justify-content: left; align-items: center; gap: 20px; } */
 
 </style>

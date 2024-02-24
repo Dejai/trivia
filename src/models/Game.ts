@@ -127,20 +127,28 @@ export default class Game {
         }
 
         // Make sure every answer has a value
-        let ansErr = new ErrorMessage("Every question must have an answer")
-        let hasMissingAnswers = false
+        let qnaError = new ErrorMessage("Every question pair must have a question and an answer")
+        let hasMissingQnA = false
         // Loop through the things
         for(let category of this.Categories){
             for(let pair of category.QuestionAnswerPairs){
+                let question = pair.Question; 
+                let hasQuestionValue = [question.Text, question.SubText, question.ImageRef, question.AudioRef].some( (x:string) => x != "")
+                if(!hasQuestionValue){
+                    qnaError.addDetail(`Missing question: ${category.Name} for ${pair.Value}`)
+                    hasMissingQnA = true
+                }
+
                 let answer = pair.Answer; 
-                if(answer.Text === ""){
-                    ansErr.addDetail(`Missing answer: ${category.Name} for ${pair.Value}`)
-                    hasMissingAnswers = true
+                let hasAnswerValue = [answer.Text, answer.SubText, answer.ImageRef, answer.AudioRef].some( (x:string) => x != "")
+                if(!hasAnswerValue){
+                    qnaError.addDetail(`Missing answer: ${category.Name} for ${pair.Value}`)
+                    hasMissingQnA = true
                 }
             }
         }
-        if(hasMissingAnswers){
-            errors.push(ansErr);
+        if(hasMissingQnA){
+            errors.push(qnaError);
         }
 
 

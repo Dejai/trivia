@@ -5,11 +5,11 @@
             <FormContainer>
                 <FormRow :stacked="true" :class="'gameDetailsInput'">
                     <h3>Name</h3>
-                    <input id="gameName" class="fieldInput" type="text" placeholder="Enter a name" v-model="currentGame.Name" @change="saveOnChange" @keyup="updateMenu">
+                    <input id="gameName" class="fieldInput" type="text" placeholder="Enter a name" v-model="currentGame.Name" @change="saveOnChange" @keydown="saveOnChange" @keyup="updateMenu">
                 </FormRow>
                 <FormRow :stacked="true" :class="'gameDetailsInput'">
                     <h3>Description</h3>
-                    <input id="gameDescription" class="fieldInput" type="text" placeholder="Enter a short description" v-model="currentGame.Description" @change="saveOnChange">
+                    <input id="gameDescription" class="fieldInput" type="text" placeholder="Enter a short description" v-model="currentGame.Description" @change="saveOnChange" @keydown="saveOnChange">
                 </FormRow>
             </FormContainer>
         </div>

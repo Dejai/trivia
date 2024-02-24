@@ -37,16 +37,7 @@
             </div>
             <div id="teamSection" style="width:15%;">
                 <h1 style="width:100%;">Teams</h1>
-                <IconButton v-if="!isGameStarted" @click="getTeamsForGame()">
-                    <template #icon>
-                        <h3>
-                            <rotate-icon :spinning="isTeamRefreshSpinning"/>
-                        </h3>
-                    </template>
-                    <template #content>
-                        <h3>Get Teams</h3>
-                    </template>
-                </IconButton>
+                
                 <IconButton v-if="isFinalJeopardy && !filters.finalQuestionRevealed" @click="getTeamWagers">
                     <template #icon>
                         <h3>
@@ -57,21 +48,34 @@
                         <h3>Check for Wagers</h3>
                     </template>
                 </IconButton>
-                <div class="teamRows">
+                <div class="teamRows" style="margin-bottom:5%;">
                     <div class="teamSectionRow color-white" v-for="(team, idx) in teamsSorted">
                         <h3 style="max-width:75%;" class="flex-row flex-nowrap">
                             <p class="color-gray">{{ idx+1 }} &nbsp;</p>
-                            <span class="color-green" v-if="team.HasWager">
-                                <circle-check-icon/> &nbsp;
-                            </span>
                             <p>
                                 {{ team.Name }}
+                                
                             </p>
                         </h3>
-                        <h3 v-if="team.HasWager">{{ team.FinalScore }}</h3>
+                        <h3 v-if="team.HasWager">{{ team.FinalScore }}
+                            
+                        </h3>
                         <h3 v-else>{{ team.Score }}</h3>
+                        <h3 class="color-green flex-row flex-align-center" v-if="team.HasWager">
+                            <circle-check-icon/> &nbsp;
+                        </h3>
                     </div>
                 </div>
+                    <IconButton @click="getTeamsForGame()" style="text-align:right;">
+                        <template #icon>
+                            <h4>
+                                <rotate-icon :spinning="isTeamRefreshSpinning"/>
+                            </h4>
+                        </template>
+                        <template #content>
+                            <h4>Get Teams</h4>
+                        </template>
+                    </IconButton>
             </div>
             <br/>
             <div v-if="isGameStarted && !isFinalJeopardy" style="width:80%; text-align: center; padding-top:0.5%; ">
@@ -110,7 +114,7 @@
     const teamsStore = useTeamsStore()
     const filtersStore = useFiltersStore()
 
-    const { currentGame } = storeToRefs(gamesStore)
+    const { currentGame, currentSession } = storeToRefs(gamesStore)
     const { teams } = storeToRefs(teamsStore)
     const { filters } = storeToRefs(filtersStore)
 
@@ -124,7 +128,6 @@
     const isTeamRefreshSpinning = ref(false)
     const isWagerRefreshSpinning = ref(false)
 
-    const currentSession = computed( () => currentGame?.value.getSession(route.params.sessionID ))
     const mainCategories = computed( () => currentGame?.value?.Categories.filter( (cat:Category) => !cat.isFinalJeopardy()) )
     const mainCategoryWidths = computed( () => (96 / mainCategories.value.length ) + "%" )
     const finalJeopardy = computed( () => currentGame?.value?.Categories.filter( (cat:Category) => cat.isFinalJeopardy()) )
@@ -197,6 +200,7 @@
             await gamesStore.getCurrentGame()
         }
         categories.value = currentGame?.value?.Categories
+        gamesStore.setCurrentSession()
         await teamsStore.getTeams()
     })
 
