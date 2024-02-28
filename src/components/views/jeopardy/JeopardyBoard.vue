@@ -1,12 +1,12 @@
 <template>
     <main>
-        <div id="playFinalJeopardyButtonSection" v-if="showFinalJeopardyButton">
+        <div id="playFinalJeopardyButtonSection width-80" v-if="showFinalJeopardyButton">
             <button class="bg-color-red color-white button-round" @click="showFinalJeopardy">
                 <h1>Play Final Jeopardy!</h1>
             </button>
         </div>
         <div id="jeopardyBoard">
-            <div class="columns"  style="width:80%; position:relative;" v-if="!isFinalJeopardy">
+            <div class="columns width-80"  style="width:80%; position:relative;" v-if="!isFinalJeopardy">
                 <JeopardyColumn :style="{width: mainCategoryWidths }" v-for="category in mainCategories" 
                     :key="category"
                     :category="category"
@@ -32,14 +32,14 @@
                     </template>
                 </ModalView>
             </div>
-            <div class="columns" style="width:80%; position:relative;" v-if="isFinalJeopardy">
+            <div class="columns width-80" style="position:relative;" v-if="isFinalJeopardy">
                 <JeopardyColumn :style="{width: '100%' }" v-for="category in finalJeopardy" 
                     :key="category"
                     :category="category"
                     @revealed="onColumnRevealed"
                 />
             </div>
-            <div id="teamSection" style="width:15%;">
+            <div id="teamSection" style="width:18%;">
                 <h1 style="width:100%;">Teams</h1>
                 
                 <IconButton v-if="isFinalJeopardy && !filters.finalQuestionRevealed" @click="getTeamWagers">
@@ -52,8 +52,8 @@
                         <h3>Check for Wagers</h3>
                     </template>
                 </IconButton>
-                <div class="teamRows" style="margin-bottom:5%;">
-                    <div class="teamSectionRow color-white" v-for="(team, idx) in teamsSorted">
+                <div class="teamRows" style="margin-bottom:5%; width:60%;">
+                    <div class="teamSectionRow flex-row flex-wrap flex-justify-space-between flex-align-center flex-gap-30 color-white" v-for="(team, idx) in teamsSorted">
                         <h3 style="max-width:75%;" class="flex-row flex-nowrap">
                             <p class="color-gray">{{ idx+1 }} &nbsp;</p>
                             <p>
@@ -78,7 +78,7 @@
             </div>
             <br/>
             <div v-if="showNextQuestionSection" style="width:80%; text-align: center; padding-top:0.5%; ">
-                <h2>Next Question: {{ showFinalJeopardyButton }}</h2>
+                <h2>Next Question:</h2>
                 <h2>{{ nextQuestion }}</h2>
             </div>
         </div>
@@ -243,7 +243,7 @@ import QuestionAnswerPair from '@/models/QuestionAnswerPair'
 
 <style>
 
-    #playFinalJeopardyButtonSection { width:80%; text-align:center; padding:1% 0%; }
+    #playFinalJeopardyButtonSection { text-align:center; padding:1% 0%; }
 
     #jeopardyBoard { display:flex; flex-wrap: wrap; align-items:start; justify-content: space-between;}
     
@@ -256,7 +256,7 @@ import QuestionAnswerPair from '@/models/QuestionAnswerPair'
     #assign_scores_block { padding:1%; text-align:right; }
     #close_question_view { position:fixed; z-index:1000; top:0; left:0; width:10%; padding:1%; text-align:left; cursor:pointer; }
 
-    .teamSectionRow { display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 30px; }
+    /* .teamSectionRow { display:flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 30px; } */
 
     #teamSection { display:flex; flex-direction: column; gap:10px; justify-content: left; align-items: start; }
 

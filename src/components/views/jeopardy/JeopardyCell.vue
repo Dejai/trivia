@@ -57,7 +57,7 @@
                 </h3>
                 <div v-if="showWhoGotItRight" style="width:25%; overflow:hidden;">
                     <h2>Who Got it Right?</h2>
-                    <p class="flex-row flex-justify-center">
+                    <p class="flex-row flex-justify-center" v-if="settingForAnswering != 2">
                         <IconButton @click="refreshAnswers()">
                             <template #icon>
                                 <rotate-icon :spinning="isRefreshAnswersSpinning"/>
@@ -68,10 +68,10 @@
                         </IconButton>
                     </p>
                     
-                    <div id="teamAnswerList">
+                    <div id="teamAnswerList" :class="{'onlyOneRight': onlyOneRight}">
                         <WhoGotItRight v-for="team in teams"
                             :key="team.Code"
-                            :type="'jeopardy1'"
+                            :type="settingForAnswering"
                             :score-value="cellValuNumber"
                             :team="team"
 
@@ -157,9 +157,11 @@
     const isNobodyRightEnabled = computed( () => numberRight.value == 0 )
     const showWhoGotItRightLoading = computed( () => showAnswer.value && !showWhoGotItRight.value)
     const timerSeconds = computed( () => Number(currentSession.value.getSettingValue("Seconds to Answer")?.value ?? 7) )
+    const settingForAnswering = computed( () => currentSession.value.getSettingValue("Answering Questions")?.optionID ?? 1 )
     const isShowSelectable = computed( () => props.pair._showSelectable && !props.pair._prevOpen )
     const isTestOrDemo = computed( () => route.params.sessionID.toString() == "DEMO" || route.params.sessionID.toString() == "TEST")
     const isRevealButtonVisible = computed( ()=> ( showRevealAnswer.value || props.isPreview || isTestOrDemo.value ) && !showAnswer.value )
+    const onlyOneRight = computed( () => settingForAnswering.value == 2 && numberRight.value == 1)
 
     const cellValue = props.pair?.Value
     const cellValuNumber = Number(cellValue)
@@ -191,11 +193,18 @@
         let defaultAnswer = (route.params.sessionID == "TEST") ? "test answer" : ""
         showQuestion.value = false
         showAnswer.value = true 
-        // Add a 2-second delay in retrieving answers
-        setTimeout( async () => {
-            await refreshAnswers()
-            showWhoGotItRight.value = true
-        }, 2000)
+
+        if(settingForAnswering.value == 1){
+            // Add a 2-second delay in retrieving answers
+            setTimeout( async () => {
+                await refreshAnswers()
+                showWhoGotItRight.value = true
+            }, 2000)    
+        } else if (settingForAnswering.value == 2){
+            setTimeout( () => {
+                showWhoGotItRight.value = true
+            }, 1000)
+        }
     }
 
     // Get the team answers
@@ -225,7 +234,7 @@
     }
 
     // Adding or increasing the number right
-    function onAddRight(){ numberRight.value++ }
+    function onAddRight(){  numberRight.value++ }
     function onSubtractRight(){ numberRight.value-- }
 
     function assignPoints(){
@@ -275,6 +284,7 @@
     #close_question_view { position:fixed; z-index:1000; top:0; left:0; width:10%; padding:1%; text-align:left; cursor:pointer; }
 
     #teamAnswerList { max-height:500px; overflow-y:scroll; position:relative; padding: 2%; text-align: center; }
+    #teamAnswerList.onlyOneRight .whoGotItRight:not(.isRightAnswerBlock) { color: red; display:none; }
 
     .subtext { font-size: 80%; font-style:italic; }
 

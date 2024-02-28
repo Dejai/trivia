@@ -68,7 +68,7 @@
                     <div id="teamAnswerList">
                         <WhoGotItRight v-for="team in teams"
                             :key="team.Code"
-                            :type="'jeopardy1'"
+                            :type="1"
                             :score-value="0"
                             :team="team"
                             :is-final-question="true"

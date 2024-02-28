@@ -1,7 +1,7 @@
 <template>
     <div class="whoGotItRight" :class="{'isRightAnswerBlock': isRightAnswer}" @click="toggleRightAnswer">
-        <p style="font-style:italic; font-size:smaller;">{{ props.team.Name }}</p>
-        <div>
+        <p :class="{'smallTeamName': showSmallName}">{{ props.team.Name }}</p>
+        <div v-if="props.type != 2">
             {{ props.team.Answer }}
         </div>
     </div>
@@ -11,7 +11,7 @@
     import Team from '@/models/Team'
 
     const props = defineProps<{
-        type?:string,
+        type:number,
         team:Team,
         scoreValue:number,
         isFinalQuestion?:boolean
@@ -20,6 +20,8 @@
 
     const isRightAnswer = ref(false)
     const isFinalQ = ref(props.isFinalQuestion ?? false)
+
+    const showSmallName = computed( () => props.type == 1)
 
     function toggleRightAnswer(){
         isRightAnswer.value = !isRightAnswer.value
@@ -41,4 +43,6 @@
     .answerIdentifier { color:gray;}
     .answerIdentifier.isRightAnswer { color:limegreen !important; }
     .isRightAnswerBlock { background-color: limegreen !important; color:black; }
+
+    .smallTeamName { font-style:italic; font-size:smaller; }
 </style>
