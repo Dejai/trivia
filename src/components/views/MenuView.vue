@@ -28,6 +28,7 @@
     import { storeToRefs } from 'pinia';
     import { useGamesStore } from '@/stores/games'
     import { useMenuStore } from '@/stores/menu'
+    import { useFiltersStore } from '@/stores/filters'
     import SpinnerIcon from '@/components/icons/FontAwesome/SpinnerIcon.vue'
 
     import router from '@/router'
@@ -35,9 +36,11 @@
     const route = useRoute()
     const gamesStore = useGamesStore()
     const menuStore = useMenuStore()
+    const filtesStore = useFiltersStore()
 
     const { currentGame } = storeToRefs(gamesStore)
     const { gameName, subtitle1, subtitle2 } = storeToRefs(menuStore)
+    const { filters } = storeToRefs(filtesStore)
 
     const isLoading = computed( () => subtitle1.value == "loading" )
     const showMenuSubTitle1 = computed( () =>  subtitle1.value != "" )
@@ -45,12 +48,16 @@
 
     // Navigate to home
     function onNavigateHome(){
-        router.push( { name: "home" } )
+        if(!filters.value.preventUnload){
+            router.push( { name: "home" } )
+        }
     }
 
     // Go back to game page
     function onNavigateGamePage(){
-        router.push({name: "game", params: { gameID: currentGame.value.GameID , tab: route.params.tab }})
+        if(!filters.value.preventUnload){
+            router.push({name: "game", params: { gameID: currentGame.value.GameID , tab: route.params.tab }})
+        }
     }
 
     onMounted( async () => {

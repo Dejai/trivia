@@ -227,6 +227,10 @@
         // Archive the game
         let sessionID = route.params.sessionID?.toString()
         await gamesStore.archiveGame(sessionID, teams.value)
+
+        // Allow unload
+        filtersStore.clearFilter("preventUnload")
+
     }
 
     function closeCell(){

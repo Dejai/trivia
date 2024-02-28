@@ -1,6 +1,6 @@
 <template>
     <main>
-        <div id="playFinalJeopardyButtonSection width-80" v-if="showFinalJeopardyButton">
+        <div id="playFinalJeopardyButtonSection" class="width-80" v-if="showFinalJeopardyButton">
             <button class="bg-color-red color-white button-round" @click="showFinalJeopardy">
                 <h1>Play Final Jeopardy!</h1>
             </button>
@@ -175,6 +175,7 @@ import QuestionAnswerPair from '@/models/QuestionAnswerPair'
         isGameStarted.value = true
         gameStartDate.value = new Date()
         filtersStore.setFilter("gameStarted", true)
+        filtersStore.setFilter("preventUnload", true)
         // If the game select option is last right, let all cells be selectable
         if(selectQuestionOption.value == 2){
             _setAllQuesitonsCanOpen()

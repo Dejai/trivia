@@ -17,7 +17,8 @@ export const useFiltersStore = defineStore('filters', () => {
         gameStarted: false,
         mediaForm: false,
         wagers:false,
-        finalQuestionRevealed:false
+        finalQuestionRevealed:false,
+        preventUnload:false
     }
 
     const filters = ref(defaultFilters)
