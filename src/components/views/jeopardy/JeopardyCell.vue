@@ -108,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, computed } from 'vue'
+    import { ref, computed, onMounted } from 'vue'
     import { useRoute } from 'vue-router'
     import { storeToRefs } from 'pinia'
     import { useFiltersStore } from '@/stores/filters'
@@ -167,10 +167,9 @@
     const isRevealButtonVisible = computed( ()=> ( showRevealAnswerButton.value || props.isPreview || isTestOrDemo.value ) && !showAnswer.value )
     const onlyOneRight = computed( () => settingForAnswering.value == 2 && numberRight.value == 1)
 
+    // VARIABLES
     const cellValue = props.pair?.Value
     const cellValuNumber = Number(cellValue)
-    const questionKey = `${props.categoryName} for ${cellValue}`
-
     // Question details
     const question = props.pair?.Question
     const questionText = question?.Text ?? ""
@@ -186,11 +185,8 @@
     const showAnswerImage = (answerImageUrl != "")
     const showAnswerAudio = (answerAudioUrl != "")
 
-
-    // Show the button to reveal the answer
-    function onShowRevealAnswerButton(){
-        showRevealAnswerButton.value = true
-    }
+    // FUNCTION
+    function onShowRevealAnswerButton(){ showRevealAnswerButton.value = true }
 
     // Revealing the answers given
     async function revealAnswer() {
@@ -223,6 +219,7 @@
         isRefreshAnswersSpinning.value = false
     }
 
+    // Open up a cell
     function openCell(){
         // If the game has not been started, don't open a cell
         if(!filters.value.gameStarted){ return }
@@ -233,7 +230,7 @@
                 isOpen.value = true
                 props.pair._prevOpen = true
                 wasOpened.value = true
-                
+
                 // Set a cookie to indicate that this question was opened
                 useCookie("set", _getQuestionCookieName(), "true")
             }
@@ -274,6 +271,15 @@
         let value = props.pair.Value
         return `${session}_${category}_${value}`
     }
+
+    onMounted( () => {
+        let cookieVal = useCookie("get", _getQuestionCookieName()) ?? ""
+        if(cookieVal == "true")
+        {
+            props.pair._prevOpen = true
+        }
+    })
+
 </script>
 
 <style scoped>

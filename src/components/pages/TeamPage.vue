@@ -173,7 +173,7 @@
     // Check/set cookie for this team session
     // Check for existing cookie & if none, set one with this game,session
     function checkSessionCookie() {
-        const cookieNameBase = `dtk-trivia-${route.params.gameID}_${route.params.sessionID}`;
+        const cookieNameBase = `${route.params.gameID}_${route.params.sessionID}`;
         const teamInfo = `${currentTeam.value.Name} - ${currentTeam.value.Code}`
         let cookieValue = useCookie("get", cookieNameBase)
         if(cookieValue != teamInfo){

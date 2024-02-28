@@ -10,9 +10,7 @@ class CookieObj{
 
 export function useCookie(action:string, cookieName:string, cookieValue:string="", attributes:any ={}){
 	
-	console.log(cookieName)
 	cookieName = `dtk-trivia-${cookieName}`
-	console.log(cookieName)
     
 	// Get a cookie by name
 	const _getCookie = () => {
