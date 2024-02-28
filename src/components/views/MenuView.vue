@@ -48,16 +48,24 @@
 
     // Navigate to home
     function onNavigateHome(){
-        if(!filters.value.preventUnload){
+        if(canNavigate()){
             router.push( { name: "home" } )
         }
     }
 
     // Go back to game page
     function onNavigateGamePage(){
-        if(!filters.value.preventUnload){
+        if(canNavigate()){
             router.push({name: "game", params: { gameID: currentGame.value.GameID , tab: route.params.tab }})
         }
+    }
+
+    // Check if this is a test or demo session
+    function canNavigate(){
+        let isTestOrDemo = ["DEMO", "TEST"].some( (val:string) => val == route.params.sessionID?.toString() )
+        let isBoardPage = route.name == "board"
+
+        return (isBoardPage && (!filters.value.preventUnload || isTestOrDemo) ) || (!isBoardPage) 
     }
 
     onMounted( async () => {
