@@ -89,19 +89,19 @@
 <script setup lang="ts">
     import { ref, onMounted, computed, watch } from 'vue'
     import { useRoute } from'vue-router'
-    import JeopardyColumn from '@/components/views/jeopardy/JeopardyColumn.vue'
-    import { mapActions, storeToRefs } from 'pinia'
+    import { storeToRefs } from 'pinia'
     import { useGamesStore } from '@/stores/games'
     import { useMenuStore } from '@/stores/menu'
     import { useTeamsStore } from '@/stores/teams'
-    import type Category from '@/models/Category'
     import { useFiltersStore } from '@/stores/filters'
+    import { useCookie } from '@/composables/useCookie'
+    import type Category from '@/models/Category'
+    import JeopardyColumn from '@/components/views/jeopardy/JeopardyColumn.vue'
     import ModalView from '@/components/views/ModalView.vue'
     import PlayIcon from '@/components/icons/FontAwesome/PlayIcon.vue'
     import IconButton from '@/components/views/IconButton.vue'
     import RotateIcon from '@/components/icons/FontAwesome/RotateIcon.vue'
-    import  CircleCheckIcon from '@/components/icons/FontAwesome/CircleCheckIcon.vue'
-import QuestionAnswerPair from '@/models/QuestionAnswerPair'
+    import QuestionAnswerPair from '@/models/QuestionAnswerPair'
 
     // STORES
     const route = useRoute()
@@ -181,6 +181,9 @@ import QuestionAnswerPair from '@/models/QuestionAnswerPair'
             _setAllQuesitonsCanOpen()
         }
         onNextQuestion()
+
+        // Set cookie to indicate game session started
+        useCookie("set", route.params.sessionID.toString(), "started")
     }
 
     function onColumnRevealed(){
@@ -237,6 +240,10 @@ import QuestionAnswerPair from '@/models/QuestionAnswerPair'
         categories.value = currentGame?.value?.Categories
         gamesStore.setCurrentSession()
         await teamsStore.getTeams()
+
+        if( useCookie("get", route.params.sessionID.toString()) == "started" ) {
+            onStartGame()
+        }
     })
 
 </script>
