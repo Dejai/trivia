@@ -14,7 +14,6 @@
                 :key="pair.Value"    
                 :pair="pair"
                 :category-name="props.category.Name"
-                :active="isActiveCategory"
                 :is-final-jeopardy="props.category.isFinalJeopardy()"
                 @next="onNext" />
             <FinalJeopardyCell style="width:100%;" v-if="isFinalJeopardyCagtegory" v-for="pair in pairs" 
@@ -28,7 +27,9 @@
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue'
+    import { ref, onMounted } from 'vue'
+    import { useRoute } from 'vue-router'
+    import { useCookie } from '@/composables/useCookie'
     import JeopardyCell from '@/components/views/jeopardy/JeopardyCell.vue'
     import Category from '@/models/Category'
     import FinalJeopardyCell from '@/components/views/jeopardy/FinalJeopardyCell.vue';
@@ -36,24 +37,37 @@
     const props = defineProps<{
         category: Category 
     }>()
-
     const emit = defineEmits(["revealed", "next"])
+
+    const route = useRoute()
 
     const isFinalJeopardyCagtegory = ref(props.category.isFinalJeopardy())
     const showCategory = ref(props.category.isFinalJeopardy() ?? false)
     const categoryName = props.category.isFinalJeopardy() ? "Final Jeopardy!" : props.category?.Name
     const pairs = props.category?.QuestionAnswerPairs;
-    const isActiveCategory = ref(false)
 
     function onNext(){
         emit("next")
     }
 
     function showCategoryHeader(){
-        showCategory.value = true
-        isActiveCategory.value = true
-        emit("revealed")
+        if(!showCategory.value)
+        {
+            showCategory.value = true
+            useCookie("set", _getCookieName(), "revealed")
+            emit("revealed")
+        }
     }
+
+    function _getCookieName(){
+        return `${route.params.sessionID}_${props.category.Name}`
+    }
+
+    onMounted( () => {
+        if(useCookie("get", _getCookieName()) == "revealed"){
+            showCategoryHeader()
+        }
+    })
 
 </script>
 
