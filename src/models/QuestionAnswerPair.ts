@@ -13,15 +13,23 @@ export default class QuestionAnswerPair {
     Question: Question;
     Answer: Answer;
 
-    constructor(details:any, order:number, isNew?:boolean){
+    // private properties
+    _quesitonKey:string = "";
+    _canOpen:boolean = false;
+    _showSelectable:boolean = false;
+    _prevOpen:boolean = false;
+
+    constructor(details:any, order:number, categoryName:string, isNew?:boolean){
         this.Value = Number(details?.Value) ?? -1;
         this.Tags = details?.Tags ?? []
         this.Question = new Question(details?.Question ?? {})
         this.Answer = new Answer(details?.Answer ?? {})
-        this.Order = order;
+        this.Order = details?.Order ?? order;
         if(isNew){
             this.addTag(config.Tags.NewQuestion)
         }
+
+        this._quesitonKey = `${categoryName} for ${this.Value}`
     }
 
     udpate(details:any){

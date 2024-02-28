@@ -1,6 +1,10 @@
 <template>
     <main>
-        <!-- <h2 v-if="showColumnTip">Click on the headers to reveal your categories</h2> -->
+        <div id="playFinalJeopardyButtonSection" v-if="showFinalJeopardyButton">
+            <button class="bg-color-red color-white button-round" @click="showFinalJeopardy">
+                <h1>Play Final Jeopardy!</h1>
+            </button>
+        </div>
         <div id="jeopardyBoard">
             <div class="columns"  style="width:80%; position:relative;" v-if="!isFinalJeopardy">
                 <JeopardyColumn :style="{width: mainCategoryWidths }" v-for="category in mainCategories" 
@@ -8,7 +12,7 @@
                     :category="category"
 
                     @revealed="onColumnRevealed"
-                    @next="onNext"
+                    @next="onNextQuestion"
                 />
                 <ModalView v-if="canPlayGame && !isGameStarted">
                     <template #header>
@@ -73,14 +77,9 @@
                     </IconButton>
             </div>
             <br/>
-            <div v-if="isGameStarted && !isFinalJeopardy" style="width:80%; text-align: center; padding-top:0.5%; ">
-                <h2>Next Question:</h2>
-                <h2 v-if="showFinalJeopardyButton">
-                    <button style="background-color:red; color:white; border:none;" @click="showFinalJeopardy">
-                        <h2>FINAL JEOPARDY!</h2>
-                    </button>
-                </h2>
-                <h2 v-else>{{ nextQuestion }}</h2>
+            <div v-if="showNextQuestionSection" style="width:80%; text-align: center; padding-top:0.5%; ">
+                <h2>Next Question: {{ showFinalJeopardyButton }}</h2>
+                <h2>{{ nextQuestion }}</h2>
             </div>
         </div>
     </main>
@@ -102,6 +101,7 @@
     import IconButton from '@/components/views/IconButton.vue'
     import RotateIcon from '@/components/icons/FontAwesome/RotateIcon.vue'
     import  CircleCheckIcon from '@/components/icons/FontAwesome/CircleCheckIcon.vue'
+import QuestionAnswerPair from '@/models/QuestionAnswerPair'
 
     // STORES
     const route = useRoute()
@@ -111,25 +111,26 @@
     const filtersStore = useFiltersStore()
 
     // REFS
-    const { currentGame, gameStartDate } = storeToRefs(gamesStore)
+    const { currentGame, currentSession, gameStartDate } = storeToRefs(gamesStore)
     const { teams } = storeToRefs(teamsStore)
     const { filters } = storeToRefs(filtersStore)
     const isFinalJeopardy = ref(false)
     const canPlayGame = ref(false)
     const isGameStarted = ref(false)
-    const gameStartedDate = ref(new Date())
     const columnsRevealed = ref(0)
     const categories = ref(currentGame?.value?.Categories)
     const nextQuestion = ref("")
     const showFinalJeopardyButton = ref(false)
     const isTeamRefreshSpinning = ref(false)
     const isWagerRefreshSpinning = ref(false)
+    const showNextQuestionSection = ref(false)
 
     // COMPUTED
     const mainCategories = computed( () => currentGame?.value?.Categories.filter( (cat:Category) => !cat.isFinalJeopardy()) )
     const mainCategoryWidths = computed( () => (96 / mainCategories.value.length ) + "%" )
     const finalJeopardy = computed( () => currentGame?.value?.Categories.filter( (cat:Category) => cat.isFinalJeopardy()) )
     const teamsSorted = computed( ()=> teams.value.sort( (a,b) => b.Score - a.Score ))
+    const selectQuestionOption = computed( () =>  currentSession.value.getSettingValue("Selecting Questions")?.optionID )
 
     // FUNCTIONS 
     async function getTeamsForGame(){
@@ -151,23 +152,22 @@
     // Pick the next available question
     function getRandomQuestion(){
         try { 
-            let availableCells = Array.from(document.querySelectorAll(".questionCell:not(.cellViewed)"))
-            for(let cell of availableCells){
-                cell.classList.remove("selectableCell")
-            }
-            let randIdx = Math.floor(Math.random()*availableCells.length)
-            let cell = availableCells[randIdx]
-            if(cell != undefined){
-                cell.classList.add("selectableCell")
-                let questionKey = cell.getAttribute("data-question-key")
-                nextQuestion.value = questionKey ?? ""
+            let questionPool = _getQuestionPool()
+            if(questionPool.length > 0 ){
+                let randIdx = Math.floor(Math.random()*questionPool.length)
+                let question = questionPool[randIdx] as QuestionAnswerPair
+                if(question != undefined){
+                    question._canOpen = true
+                    question._showSelectable = true
+                    nextQuestion.value = question._quesitonKey
+                }
             } else { 
-                showFinalJeopardyButton.value =true
+                showFinalJeopardyButton.value = true
+                showNextQuestionSection.value = false
             }
         } catch(err){
-            console.info(err);
+            console.error(err);
         }
-        
     }
 
     // Start a new game
@@ -175,7 +175,11 @@
         isGameStarted.value = true
         gameStartDate.value = new Date()
         filtersStore.setFilter("gameStarted", true)
-        getRandomQuestion();
+        // If the game select option is last right, let all cells be selectable
+        if(selectQuestionOption.value == 2){
+            _setAllQuesitonsCanOpen()
+        }
+        onNextQuestion()
     }
 
     function onColumnRevealed(){
@@ -183,12 +187,46 @@
         canPlayGame.value = (columnsRevealed.value >= mainCategories?.value?.length)
     }
 
-    function onNext(){
-        getRandomQuestion()
+    function onNextQuestion(){
+        if(selectQuestionOption.value == 1){
+            showNextQuestionSection.value = true
+            getRandomQuestion()
+        } else if(selectQuestionOption.value == 2){
+            let questionPool = _getQuestionPool()
+            if(questionPool.length == 0){
+                showFinalJeopardyButton.value = true
+            }
+        }
     }
 
     function showFinalJeopardy(){
         isFinalJeopardy.value = true
+        showFinalJeopardyButton.value = false
+        showNextQuestionSection.value = false
+    }
+
+    // Get a pool of questions that are available in game
+    function _getQuestionPool(){
+        let questionPool = new Array<QuestionAnswerPair>()
+        for(let category of currentGame.value.Categories){
+            if(category.isFinalJeopardy()){
+                continue
+            }
+
+            let availableQnA = category.QuestionAnswerPairs.filter( (x:QuestionAnswerPair) => !x._prevOpen )
+            for(let qna of availableQnA){
+                questionPool.push(qna)
+            }
+        }
+        return questionPool
+    }
+
+    // For certain game types, just make all questions available to open
+    function _setAllQuesitonsCanOpen(){
+        let questionPool = _getQuestionPool()
+        for(let question of questionPool){
+            question._canOpen = true
+        }
     }
 
     onMounted( async () => {
@@ -197,12 +235,16 @@
         }
         categories.value = currentGame?.value?.Categories
         gamesStore.setCurrentSession()
+        console.log(currentSession.value)
         await teamsStore.getTeams()
     })
 
 </script>
 
 <style>
+
+    #playFinalJeopardyButtonSection { width:80%; text-align:center; padding:1% 0%; }
+
     #jeopardyBoard { display:flex; flex-wrap: wrap; align-items:start; justify-content: space-between;}
     
     .columns { display:flex; flex-wrap: wrap; justify-content:left; align-items: start; gap:10px;  }

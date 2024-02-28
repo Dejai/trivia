@@ -1,7 +1,7 @@
 <template>
     <main>
-        <div v-if="!props.isPreview" class="pointer questionCell" :class=" { 'cellViewed' : wasOpened }" @click="openCell($event)" :data-question-key="questionKey">
-            {{ cellValue }} 
+        <div v-if="!props.isPreview" class="pointer questionCell" :class=" { 'tiltingCell':isShowSelectable, 'cellViewed' : props.pair._prevOpen }" @click="openCell">
+            {{ cellValue }}
         </div>
 
         <div  :class="{ 'cellOpen': isOpen }">
@@ -35,7 +35,7 @@
                     {{ questionText }}
                     <p class="subtext italic">{{ props.pair.Question.SubText }}</p>
                 </div>
-                <div v-if=" (showRevealAnswer || props.isPreview ) && !showAnswer">
+                <div v-if="isRevealButtonVisible">
                     <IconButton @click="revealAnswer">
                         <template  #icon>
                            <h2><eye-icon /></h2>
@@ -97,8 +97,6 @@
                             </template>
                         </IconButton>
                     </div>
-                    <!-- <button id="assignScoresButton" class="pointer" :disabled="isAssignDisabled" @click="assignPoints">Assign Points</button> -->
-                    <!-- <button id="nobodyGotItRightButton" class="pointer" :disabled="isNobodyRightDisabled" @click="nobodyRight"></button> -->
                 </div>
                 <div v-if="props.isPreview">
                     <button @click="closePreview">Close Preview</button>
@@ -159,6 +157,9 @@
     const isNobodyRightEnabled = computed( () => numberRight.value == 0 )
     const showWhoGotItRightLoading = computed( () => showAnswer.value && !showWhoGotItRight.value)
     const timerSeconds = computed( () => Number(currentSession.value.getSettingValue("Seconds to Answer")?.value ?? 7) )
+    const isShowSelectable = computed( () => props.pair._showSelectable && !props.pair._prevOpen )
+    const isTestOrDemo = computed( () => route.params.sessionID.toString() == "DEMO" || route.params.sessionID.toString() == "TEST")
+    const isRevealButtonVisible = computed( ()=> ( showRevealAnswer.value || props.isPreview || isTestOrDemo.value ) && !showAnswer.value )
 
     const cellValue = props.pair?.Value
     const cellValuNumber = Number(cellValue)
@@ -209,18 +210,15 @@
         isRefreshAnswersSpinning.value = false
     }
 
-    function openCell(event:any){
-        let target = event.target;
+    function openCell(){
         // If the game has not been started, don't open a cell
         if(!filters.value.gameStarted){ return }
 
-        let isSelectable = target?.classList?.contains("selectableCell") ?? false
-        let prevViewed = wasOpened.value
-
-        if(isSelectable || prevViewed){
-            let proceed = prevViewed ? confirm("Already opened. Open again?") : true
+        if(props.pair._canOpen || props.pair._prevOpen){
+            let proceed = props.pair._prevOpen ? confirm("Already opened. Open again?") : true
             if(proceed){
                 isOpen.value = true
+                props.pair._prevOpen = true
                 wasOpened.value = true
             }
         }
@@ -288,7 +286,8 @@
         100% { transform: rotate(0deg); }
     }
 
-    .selectableCell:not(.cellViewed) { animation: tilt-shaking 0.25s infinite; border:1px dashed white; }
+    .tiltingCell:not(.cellViewed) { animation: tilt-shaking 0.25s infinite; border:1px dashed white; }
+    /* .selectableCell:not(.cellViewed) { animation: tilt-shaking 0.25s infinite; border:1px dashed white; } */
 
     .assignmentButton { color: gray; }
     .assignmentButton.clickable { color: white !important; }

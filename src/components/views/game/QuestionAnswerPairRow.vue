@@ -184,7 +184,7 @@
     const qnaPair = ref(props.questionAnswerPair)
     const isFinalJeopardy = props.category.isFinalJeopardy()
     const justModified = ref(false)
-    const qnaCopy = ref(new QuestionAnswerPair({}, 0))
+    const qnaCopy = ref(new QuestionAnswerPair({}, 0, props.category.Name))
     const showPreview = ref(false)
     const showEditQna = ref(props.questionAnswerPair.isNew() ?? false)
     const isDeleting = ref(false)
@@ -215,7 +215,7 @@
 
     function onEditQna(){
         showEditQna.value = true
-        qnaCopy.value = new QuestionAnswerPair(props.questionAnswerPair, props.questionAnswerPair.Order)
+        qnaCopy.value = new QuestionAnswerPair(props.questionAnswerPair, props.questionAnswerPair.Order, props.category.Name)
         emits("editing")
     }
 

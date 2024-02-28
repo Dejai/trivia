@@ -177,7 +177,7 @@
     function addQuestion() {
         let nextValue = props.category.getNextQnAValue()
         let nextOrder = props.category.getNextQnAOrder()
-        let newQnA = new QuestionAnswerPair({ Value: nextValue}, nextOrder, true)
+        let newQnA = new QuestionAnswerPair({ Value: nextValue}, nextOrder, props.category.Name, true)
         props.category.addNewPair(newQnA)
     }
 

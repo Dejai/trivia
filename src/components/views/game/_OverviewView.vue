@@ -5,11 +5,11 @@
             <FormContainer>
                 <FormRow :stacked="true" :class="'gameDetailsInput'">
                     <h3>Name</h3>
-                    <input id="gameName" class="fieldInput" type="text" placeholder="Enter a name" v-model="currentGame.Name" @change="saveOnChange" @keydown="saveOnChange" @keyup="updateMenu">
+                    <input id="gameName" class="fieldInput" type="text" placeholder="Enter a name" v-model="currentGame.Name" @change="onShowSaveAfterChange" @keydown="onShowSaveAfterChange" @keyup="updateMenu">
                 </FormRow>
                 <FormRow :stacked="true" :class="'gameDetailsInput'">
                     <h3>Description</h3>
-                    <input id="gameDescription" class="fieldInput" type="text" placeholder="Enter a short description" v-model="currentGame.Description" @change="saveOnChange" @keydown="saveOnChange">
+                    <input id="gameDescription" class="fieldInput" type="text" placeholder="Enter a short description" v-model="currentGame.Description" @change="onShowSaveAfterChange" @keydown="onShowSaveAfterChange">
                 </FormRow>
             </FormContainer>
         </div>
@@ -17,9 +17,6 @@
             <h2>Game Description</h2>
             <h3 style="padding-left:5%;">{{ currentGame.Description }}</h3>
         </div>
-        <!-- <div>
-            <h2>Type: {{ currentGame.Type }}</h2>
-        </div> -->
         <div id="gameSessionsSubSection">
             <div id="gameSessionsHeader" class="flex-row flex-wrap flex-justify-left flex-align-center flex-gap-20">
                 <h2>Game Session{{gameSessionPlurality}}</h2>
@@ -43,7 +40,7 @@
                         :gameID="currentGame.GameID"
                         :session="session"
 
-                        @save="afterSaveNewSession"
+                        @save="onSessionSave"
                         @cancel="hideNewSessionForm"
                     />
                 </div>
@@ -53,7 +50,7 @@
                 <SessionForm 
                     :session="newSession"
                     :isNew="true"
-                    @save="afterSaveNewSession"
+                    @save="onSessionSave"
                     @cancel="hideNewSessionForm"
                     />
             </div>
@@ -113,9 +110,11 @@
         showAddNewSession.value = true
     }
 
-    // Saving a new session
-    function afterSaveNewSession(){
-        saveOnChange();
+    // Saving a session
+    function onSessionSave(){
+        gamesStore.setGameSaveNeeded();
+        // For session changes, save right away
+        gamesStore.saveGame()        
         hideNewSessionForm();
     }
 
@@ -129,7 +128,7 @@
     }
 
     // On change in the field, trigger syncing
-    function saveOnChange(){
+    function onShowSaveAfterChange(){
         gamesStore.setGameSaveNeeded();
         gamesStore.setSyncNeeded();
     }

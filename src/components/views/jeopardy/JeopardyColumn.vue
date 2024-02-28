@@ -2,14 +2,14 @@
 
     <main>
         <div class="jeopardyColumn" >
-            <h2 class="jeopardyColumnHeader pointer" style="width:100%;" @click="showCategoryHeader">
+            <h1 class="jeopardyColumnHeader pointer" style="width:100%;" @click="showCategoryHeader">
                 <span v-if="showCategory">
                     {{ categoryName }}
                 </span>
                 <p v-else style="width:100%;">
                     &nbsp;
                 </p>
-            </h2>
+            </h1>
             <JeopardyCell style="width:100%;" v-if="!isFinalJeopardyCagtegory" v-for="pair in pairs" 
                 :key="pair.Value"    
                 :pair="pair"
@@ -40,8 +40,8 @@
     const emit = defineEmits(["revealed", "next"])
 
     const isFinalJeopardyCagtegory = ref(props.category.isFinalJeopardy())
-    const showCategory = ref(false)
-    const categoryName = props.category?.Name
+    const showCategory = ref(props.category.isFinalJeopardy() ?? false)
+    const categoryName = props.category.isFinalJeopardy() ? "Final Jeopardy!" : props.category?.Name
     const pairs = props.category?.QuestionAnswerPairs;
     const isActiveCategory = ref(false)
 

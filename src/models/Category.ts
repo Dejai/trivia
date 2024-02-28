@@ -17,7 +17,7 @@ export default class Category {
         this.Order = details?.Order ?? 1;
         this.Tags = details?.Tags ?? [];
         this.SortBy = details?.SortBy ?? "Value"  // other option is Custom Order
-        this.QuestionAnswerPairs = details?.QuestionAnswerPairs?.map( (obj:any, idx:number) => new QuestionAnswerPair(obj, idx) ) ?? []
+        this.QuestionAnswerPairs = details?.QuestionAnswerPairs?.map( (obj:any, idx:number) => new QuestionAnswerPair(obj, idx, this.Name) ) ?? []
     }
 
     updateCategory(details:any){

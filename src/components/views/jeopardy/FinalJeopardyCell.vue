@@ -1,6 +1,6 @@
 <template>
     <main style="display:relative;">
-        <div v-if="!props.isPreview" class="pointer questionCell finalJeopardyCategoryCell" :class=" { 'cellViewed' : wasOpened }" @click="openCell($event)" :data-question-key="questionKey">
+        <div v-if="!props.isPreview" class="pointer questionCell finalJeopardyCategoryCell" :class=" { 'cellViewed' : props.pair._prevOpen }" @click="openCell($event)">
             <span class="finalJeopardyCategory" :class="{'isCategoryVisible': isCategoryVisible}">{{ categoryName }} </span>
             
             <ModalView v-if="isWagersNeedConfirmed">
@@ -118,7 +118,7 @@
     import ModalView from '@/components/views/ModalView.vue'
     
     const props = defineProps<{
-        pair?: QuestionAnswerPair ,
+        pair: QuestionAnswerPair ,
         categoryName?: string,
         isPreview?:boolean
     }>()
@@ -148,16 +148,9 @@
     const isWagersNeedConfirmed = ref(false)
 
     // COMPUTED
-    const isAssignDisabled = computed( () => numberRight.value == 0 )
-    const isAssignEnabled = computed( () => numberRight.value > 0 )
-    const isNobodyRightDisabled = computed( () => numberRight.value > 0 )
-    const isNobodyRightEnabled = computed( () => numberRight.value == 0 )
     const showWhoGotItRIghtLoading = computed( () => showAnswer.value && !showWhoGotItRIght.value)
 
     // VARIABLES
-    const cellValue = props.categoryName
-    const cellValuNumber = Number(cellValue)
-    const questionKey = `${props.categoryName} for ${cellValue}`
     const question = props.pair?.Question
     const questionText = question?.Text ?? ""
     const questionImageUrl = mediaStore.getMediaURL(question?.ImageRef)
@@ -205,7 +198,7 @@
         }
 
         isOpen.value = true
-        wasOpened.value = true
+        props.pair._prevOpen = true
         filtersStore.setFilter("finalQuestionRevealed", true)
     }
 
@@ -223,9 +216,8 @@
     }
 
     async function assignFinalPoints(){
-        let wagerSetting = currentSession.value.getSetting("Final Jeopardy Wager")
+        let wagerOption = currentSession.value.getSettingValue("Final Jeopardy Wager")?.optionID ?? 1
         let maxTeamScore = Math.max(...teams.value.map( (x:Team) => x.Score))
-        let wagerOption = wagerSetting?.OptionID ?? 1
         for(let team of teams.value){
             let maxWager = (wagerOption == 2) ? maxTeamScore : team.Score
             team.setFinalScore(maxWager)
