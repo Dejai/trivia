@@ -139,9 +139,7 @@ export const useGamesStore = defineStore('games', () => {
       "Session":session
     })
     archive.Teams = teams
-    console.log(archive)
     currentGame.value.Archives.push(archive)
-    console.log(currentGame)
     await _saveGame()
   }
 

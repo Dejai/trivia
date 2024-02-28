@@ -186,7 +186,6 @@
         let target = ev.target
         let table = target.closest("table")
         let buttons = table.querySelectorAll(".editQnAIcon")
-        console.log(buttons)
         buttons.forEach( (element:any) => {
             element.click()
         });
@@ -196,7 +195,6 @@
         let target = ev.target
         let table = target.closest("table")
         let buttons = table.querySelectorAll(".saveQnAIcon")
-        console.log(buttons)
         buttons.forEach( (element:any) => {
             element.click()
         });

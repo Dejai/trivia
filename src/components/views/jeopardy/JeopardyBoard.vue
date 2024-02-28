@@ -235,7 +235,6 @@ import QuestionAnswerPair from '@/models/QuestionAnswerPair'
         }
         categories.value = currentGame?.value?.Categories
         gamesStore.setCurrentSession()
-        console.log(currentSession.value)
         await teamsStore.getTeams()
     })
 
