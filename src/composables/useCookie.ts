@@ -9,8 +9,12 @@ class CookieObj{
 }
 
 export function useCookie(action:string, cookieName:string, cookieValue:string="", attributes:any ={}){
-
-    // Get a cookie by name
+	
+	console.log(cookieName)
+	cookieName = `dtk-trivia-${cookieName}`
+	console.log(cookieName)
+    
+	// Get a cookie by name
 	const _getCookie = () => {
 		// Get all the cookies; Split up into list
 		let decodedCookies = decodeURIComponent(document.cookie);

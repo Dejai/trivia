@@ -61,6 +61,7 @@
     import { useFetch } from '@/composables/useFetch'
     import { useMenuStore } from '@/stores/menu'
     import { useGamesStore } from '@/stores/games'
+    import { useJsonStringify } from '@/composables/useJsonStringify'
     import config from '@/assets/config/app.json'
     import GameTemplate from '@/assets/config/template/game.json'
     import Game from '@/models/Game'
@@ -101,7 +102,7 @@
         isFetching.value = true
         
         // Create the game
-        await useFetch("POST", "https://files.the-dancinglion.workers.dev/trivia/", { body: JSON.stringify(newGame.value)})
+        await useFetch("POST", "https://files.the-dancinglion.workers.dev/trivia/", { body: useJsonStringify(newGame.value) })
 
         // Then make sure things get synced
         gamesStore.setSyncNeeded();

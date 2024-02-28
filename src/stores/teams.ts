@@ -4,6 +4,7 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useFetch } from '@/composables/useFetch'
 import { defineStore } from 'pinia'
+import { useJsonStringify } from '@/composables/useJsonStringify'
 import Team from '@/models/Team'
 import appConfig from '@/assets/config/app.json'
 
@@ -57,7 +58,7 @@ export const useTeamsStore = defineStore('teams', () => {
       value: "", 
       score: 0 
     }
-    let { data, error } = await useFetch("POST", `${appConfig.Urls.kv}/trivia/team`, { body: JSON.stringify(createObj) } )
+    let { data, error } = await useFetch("POST", `${appConfig.Urls.kv}/trivia/team`, { body: useJsonStringify(createObj) } )
     if(data?.status == 200){
       currentTeam.value = new Team(data);
     }
@@ -102,7 +103,7 @@ export const useTeamsStore = defineStore('teams', () => {
       code: team.Code,
       wager: team.Wager
     }
-    let { data, error } = await useFetch("POST", `${appConfig.Urls.kv}/trivia/team`, { body: JSON.stringify(updateObj) } )
+    let { data, error } = await useFetch("POST", `${appConfig.Urls.kv}/trivia/team`, { body: useJsonStringify(updateObj) } )
     if(data != undefined){
       currentTeam.value = new Team(data);
     }

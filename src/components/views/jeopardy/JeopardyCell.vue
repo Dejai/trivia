@@ -20,7 +20,7 @@
                                
                             </td>
                             <td>
-                                <TimerCountdownView :seconds="timerSeconds" @timeup="onShowRevealAnswer"/> 
+                                <TimerCountdownView :seconds="timerSeconds" @timeup="onShowRevealAnswerButton"/> 
                             </td>
                             <td>
                                 <span>{{ cellValuNumber }}</span>
@@ -115,6 +115,7 @@
     import { useMediaStore } from '@/stores/media'
     import { useTeamsStore } from '@/stores/teams'
     import { useGamesStore } from '@/stores/games'
+    import { useCookie } from '@/composables/useCookie'
     import QuestionAnswerPair from '@/models/QuestionAnswerPair'
     import WhoGotItRight from '@/components/views/jeopardy/WhoGotItRight.vue'
     import Image from '@/components/views/media/Image.vue'
@@ -134,12 +135,14 @@
     }>()
     const emit = defineEmits(["next"])
 
+    // STORES
     const route = useRoute()
     const mediaStore = useMediaStore();
     const filtersStore = useFiltersStore()
     const teamsStore = useTeamsStore()
     const gamesStore = useGamesStore()
 
+    // REFS
     const { filters } = storeToRefs(filtersStore)
     const { teams } = storeToRefs(teamsStore)
     const { media } = storeToRefs(mediaStore)
@@ -148,11 +151,12 @@
     const isOpen = ref( props.isPreview ?? false)
     const wasOpened = ref(false)
     const showQuestion = ref(true)
-    const showRevealAnswer = ref(false)
+    const showRevealAnswerButton = ref(false)
     const showAnswer = ref(false)
     const showWhoGotItRight = ref(false)
     const numberRight = ref(0)
 
+    // COMPUTED
     const isAssignEnabled = computed( () => numberRight.value > 0 )
     const isNobodyRightEnabled = computed( () => numberRight.value == 0 )
     const showWhoGotItRightLoading = computed( () => showAnswer.value && !showWhoGotItRight.value)
@@ -160,7 +164,7 @@
     const settingForAnswering = computed( () => currentSession.value.getSettingValue("Answering Questions")?.optionID ?? 1 )
     const isShowSelectable = computed( () => props.pair._showSelectable && !props.pair._prevOpen )
     const isTestOrDemo = computed( () => route.params.sessionID.toString() == "DEMO" || route.params.sessionID.toString() == "TEST")
-    const isRevealButtonVisible = computed( ()=> ( showRevealAnswer.value || props.isPreview || isTestOrDemo.value ) && !showAnswer.value )
+    const isRevealButtonVisible = computed( ()=> ( showRevealAnswerButton.value || props.isPreview || isTestOrDemo.value ) && !showAnswer.value )
     const onlyOneRight = computed( () => settingForAnswering.value == 2 && numberRight.value == 1)
 
     const cellValue = props.pair?.Value
@@ -184,8 +188,8 @@
 
 
     // Show the button to reveal the answer
-    function onShowRevealAnswer(){
-        showRevealAnswer.value = true
+    function onShowRevealAnswerButton(){
+        showRevealAnswerButton.value = true
     }
 
     // Revealing the answers given
@@ -229,6 +233,9 @@
                 isOpen.value = true
                 props.pair._prevOpen = true
                 wasOpened.value = true
+                
+                // Set a cookie to indicate that this question was opened
+                useCookie("set", _getQuestionCookieName(), "true")
             }
         }
     }
@@ -258,6 +265,14 @@
 
     function closePreview(){
         emit("next")
+    }
+
+    // Get the cookie key for this question (based on session)
+    function _getQuestionCookieName(){
+        let session = route.params.sessionID
+        let category = props.categoryName ?? ""
+        let value = props.pair.Value
+        return `${session}_${category}_${value}`
     }
 </script>
 
