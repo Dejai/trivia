@@ -2,84 +2,83 @@
 
 import Answer from "./Answer";
 import Question from "./Question";
-import { useTagManager } from "@/composables/useTagManager"
-import config from '@/assets/config/app.json'
+import { useTagManager } from "@composables/useTagManager";
+import config from "@assets/config/app.json";
 
 export default class QuestionAnswerPair {
+	Value: number;
+	Order: number;
+	Tags: string[] = [];
+	Question: Question;
+	Answer: Answer;
 
-    Value:number;
-    Order: number;
-    Tags: string[] = [];
-    Question: Question;
-    Answer: Answer;
+	// private properties
+	_quesitonKey: string = "";
+	_canOpen: boolean = false;
+	_showSelectable: boolean = false;
+	_prevOpen: boolean = false;
 
-    // private properties
-    _quesitonKey:string = "";
-    _canOpen:boolean = false;
-    _showSelectable:boolean = false;
-    _prevOpen:boolean = false;
+	constructor(details: any, order: number, categoryName: string, isNew?: boolean) {
+		this.Value = Number(details?.Value) ?? -1;
+		this.Tags = details?.Tags ?? [];
+		this.Question = new Question(details?.Question ?? {});
+		this.Answer = new Answer(details?.Answer ?? {});
+		this.Order = details?.Order ?? order;
+		if (isNew) {
+			this.addTag(config.Tags.NewQuestion);
+		}
 
-    constructor(details:any, order:number, categoryName:string, isNew?:boolean){
-        this.Value = Number(details?.Value) ?? -1;
-        this.Tags = details?.Tags ?? []
-        this.Question = new Question(details?.Question ?? {})
-        this.Answer = new Answer(details?.Answer ?? {})
-        this.Order = details?.Order ?? order;
-        if(isNew){
-            this.addTag(config.Tags.NewQuestion)
-        }
+		this._quesitonKey = `${categoryName} for ${this.Value}`;
+	}
 
-        this._quesitonKey = `${categoryName} for ${this.Value}`
-    }
+	udpate(details: any) {
+		this.Value = details?.Value ?? this.Value;
+		this.Tags = details?.Tags ?? this.Tags;
+		this.Order = details?.Order ?? this.Order;
+		this.Value = details?.Value ?? this.Value;
+	}
 
-    udpate(details:any){
-        this.Value = details?.Value ?? this.Value
-        this.Tags = details?.Tags ?? this.Tags
-        this.Order = details?.Order ?? this.Order
-        this.Value = details?.Value ?? this.Value
-    }
+	updateTags(action: string, tag: string) {
+		this.Tags = useTagManager(action, tag, this.Tags);
+	}
 
-    updateTags(action:string, tag:string){
-        this.Tags = useTagManager(action, tag, this.Tags)
-    }
+	updateOrder(order: number) {
+		this.Order = order;
+	}
 
-    updateOrder(order:number){
-        this.Order = order
-    }
+	addTag(tag: string) {
+		this._manageTags("add", tag);
+	}
+	removeTag(tag: string) {
+		this._manageTags("remove", tag);
+	}
 
-    addTag(tag:string){
-        this._manageTags("add", tag)
-    }
-    removeTag(tag:string){
-        this._manageTags("remove", tag)
-    }
+	// Manage the tags on this QnA pair
+	_manageTags(action: string, tag: string) {
+		let tagAlreadySet = this.Tags.includes(tag);
+		switch (action) {
+			case "add":
+				if (!tagAlreadySet) {
+					this.Tags.push(tag);
+				}
+				break;
+			case "delete":
+			case "remove":
+				if (tagAlreadySet) {
+					this.Tags = this.Tags.filter((x: string) => x != tag);
+				}
+				break;
+			default:
+				break;
+		}
+	}
 
-    // Manage the tags on this QnA pair
-    _manageTags(action:string, tag:string){
-        let tagAlreadySet = this.Tags.includes(tag)
-        switch(action){
-            case "add":
-                if(!tagAlreadySet){
-                    this.Tags.push(tag)
-                }
-                break;
-            case "delete":
-            case "remove":
-                if(tagAlreadySet){
-                    this.Tags = this.Tags.filter( (x:string) => x != tag)
-                }
-                break;
-            default:
-                break;
-        }
-    }
+	// Confirm if this QnA pair is a new one
+	isNew() {
+		return this.Tags.includes(config.Tags.NewQuestion);
+	}
 
-    // Confirm if this QnA pair is a new one
-    isNew(){
-        return this.Tags.includes(config.Tags.NewQuestion)
-    }
-
-    isDailyDouble(){
-        return this.Tags.includes(config.Tags.DailyDouble)
-    }
+	isDailyDouble() {
+		return this.Tags.includes(config.Tags.DailyDouble);
+	}
 }

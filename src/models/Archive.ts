@@ -1,22 +1,22 @@
-import Team from '@/models/Team'
+import Team from "@models/Team";
 
-export default class Archive { 
-    Date:Date;
-    Session:string;
-    Teams: Team[]
-    constructor(details:any){
-        this.Date = details?.Date ?? ""
-        this.Session = details?.Session ?? ""
-        this.Teams = details?.Teams?.map( (x:any) => new Team(x)) ?? []
+export default class Archive {
+	Date: Date;
+	Session: string;
+	Teams: Team[];
+	constructor(details: any) {
+		this.Date = details?.Date ?? "";
+		this.Session = details?.Session ?? "";
+		this.Teams = details?.Teams?.map((x: any) => new Team(x)) ?? [];
 
-        // sort teams ased on final score
-        this.Teams.sort( (a:any, b:any) => b.FinalScore - a.FinalScore)
-    }
+		// sort teams ased on final score
+		this.Teams.sort((a: any, b: any) => b.FinalScore - a.FinalScore);
+	}
 
-    getWinners() :string {
-        let highScore = 0;
-        let winningScore = Math.max(...this.Teams.map( (x:Team) => x.FinalScore))
-        let winners = this.Teams.filter( (x:Team) => x.Score == winningScore).map( (y:Team) => y.Name)
-        return winners.join(" / ")
-    }
+	getWinners(): string {
+		let highScore = 0;
+		let winningScore = Math.max(...this.Teams.map((x: Team) => x.FinalScore));
+		let winners = this.Teams.filter((x: Team) => x.Score == winningScore).map((y: Team) => y.Name);
+		return winners.join(" / ");
+	}
 }

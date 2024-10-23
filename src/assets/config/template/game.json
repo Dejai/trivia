@@ -1,50 +1,50 @@
 {
-    "Name": "",
-    "Status": "Draft",
-    "GameID": "",
-    "Type": "Jeopardy",
-    "Description": "This is a generic description",
-    "Admins": [],
-    "Categories": [
-        {
-            "CategoryID": "FINALJEOPARDY",
-            "Name": "Final Jeopardy!",
-            "Order": 9999,
-            "Tags": ["Final Jeopardy!"],
-            "QuestionAnswerPairs": [
-                {
-                    "Value": null,
-                    "Question": {
-                        "Text": "This is your final jeopardy question.",
-                        "Audio": "",
-                        "Image": "",
-                        "URL": ""
-                    },
-                    "Answer": {
-                        "Text": "This is your final jeopardy answer.",
-                        "Audio": "",
-                        "Image": "",
-                        "URL": ""
-                    }
-                }
-            ]
-        }
-    ],
-    "Media": [],
-    "Sessions": [
-        {
-            "Code": "TEST",
-            "Expires": {
-                "Month": "Dec",
-                "Day": 31,
-                "Year": 2099
-            },
-            "Settings": [
-                { "Name": "Answering Questions", "Type": "select", "OptionID": 2 },
-                { "Name": "Selecting Questions", "Type": "select", "OptionID": 3 },
-                {"Name": "Seconds to Answer", "Type": "Number", "OptionID": 1, "Value": 15},
-                {"Name": "Final Jeopardy Wager", "Type": "select", "OptionID": 1}
-            ]
-        }
-    ]
+	"Name": "",
+	"Status": "Draft",
+	"GameID": "",
+	"Type": "Jeopardy",
+	"Description": "This is a generic description",
+	"Admins": [],
+	"Categories": [
+		{
+			"CategoryID": "FINALJEOPARDY",
+			"Name": "Final Jeopardy!",
+			"Order": 9999,
+			"Tags": ["Final Jeopardy!"],
+			"QuestionAnswerPairs": [
+				{
+					"Value": null,
+					"Question": {
+						"Text": "This is your final jeopardy question.",
+						"Audio": "",
+						"Image": "",
+						"URL": ""
+					},
+					"Answer": {
+						"Text": "This is your final jeopardy answer.",
+						"Audio": "",
+						"Image": "",
+						"URL": ""
+					}
+				}
+			]
+		}
+	],
+	"Media": [],
+	"Sessions": [
+		{
+			"Code": "TEST",
+			"Expires": {
+				"Month": "Dec",
+				"Day": 31,
+				"Year": 2099
+			},
+			"Settings": [
+				{ "Name": "Answering Questions", "Type": "select", "OptionID": 2 },
+				{ "Name": "Selecting Questions", "Type": "select", "OptionID": 3 },
+				{ "Name": "Seconds to Answer", "Type": "Number", "OptionID": 1, "Value": 15 },
+				{ "Name": "Final Jeopardy Wager", "Type": "select", "OptionID": 1 }
+			]
+		}
+	]
 }

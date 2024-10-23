@@ -1,13 +1,21 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/**/*.ts"],
-  "exclude": ["src/**/__tests__/*"],
-  "compilerOptions": {
-    "composite": true,
-    "noEmit": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
+	"extends": "@vue/tsconfig/tsconfig.dom.json",
+	"include": ["env.d.ts", "src/**/*", "src/**/*.vue", "src/**/*.ts"],
+	"exclude": ["src/**/__tests__/*"],
+	"compilerOptions": {
+		"composite": true,
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"baseUrl": ".",
+		"paths": {
+			"@assets/*": ["./src/assets/*"],
+			"@views/*": ["./src/components/views/*"],
+			"@icons/*": ["./src/components/icons/*"],
+			"@pages/*": ["./src/components/pages/*"],
+			"@composables/*": ["./src/composables/*"],
+			"@models/*": ["./src/models/*"],
+			"@stores/*": ["./src/stores/*"],
+			"@router/*": ["./src/router/*"]
+		}
+	}
 }

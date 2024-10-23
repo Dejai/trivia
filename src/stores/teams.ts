@@ -1,112 +1,108 @@
+import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
+import { useFetch } from "@composables/useFetch";
+import { defineStore } from "pinia";
+import { useJsonStringify } from "@composables/useJsonStringify";
+import Team from "@models/Team";
+import appConfig from "@assets/config/app.json";
 
+export const useTeamsStore = defineStore("teams", () => {
+	const exampleTeams = [
+		{ Name: "Team Name 1", Code: "ABCD", Answer: "answer 1", Score: 0, Wager: 0 },
+		{ Name: "Team Name 2", Code: "EFXG", Answer: "answer 2", Score: 0, Wager: 1 },
+		{ Name: "Team Name 3", Code: "SDFD", Answer: "answer 3", Score: 0, Wager: 100 },
+		{ Name: "Team Name 4", Code: "AEWP", Answer: "answer 4", Score: 0, Wager: 1000 }
+	];
 
-import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { useFetch } from '@/composables/useFetch'
-import { defineStore } from 'pinia'
-import { useJsonStringify } from '@/composables/useJsonStringify'
-import Team from '@/models/Team'
-import appConfig from '@/assets/config/app.json'
+	const route = useRoute();
+	const sessionID = route.params.sessionID ?? "";
+	const defaultTeams = sessionID == "TEST" ? exampleTeams.map((x: any) => new Team(x)) : new Array<Team>();
+	const teams = ref(defaultTeams);
+	const currentTeam = ref(new Team({}));
 
-export const useTeamsStore = defineStore('teams', () => {
+	// Get teams for this game
+	async function getTeams() {
+		let gameID = route.params.gameID?.toString().toLowerCase();
+		let sessionID = route.params.sessionID?.toString().toLowerCase();
+		let { data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/teams/?key=${gameID}_${sessionID}`);
+		console.info(data);
+		if (data != undefined) {
+			teams.value = data.map((x: any) => new Team(x));
+		}
 
-  const exampleTeams = [
-    { Name: "Team Name 1", Code: "ABCD", "Answer": "answer 1", Score: 0, Wager:0 },
-    { Name: "Team Name 2", Code: "EFXG", "Answer": "answer 2", Score: 0, Wager:1 },
-    { Name: "Team Name 3", Code: "SDFD", "Answer": "answer 3", Score: 0, Wager:100 },
-    { Name: "Team Name 4", Code: "AEWP", "Answer": "answer 4", Score: 0, Wager: 1000 }
-  ]
+		// Adding example teams
+		if (route.params.sessionID == "TEST" || route.params.sessionID == "DEMO" || route.params.sessionID == undefined) {
+			teams.value = teams.value.concat(exampleTeams.map((x: any) => new Team(x)));
+		}
+	}
 
-  const route = useRoute()
-  const sessionID = route.params.sessionID ?? ""
-  const defaultTeams = (sessionID == "TEST") ? exampleTeams.map( (x:any) => new Team(x)) : new Array<Team>
-  const teams = ref(defaultTeams)
-  const currentTeam = ref(new Team({}))
+	// Generate a team "key"
+	function _getTeamKey(teamCode: string) {
+		let gameID = route.params.gameID;
+		let sessionID = route.params.sessionID;
+		let teamKey = `${gameID}_${sessionID}_${teamCode}`;
+		return teamKey;
+	}
 
-  // Get teams for this game
-  async function getTeams(){
-    let gameID = route.params.gameID?.toString().toLowerCase()
-    let sessionID = route.params.sessionID?.toString().toLowerCase()
-    let {data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/teams/?key=${gameID}_${sessionID}`);
-    console.info(data)
-    if(data != undefined){
-      teams.value = data.map( (x:any) => new Team(x))
-    }
+	// Create a new team
+	async function createTeam(teamCode: string, teamName: string) {
+		let teamKey = _getTeamKey(teamCode);
+		let createObj = {
+			key: teamKey,
+			code: teamCode,
+			name: teamName,
+			value: "",
+			score: 0
+		};
+		let { data, error } = await useFetch("POST", `${appConfig.Urls.kv}/trivia/team`, { body: useJsonStringify(createObj) });
+		if (data?.status == 200) {
+			currentTeam.value = new Team(data);
+		}
+	}
 
-    // Adding example teams
-    if(route.params.sessionID == "TEST" || route.params.sessionID == "DEMO" || route.params.sessionID == undefined){
-      teams.value = teams.value.concat( exampleTeams.map( (x:any) => new Team(x)) )
-    }
-  }
+	async function getTeam(teamCode: string) {
+		let teamKey = _getTeamKey(teamCode);
+		let { data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/team?key=${teamKey}`);
+		if (data != undefined) {
+			currentTeam.value = new Team(data);
+		}
+	}
 
+	async function getTeamAnswers() {
+		let gameID = route.params.gameID;
+		let { data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/team/answers/?key=${gameID}`);
+		return data ?? [];
+	}
 
-  // Generate a team "key"
-  function _getTeamKey(teamCode:string){
-    let gameID = route.params.gameID;
-    let sessionID = route.params.sessionID
-    let teamKey =`${gameID}_${sessionID}_${teamCode}`
-    return teamKey
-  }
+	async function getTeamWagers() {
+		let gameID = route.params.gameID;
+		let { data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/team/answers/?key=${gameID}`);
+		if (data != undefined) {
+			for (let team of teams.value) {
+				let match = data.filter((t: any) => t.code == team.Code)?.[0];
+				if (match != undefined && match.wager != undefined) {
+					team.setWager(match.wager);
+				}
+			}
+		}
+		return data ?? [];
+	}
 
-  // Create a new team
-  async function createTeam(teamCode:string, teamName:string){
-    let teamKey = _getTeamKey(teamCode);
-    let createObj = { 
-      key: teamKey, 
-      code: teamCode,
-      name: teamName, 
-      value: "", 
-      score: 0 
-    }
-    let { data, error } = await useFetch("POST", `${appConfig.Urls.kv}/trivia/team`, { body: useJsonStringify(createObj) } )
-    if(data?.status == 200){
-      currentTeam.value = new Team(data);
-    }
-  }
-
-  async function getTeam(teamCode:string){
-    let teamKey = _getTeamKey(teamCode);
-    let { data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/team?key=${teamKey}`)
-    if(data != undefined ){
-      currentTeam.value = new Team(data);
-    }
-  }
-
-  async function getTeamAnswers(){
-    let gameID = route.params.gameID
-    let { data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/team/answers/?key=${gameID}`)
-    return data ?? [];
-  }
-
-  async function getTeamWagers(){
-    let gameID = route.params.gameID
-    let { data, error } = await useFetch("GET", `${appConfig.Urls.kv}/trivia/team/answers/?key=${gameID}`)
-    if(data != undefined){
-      for(let team of teams.value){
-          let match = data.filter( (t:any) => t.code == team.Code)?.[0];
-          if(match != undefined && match.wager != undefined){
-            team.setWager(match.wager)
-          }
-      }
-    }
-    return data ?? [];
-  }
-
-  // Update a team
-  async function updateTeam(team:Team){
-    let teamKey = _getTeamKey(team.Code)
-    let updateObj = { 
-      key: teamKey,
-      name: team.Name, 
-      score: team.Score, 
-      value: team.Answer,
-      code: team.Code,
-      wager: team.Wager
-    }
-    let { data, error } = await useFetch("POST", `${appConfig.Urls.kv}/trivia/team`, { body: useJsonStringify(updateObj) } )
-    if(data != undefined){
-      currentTeam.value = new Team(data);
-    }
-  }
-    return { currentTeam, teams, getTeams, createTeam, getTeam, updateTeam, getTeamAnswers, getTeamWagers }
-})
+	// Update a team
+	async function updateTeam(team: Team) {
+		let teamKey = _getTeamKey(team.Code);
+		let updateObj = {
+			key: teamKey,
+			name: team.Name,
+			score: team.Score,
+			value: team.Answer,
+			code: team.Code,
+			wager: team.Wager
+		};
+		let { data, error } = await useFetch("POST", `${appConfig.Urls.kv}/trivia/team`, { body: useJsonStringify(updateObj) });
+		if (data != undefined) {
+			currentTeam.value = new Team(data);
+		}
+	}
+	return { currentTeam, teams, getTeams, createTeam, getTeam, updateTeam, getTeamAnswers, getTeamWagers };
+});
